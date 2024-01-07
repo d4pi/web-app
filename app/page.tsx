@@ -5,6 +5,7 @@ import React from 'react';
 import Script from 'next/script';
 
 const d4pi_d4Items = [] as D4Item[];
+let d4pi_isSkipped_becauseDuplicateId_count = 0;
 
 export default function Home() {
   const processorArgument_class = 'bg-gray-700';
@@ -15,6 +16,7 @@ export default function Home() {
   const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(130);
   const [d4Items, setD4Items] = React.useState([...d4pi_d4Items]);
   const [d4ItemScreenshotBrightnessThreshold, setD4ItemScreenshotBrightnessThreshold] = React.useState(25);
+  const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateId_count);
   const [isVerboseMode, setIsVerboseMode] = React.useState(true);
   const buttonInputType = 'button';
   const d4ItemImageMaxWidthComponent = <code className={processorArgument_class}>Item Image Maximum Width</code>;
@@ -32,11 +34,11 @@ export default function Home() {
   const example1Url = '/images/example-1.jpg';
   const example2Url = '/images/example-2.jpg';
   const example3Url = '/images/example-3.jpg';
-  const exampleLinkClass = 'm-2 hover:underline bg-blue-500 rounded';
+  const exampleLinkClass = 'mx-2 my-3 py-1 px-2 hover:underline bg-blue-500 rounded';
   const isVerboseModeInputId = 'd4pi-is-verbose-mode-input';
   const numberInputClass = 'text-black mx-4';
   const numberInputType = 'number';
-  const runExampleInputClass = 'bg-blue-500 hover:bg-blue-700 py-1 px-2 m-2 rounded';
+  const runExampleInputClass = 'bg-blue-500 hover:bg-blue-700 py-1 px-2 m-2 my-3 rounded';
   const scriptStrategy = 'beforeInteractive';
   const ulClass = 'list-disc ml-8';
   const zeroString = '0';
@@ -66,11 +68,12 @@ export default function Home() {
             d4ItemScreenshotFile.size
           );
           if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
-            newD4Item.isSkipped_becauseAlreadyProcessed = true;
-          }
-          d4pi_d4Items.push(newD4Item);
-          setD4Items([...d4pi_d4Items]);
-          if (!newD4Item.isSkipped_becauseAlreadyProcessed) {
+            newD4Item.isSkipped_becauseDuplicateIds = true;
+            ++d4pi_isSkipped_becauseDuplicateId_count;
+            setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateId_count);
+          } else {
+            d4pi_d4Items.push(newD4Item);
+            setD4Items([...d4pi_d4Items]);
             const d4ItemScreenshotFileReader = new FileReader();
             d4ItemScreenshotFileReader.onload = () => {
               const d4ItemScreenshotDataUrl = d4ItemScreenshotFileReader.result as string;
@@ -142,7 +145,7 @@ export default function Home() {
             function isD4ItemTextInitialized(): boolean { return globalThis.d4pi_textData[d4Item.textDataId] !== undefined; }
 
             function ProcessD4ItemText() {
-              d4Item.isFilterable = true;
+              d4Item.isProcessingCompleted = true;
               setD4Items([...d4pi_d4Items]);
             }
           }
@@ -182,23 +185,50 @@ export default function Home() {
         0
       );
       if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
-        newD4Item.isSkipped_becauseAlreadyProcessed = true;
-      }
-      d4pi_d4Items.push(newD4Item);
-      setD4Items([...d4pi_d4Items]);
-      if (!newD4Item.isSkipped_becauseAlreadyProcessed) {
+        newD4Item.isSkipped_becauseDuplicateIds = true;
+        ++d4pi_isSkipped_becauseDuplicateId_count;
+        setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateId_count);
+      } else {
+        d4pi_d4Items.push(newD4Item);
+        setD4Items([...d4pi_d4Items]);
         waitForD4ItemRendering_thenInitializeD4ItemScreenshot(newD4Item, screenshotUrl);
       }
     }
   }
 
-  function handleRunExample1InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example1Url, `D4pi Example 1 - ${Date.now()}`); }
+  function handleRunExample1InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example1Url, `D4pi Example 1`); }
 
-  function handleRunExample2InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example2Url, `D4pi Example 2 - ${Date.now()}`); }
+  function handleRunExample2InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example2Url, `D4pi Example 2`); }
 
-  function handleRunExample3InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example3Url, `D4pi Example 3 - ${Date.now()}`); }
+  function handleRunExample3InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example3Url, `D4pi Example 3`); }
 
   function hideIfNotVerboseMode(): string { return isVerboseMode ? '' : 'hidden'; }
+
+  function getItemCountersComponent() {
+    const queued = d4Items.length + isSkipped_becauseDuplicateId_count;
+    const completed = d4Items.filter(d4Item => d4Item.isProcessingCompleted).length
+    const inProgress = queued - completed - isSkipped_becauseDuplicateId_count;
+    const warning = d4Items.filter(d4Item => d4Item.itemImageBoundingRectangleWidth === 0).length;
+
+    function inProgressClass(): string { return inProgress === 0 ? 'bg-green-700' : 'bg-yellow-700'; }
+
+    function warningClass(): string { return warning === 0 ? '' : 'bg-orange-700'; }
+
+    return <>
+      <li>
+        <span>(Total Requests: {queued})</span>
+        ===
+        <span>(Completed Requests: {completed})</span>
+        +
+        <span>(Skipped Requests (because of duplicate ids): {isSkipped_becauseDuplicateId_count})</span>
+        +
+        <span className={inProgressClass()}>(Requests being Processed: {inProgress})</span>
+      </li>
+      <li>
+        <span className={warningClass()}>Warning (completed without detecting any game item image): {warning}</span>
+      </li>
+    </>;
+  }
 
   return <>
     <Script src='/code/is_opencv_runtimeInitialized.js' strategy={scriptStrategy} />
@@ -227,7 +257,7 @@ export default function Home() {
         <div>
           Examples:
           <ul className={ulClass}>
-            <li className='my-1'>
+            <li>
               <input className={runExampleInputClass} onClick={handleRunExample1InputClick} type={buttonInputType} value='Run Example 1' />
               <input className={runExampleInputClass} onClick={handleRunExample2InputClick} type={buttonInputType} value='Run Example 2' />
               <input className={runExampleInputClass} onClick={handleRunExample3InputClick} type={buttonInputType} value='Run Example 3' />
@@ -357,6 +387,14 @@ export default function Home() {
         </div>
 
         <div>
+          Statistics
+          <ul className={ulClass}>
+            {getItemCountersComponent()}
+          </ul>
+        </div>
+
+        <div>
+          Processor Workspaces:
           <ul className={ulClass}>
             {
               d4Items.map(d4Item =>

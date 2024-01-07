@@ -4,8 +4,8 @@ export default class D4Item {
     itemImageProcessorArgument_pictureHeight = 0;
     itemImageProcessorArgument_pictureWidth = 0;
     itemImageProcessorArgument_screenshotBrightnessThreshold = 0;
-    isFilterable = false;
-    isSkipped_becauseAlreadyProcessed = false;
+    isProcessingCompleted = false;
+    isSkipped_becauseDuplicateIds = false;
     screenshotFileLastModified = 0;
     screenshotFileName = '';
     screenshotFileSize = 0;
