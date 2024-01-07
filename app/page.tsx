@@ -5,45 +5,45 @@ import React from 'react';
 import Script from 'next/script';
 
 const d4pi_d4Items = [] as D4Item[];
-let d4pi_isSkipped_becauseDuplicateId_count = 0;
+let d4pi_isSkipped_becauseDuplicateIds_count = 0;
 
 export default function Home() {
-  const processorArgument_class = 'bg-gray-700';
+  const processorArgumentClassName = 'bg-gray-700 p-1 rounded';
 
-  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(30);
+  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(32);
   const [d4ItemImageMaxWidth, setD4ItemImageMaxWidth] = React.useState(410);
   const [d4ItemImageMinWidth, setD4ItemImageMinWidth] = React.useState(340);
-  const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(130);
-  const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(130);
+  const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(128);
+  const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(128);
   const [d4Items, setD4Items] = React.useState([...d4pi_d4Items]);
   const [d4ItemScreenshotBrightnessThreshold, setD4ItemScreenshotBrightnessThreshold] = React.useState(25);
-  const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateId_count);
+  const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateIds_count);
   const [isVerboseMode, setIsVerboseMode] = React.useState(true);
   const buttonInputType = 'button';
-  const d4ItemImageBorderOverwriteWidthComponent = <code className={processorArgument_class}>Item Image Border Overwrite Width</code>;
+  const d4ItemImageBorderOverwriteWidthComponent = <code className={processorArgumentClassName}>Item Image Border Overwrite Width</code>;
   const d4ItemImageBorderOverwriteWidthInputId = 'd4item-image-border-overwrite-width-input';
-  const d4ItemImageMaxWidthComponent = <code className={processorArgument_class}>Item Image Maximum Width</code>;
+  const d4ItemImageMaxWidthComponent = <code className={processorArgumentClassName}>Item Image Maximum Width</code>;
   const d4ItemImageMaxWidthInputId = 'd4item-image-max-width-input';
-  const d4ItemImageMinWidthComponent = <code className={processorArgument_class}>Item Image Minimum Width</code>;
+  const d4ItemImageMinWidthComponent = <code className={processorArgumentClassName}>Item Image Minimum Width</code>;
   const d4ItemImageMinWidthInputId = 'd4item-image-min-width-input';
-  const d4ItemPictureHeightComponent = <code className={processorArgument_class}>Item Picture Height</code>;
+  const d4ItemPictureHeightComponent = <code className={processorArgumentClassName}>Item Picture Height</code>;
   const d4ItemPictureHeightInputId = 'd4item-picture-Height-input';
-  const d4ItemPictureWidthComponent = <code className={processorArgument_class}>Item Picture Width</code>;
+  const d4ItemPictureWidthComponent = <code className={processorArgumentClassName}>Item Picture Width</code>;
   const d4ItemPictureWidthInputId = 'd4item-picture-width-input';
-  const d4ItemScreenshotBrightnessThresholdComponent = <code className={processorArgument_class}>Screenshot Brightness Threshold</code>;
+  const d4ItemScreenshotBrightnessThresholdComponent = <code className={processorArgumentClassName}>Screenshot Brightness Threshold</code>;
   const d4ItemScreenshotBrightnessThresholdInputId = 'd4item-screenshot-brightness-threshold-input';
   const d4ItemScreenshotFileInputId = 'd4Item-screenshot-file-input';
   const defaultTimeout = 250; // Milliseconds
   const example1Url = '/images/example-1.jpg';
   const example2Url = '/images/example-2.jpg';
   const example3Url = '/images/example-3.jpg';
-  const exampleLinkClass = 'mx-2 my-3 py-1 px-2 hover:underline bg-blue-500 rounded';
+  const exampleLinkClassName = 'mx-2 my-3 py-1 px-2 hover:underline bg-blue-500 rounded';
   const isVerboseModeInputId = 'd4pi-is-verbose-mode-input';
-  const numberInputClass = 'text-black mx-4';
+  const numberInputClassName = 'text-black mx-4';
   const numberInputType = 'number';
-  const runExampleInputClass = 'bg-blue-500 hover:bg-blue-700 py-1 px-2 m-2 my-3 rounded';
+  const runExampleInputClassName = 'bg-blue-500 hover:bg-blue-700 py-1 px-2 m-2 my-3 rounded';
   const scriptStrategy = 'beforeInteractive';
-  const ulClass = 'list-disc ml-8';
+  const ulClassName = 'list-disc ml-8';
   const zeroString = '0';
 
   function handleD4ItemScreenshotFileInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -73,8 +73,8 @@ export default function Home() {
           );
           if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
             newD4Item.isSkipped_becauseDuplicateIds = true;
-            ++d4pi_isSkipped_becauseDuplicateId_count;
-            setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateId_count);
+            ++d4pi_isSkipped_becauseDuplicateIds_count;
+            setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateIds_count);
           } else {
             d4pi_d4Items.push(newD4Item);
             setD4Items([...d4pi_d4Items]);
@@ -194,8 +194,8 @@ export default function Home() {
       );
       if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
         newD4Item.isSkipped_becauseDuplicateIds = true;
-        ++d4pi_isSkipped_becauseDuplicateId_count;
-        setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateId_count);
+        ++d4pi_isSkipped_becauseDuplicateIds_count;
+        setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateIds_count);
       } else {
         d4pi_d4Items.push(newD4Item);
         setD4Items([...d4pi_d4Items]);
@@ -230,10 +230,10 @@ export default function Home() {
         +
         <span>(Skipped Requests (because of duplicate ids): {isSkipped_becauseDuplicateId_count})</span>
         +
-        <span className={inProgressClass()}>(Requests being Processed: {inProgress})</span>
+        <span className={`p-1 rounded ${inProgressClass()}`}>(Requests being Processed: {inProgress})</span>
       </li>
       <li>
-        <span className={warningClass()}>Warning (completed without detecting any game item image): {warning}</span>
+        <span className={`p-1 rounded ${warningClass()}`}>Warning (completed without detecting any game item image): {warning}</span>
       </li>
     </>;
   }
@@ -248,7 +248,7 @@ export default function Home() {
     <main>
       <div>
         Start here.
-        <ul className={ulClass}>
+        <ul className={ulClassName}>
           <li>
             <label htmlFor={d4ItemScreenshotFileInputId}>Choose Screenshot(s) to be Processed</label>
             <input id={d4ItemScreenshotFileInputId} className='mx-4' accept='image/*' multiple onChange={handleD4ItemScreenshotFileInputChange} type='file' />
@@ -264,24 +264,24 @@ export default function Home() {
       <div className={`divide-y-2 divide-gray-800 ${hideIfNotVerboseMode()}`}>
         <div>
           Examples:
-          <ul className={ulClass}>
+          <ul className={ulClassName}>
             <li>
-              <input className={runExampleInputClass} onClick={handleRunExample1InputClick} type={buttonInputType} value='Run Example 1' />
-              <input className={runExampleInputClass} onClick={handleRunExample2InputClick} type={buttonInputType} value='Run Example 2' />
-              <input className={runExampleInputClass} onClick={handleRunExample3InputClick} type={buttonInputType} value='Run Example 3' />
+              <input className={runExampleInputClassName} onClick={handleRunExample1InputClick} type={buttonInputType} value='Run Example 1' />
+              <input className={runExampleInputClassName} onClick={handleRunExample2InputClick} type={buttonInputType} value='Run Example 2' />
+              <input className={runExampleInputClassName} onClick={handleRunExample3InputClick} type={buttonInputType} value='Run Example 3' />
             </li>
 
             <li>
-              <a className={exampleLinkClass} href={example1Url}>💾 example-1.jpg (678K)</a>
-              <a className={exampleLinkClass} href={example2Url}>💾 example-2.jpg (626K)</a>
-              <a className={exampleLinkClass} href={example3Url}>💾 example-3.jpg (607K)</a>
+              <a className={exampleLinkClassName} href={example1Url}>💾 example-1.jpg (678K)</a>
+              <a className={exampleLinkClassName} href={example2Url}>💾 example-2.jpg (626K)</a>
+              <a className={exampleLinkClassName} href={example3Url}>💾 example-3.jpg (607K)</a>
             </li>
           </ul>
         </div>
 
         <div>
           The following defaults settings are derived from our test environment:
-          <ul className={ulClass}>
+          <ul className={ulClassName}>
             <li>
               Xbox Series X
             </li>
@@ -306,12 +306,12 @@ export default function Home() {
 
         <div>
           You may have to adjust these settings as necessary.
-          <ul className={ulClass}>
+          <ul className={ulClassName}>
             <li>
               <label htmlFor={d4ItemScreenshotBrightnessThresholdInputId}>{d4ItemScreenshotBrightnessThresholdComponent}</label>
-              <input id={d4ItemScreenshotBrightnessThresholdInputId} className={numberInputClass} max='255' min={zeroString} onChange={handleD4ItemScreenshotBrightnessInputChange} type={numberInputType} value={d4ItemScreenshotBrightnessThreshold} />
+              <input id={d4ItemScreenshotBrightnessThresholdInputId} className={numberInputClassName} max='255' min={zeroString} onChange={handleD4ItemScreenshotBrightnessInputChange} type={numberInputType} value={d4ItemScreenshotBrightnessThreshold} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   Screenshot pixels darker/brighter than this value are treated as black/white, respectively.
                 </li>
@@ -326,9 +326,9 @@ export default function Home() {
 
             <li>
               <label htmlFor={d4ItemImageMinWidthInputId}>{d4ItemImageMinWidthComponent}</label>
-              <input id={d4ItemImageMinWidthInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemImageMinWidthInputChange} type={numberInputType} value={d4ItemImageMinWidth} />
+              <input id={d4ItemImageMinWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemImageMinWidthInputChange} type={numberInputType} value={d4ItemImageMinWidth} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   Game item image candidates with widths narrower than this value are discarded.
                 </li>
@@ -343,9 +343,9 @@ export default function Home() {
 
             <li>
               <label htmlFor={d4ItemImageMaxWidthInputId}>{d4ItemImageMaxWidthComponent}</label>
-              <input id={d4ItemImageMaxWidthInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemImageMaxWidthInputChange} type={numberInputType} value={d4ItemImageMaxWidth} />
+              <input id={d4ItemImageMaxWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemImageMaxWidthInputChange} type={numberInputType} value={d4ItemImageMaxWidth} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   Game item image candidates with widths wider than this value are discarded.
                 </li>
@@ -360,9 +360,9 @@ export default function Home() {
 
             <li>
               <label htmlFor={d4ItemPictureWidthInputId}>{d4ItemPictureWidthComponent}</label>
-              <input id={d4ItemPictureWidthInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemPictureWidthInputChange} type={numberInputType} value={d4ItemPictureWidth} />
+              <input id={d4ItemPictureWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemPictureWidthInputChange} type={numberInputType} value={d4ItemPictureWidth} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   The top-right-corner game item pictures are removed to improve text recognition accuracy.
                 </li>
@@ -377,9 +377,9 @@ export default function Home() {
 
             <li>
               <label htmlFor={d4ItemPictureHeightInputId}>{d4ItemPictureHeightComponent}</label>
-              <input id={d4ItemPictureHeightInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemPictureHeightInputChange} type={numberInputType} value={d4ItemPictureHeight} />
+              <input id={d4ItemPictureHeightInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemPictureHeightInputChange} type={numberInputType} value={d4ItemPictureHeight} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   The top-right-corner game item pictures are removed to improve text recognition accuracy.
                 </li>
@@ -394,9 +394,9 @@ export default function Home() {
 
             <li>
               <label htmlFor={d4ItemImageBorderOverwriteWidthInputId}>{d4ItemImageBorderOverwriteWidthComponent}</label>
-              <input id={d4ItemImageBorderOverwriteWidthInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemBorderOverwriteWidthInputChange} type={numberInputType} value={d4ItemImageBorderOverwriteWidth} />
+              <input id={d4ItemImageBorderOverwriteWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemBorderOverwriteWidthInputChange} type={numberInputType} value={d4ItemImageBorderOverwriteWidth} />
 
-              <ul className={ulClass}>
+              <ul className={ulClassName}>
                 <li>
                   Game item images&apos; borders are removed to improve text recognition accuracy.
                 </li>
@@ -413,19 +413,19 @@ export default function Home() {
 
         <div>
           Statistics
-          <ul className={ulClass}>
+          <ul className={ulClassName}>
             {getItemCountersComponent()}
           </ul>
         </div>
 
         <div>
           Processor Workspaces:
-          <ul className={ulClass}>
+          <ul className={ulClassName}>
             {
               d4Items.map(d4Item =>
                 <li key={d4Item.id}>
                   Screenshot File Name: <code className='mx-4'>{d4Item.screenshotFileName}</code>
-                  <ul className={ulClass}>
+                  <ul className={ulClassName}>
                     <li>
                       Screenshot File Last-Modified: <code>{d4Item.screenshotFileLastModified}</code>
                     </li>
