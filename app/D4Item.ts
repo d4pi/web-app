@@ -1,4 +1,5 @@
 export default class D4Item {
+    itemImageProcessorArgument_borderOverwriteWidth = 0;
     itemImageProcessorArgument_imageMaxWidth = 0;
     itemImageProcessorArgument_imageMinWidth = 0;
     itemImageProcessorArgument_pictureHeight = 0;
@@ -11,6 +12,7 @@ export default class D4Item {
     screenshotFileSize = 0;
 
     constructor(
+        itemImageProcessorArgument_borderOverwriteWidth: number,
         itemImageProcessorArgument_imageMaxWidth: number,
         itemImageProcessorArgument_imageMinWidth: number,
         itemImageProcessorArgument_pictureHeight: number,
@@ -20,6 +22,7 @@ export default class D4Item {
         screenshotFileName: string,
         screenshotFileSize: number
     ) {
+        this.itemImageProcessorArgument_borderOverwriteWidth = itemImageProcessorArgument_borderOverwriteWidth;
         this.itemImageProcessorArgument_imageMaxWidth = itemImageProcessorArgument_imageMaxWidth;
         this.itemImageProcessorArgument_imageMinWidth = itemImageProcessorArgument_imageMinWidth;
         this.itemImageProcessorArgument_pictureHeight = itemImageProcessorArgument_pictureHeight;

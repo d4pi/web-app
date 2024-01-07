@@ -9,6 +9,7 @@ declare function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
     d4ItemItemImageElementId: string,
     d4ItemPictureWidth: number,
     d4ItemPictureHeight: number,
+    d4ItemImageBorderOverwriteWidth: number,
     d4ItemTextImageElementId: string);
 declare function d4pi_fromImage_toText(
     d4ItemTextImageElement: HTMLCanvasElement,

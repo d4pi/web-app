@@ -10,6 +10,7 @@ let d4pi_isSkipped_becauseDuplicateId_count = 0;
 export default function Home() {
   const processorArgument_class = 'bg-gray-700';
 
+  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(30);
   const [d4ItemImageMaxWidth, setD4ItemImageMaxWidth] = React.useState(410);
   const [d4ItemImageMinWidth, setD4ItemImageMinWidth] = React.useState(340);
   const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(130);
@@ -19,6 +20,8 @@ export default function Home() {
   const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateId_count);
   const [isVerboseMode, setIsVerboseMode] = React.useState(true);
   const buttonInputType = 'button';
+  const d4ItemImageBorderOverwriteWidthComponent = <code className={processorArgument_class}>Item Image Border Overwrite Width</code>;
+  const d4ItemImageBorderOverwriteWidthInputId = 'd4item-image-border-overwrite-width-input';
   const d4ItemImageMaxWidthComponent = <code className={processorArgument_class}>Item Image Maximum Width</code>;
   const d4ItemImageMaxWidthInputId = 'd4item-image-max-width-input';
   const d4ItemImageMinWidthComponent = <code className={processorArgument_class}>Item Image Minimum Width</code>;
@@ -58,6 +61,7 @@ export default function Home() {
         const d4ItemScreenshotFiles = Array.from(d4ItemScreenshotFileList);
         d4ItemScreenshotFiles.forEach(d4ItemScreenshotFile => {
           const newD4Item = new D4Item(
+            d4ItemImageBorderOverwriteWidth,
             d4ItemImageMaxWidth,
             d4ItemImageMinWidth,
             d4ItemPictureHeight,
@@ -130,6 +134,7 @@ export default function Home() {
             d4Item.itemImageElementId,
             d4Item.itemImageProcessorArgument_pictureWidth,
             d4Item.itemImageProcessorArgument_pictureHeight,
+            d4Item.itemImageProcessorArgument_borderOverwriteWidth,
             d4Item.textImageElementId
           );
           d4pi_fromImage_toText(d4Item.textImageElement, 'eng', d4Item.textDataId);
@@ -154,6 +159,8 @@ export default function Home() {
     }
   }
 
+  function handleD4ItemBorderOverwriteWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageBorderOverwriteWidth(Number(event.target.value)); }
+
   function handleD4ItemImageMaxWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageMaxWidth(Number(event.target.value)); }
 
   function handleD4ItemImageMinWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageMinWidth(Number(event.target.value)); }
@@ -175,6 +182,7 @@ export default function Home() {
 
     function processD4piExample() {
       const newD4Item = new D4Item(
+        d4ItemImageBorderOverwriteWidth,
         d4ItemImageMaxWidth,
         d4ItemImageMinWidth,
         d4ItemPictureHeight,
@@ -377,6 +385,23 @@ export default function Home() {
                 </li>
                 <li>
                   A good pair of game item picture width & height values makes it possible to reduce noises without degrading a game item image&apos;s informational value.
+                </li>
+                <li>
+                  Run an example and check out its &quot;Game Item Image&quot; and &quot;Game Text Image&quot; result images.
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <label htmlFor={d4ItemImageBorderOverwriteWidthInputId}>{d4ItemImageBorderOverwriteWidthComponent}</label>
+              <input id={d4ItemImageBorderOverwriteWidthInputId} className={numberInputClass} min={zeroString} onChange={handleD4ItemBorderOverwriteWidthInputChange} type={numberInputType} value={d4ItemImageBorderOverwriteWidth} />
+
+              <ul className={ulClass}>
+                <li>
+                  Game item images&apos; borders are removed to improve text recognition accuracy.
+                </li>
+                <li>
+                  A good border-overwrite-width values makes it possible to reduce noises without degrading a game item image&apos;s informational value.
                 </li>
                 <li>
                   Run an example and check out its &quot;Game Item Image&quot; and &quot;Game Text Image&quot; result images.

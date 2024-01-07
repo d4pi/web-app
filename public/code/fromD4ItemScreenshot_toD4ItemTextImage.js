@@ -24,6 +24,7 @@ function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
     d4ItemItemImageElementId,
     d4ItemPictureWidth,
     d4ItemPictureHeight,
+    d4ItemImageBorderOverwriteWidth,
     d4ItemTextImageElementId
 ) {
     const originalInputImage = cv.imread(d4ItemScreenshotElement);
@@ -115,6 +116,14 @@ function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
         new cv.Point(gameItemImage.size().width, d4ItemPictureHeight),
         d4pi_d4ItemPicture_overwriteColor,
         -1
+    );
+    cv.rectangle(
+        gameItemImage,
+        new cv.Point(0, 0),
+        new cv.Point(gameItemImage.size().width, gameItemImage.size().height),
+        d4pi_d4ItemPicture_overwriteColor,
+        d4ItemImageBorderOverwriteWidth,
+        cv.LINE_AA
     );
     cv.imshow(d4ItemTextImageElementId, gameItemImage);
 
