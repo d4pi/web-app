@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import D4Item from './D4Item';
 import React from 'react';
 import Script from 'next/script';
@@ -8,28 +9,41 @@ const d4pi_d4Items = [] as D4Item[];
 let d4pi_isSkipped_becauseDuplicateIds_count = 0;
 
 export default function Home() {
+  const d4ItemImageBorderOverwriteWidth_defaultValue = 32;
+  const d4ItemImageMaxWidth_defaultValue = 410;
+  const d4ItemImageMinWidth_defaultValue = 340;
+  const d4ItemPictureHeight_defaultValue = 128;
+  const d4ItemPictureWidth_defaultValue = 128;
+  const d4ItemScreenshotBrightnessThreshold_defaultValue = 25;
+  const isVerboseMode_defaultValue = true;
   const processorArgumentClassName = 'bg-gray-700 p-1 rounded';
 
-  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(32);
-  const [d4ItemImageMaxWidth, setD4ItemImageMaxWidth] = React.useState(410);
-  const [d4ItemImageMinWidth, setD4ItemImageMinWidth] = React.useState(340);
-  const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(128);
-  const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(128);
+  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(d4ItemImageBorderOverwriteWidth_defaultValue);
+  const [d4ItemImageMaxWidth, setD4ItemImageMaxWidth] = React.useState(d4ItemImageMaxWidth_defaultValue);
+  const [d4ItemImageMinWidth, setD4ItemImageMinWidth] = React.useState(d4ItemImageMinWidth_defaultValue);
+  const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(d4ItemPictureHeight_defaultValue);
+  const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(d4ItemPictureWidth_defaultValue);
   const [d4Items, setD4Items] = React.useState([...d4pi_d4Items]);
-  const [d4ItemScreenshotBrightnessThreshold, setD4ItemScreenshotBrightnessThreshold] = React.useState(25);
+  const [d4ItemScreenshotBrightnessThreshold, setD4ItemScreenshotBrightnessThreshold] = React.useState(d4ItemScreenshotBrightnessThreshold_defaultValue);
   const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateIds_count);
-  const [isVerboseMode, setIsVerboseMode] = React.useState(true);
+  const [isVerboseMode, setIsVerboseMode] = React.useState(isVerboseMode_defaultValue);
   const buttonInputType = 'button';
+  const d4ItemImageBorderOverwriteWidth_settingName = 'IBOW';
   const d4ItemImageBorderOverwriteWidthComponent = <code className={processorArgumentClassName}>Item Image Border Overwrite Width</code>;
   const d4ItemImageBorderOverwriteWidthInputId = 'd4item-image-border-overwrite-width-input';
+  const d4ItemImageMaxWidth_settingName = 'IXW';
   const d4ItemImageMaxWidthComponent = <code className={processorArgumentClassName}>Item Image Maximum Width</code>;
   const d4ItemImageMaxWidthInputId = 'd4item-image-max-width-input';
+  const d4ItemImageMinWidth_settingName = 'INW';
   const d4ItemImageMinWidthComponent = <code className={processorArgumentClassName}>Item Image Minimum Width</code>;
   const d4ItemImageMinWidthInputId = 'd4item-image-min-width-input';
+  const d4ItemPictureHeight_settingName = 'PH';
   const d4ItemPictureHeightComponent = <code className={processorArgumentClassName}>Item Picture Height</code>;
   const d4ItemPictureHeightInputId = 'd4item-picture-Height-input';
+  const d4ItemPictureWidth_settingName = 'PW';
   const d4ItemPictureWidthComponent = <code className={processorArgumentClassName}>Item Picture Width</code>;
   const d4ItemPictureWidthInputId = 'd4item-picture-width-input';
+  const d4ItemScreenshotBrightnessThreshold_settingName = 'SBT';
   const d4ItemScreenshotBrightnessThresholdComponent = <code className={processorArgumentClassName}>Screenshot Brightness Threshold</code>;
   const d4ItemScreenshotBrightnessThresholdInputId = 'd4item-screenshot-brightness-threshold-input';
   const d4ItemScreenshotFileInputId = 'd4Item-screenshot-file-input';
@@ -37,12 +51,14 @@ export default function Home() {
   const example1Url = '/images/example-1.jpg';
   const example2Url = '/images/example-2.jpg';
   const example3Url = '/images/example-3.jpg';
-  const exampleLinkClassName = 'mx-2 my-3 py-1 px-2 hover:underline bg-blue-500 rounded';
+  const exampleLinkClassName = 'mx-2 my-3 px-2 py-1 hover:underline bg-blue-500 hover:bg-blue-700 rounded';
+  const isVerboseMode_settingName = 'VM';
   const isVerboseModeInputId = 'd4pi-is-verbose-mode-input';
   const numberInputClassName = 'text-black mx-4';
   const numberInputType = 'number';
-  const runExampleInputClassName = 'bg-blue-500 hover:bg-blue-700 py-1 px-2 m-2 my-3 rounded';
+  const runExampleInputClassName = 'bg-blue-500 hover:bg-blue-700 mx-2 my-3 px-2 py-1 rounded';
   const scriptStrategy = 'beforeInteractive';
+  const searchParams = useSearchParams();
   const ulClassName = 'list-disc ml-8';
   const zeroString = '0';
 
@@ -238,6 +254,91 @@ export default function Home() {
     </>;
   }
 
+  function exportSettingsAsUrl(): string {
+    const settingStrings = [
+      (d4ItemImageBorderOverwriteWidth === d4ItemImageBorderOverwriteWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageBorderOverwriteWidth_settingName, d4ItemImageBorderOverwriteWidth),
+      (d4ItemImageMaxWidth === d4ItemImageMaxWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageMaxWidth_settingName, d4ItemImageMaxWidth),
+      (d4ItemImageMinWidth === d4ItemImageMinWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageMinWidth_settingName, d4ItemImageMinWidth),
+      (d4ItemPictureHeight === d4ItemPictureHeight_defaultValue) ? '' : formatNameValuePair(d4ItemPictureHeight_settingName, d4ItemPictureHeight),
+      (d4ItemPictureWidth === d4ItemPictureWidth_defaultValue) ? '' : formatNameValuePair(d4ItemPictureWidth_settingName, d4ItemPictureWidth),
+      (d4ItemScreenshotBrightnessThreshold === d4ItemScreenshotBrightnessThreshold_defaultValue) ? '' : formatNameValuePair(d4ItemScreenshotBrightnessThreshold_settingName, d4ItemScreenshotBrightnessThreshold),
+      (isVerboseMode === isVerboseMode_defaultValue) ? '' : formatNameValuePair(isVerboseMode_settingName, isVerboseMode)
+    ];
+    const url = settingStrings.filter(str => str !== '').join('&');
+    if (url === '') {
+      return '/';
+    } else {
+      return '/?' + url;
+    }
+
+    function formatNameValuePair<T>(name: string, value: T): string { return `${name}=${value}`; }
+  }
+
+  function handleImportSettingsFromUrlClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void {
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemImageBorderOverwriteWidth_settingName);
+      if (value !== null) { setD4ItemImageBorderOverwriteWidth(value); }
+    }
+
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemImageMaxWidth_settingName);
+      if (value !== null) { setD4ItemImageMaxWidth(value); }
+    }
+
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemImageMinWidth_settingName);
+      if (value !== null) { setD4ItemImageMinWidth(value); }
+    }
+
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemPictureHeight_settingName);
+      if (value !== null) { setD4ItemPictureHeight(value); }
+    }
+
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemPictureWidth_settingName);
+      if (value !== null) { setD4ItemPictureWidth(value); }
+    }
+
+    {
+      const value = getNumberSettingValueFromUrl(d4ItemScreenshotBrightnessThreshold_settingName);
+      if (value !== null) { setD4ItemScreenshotBrightnessThreshold(value); }
+    }
+
+    {
+      const value = getBooleanSettingValueFromUrl(isVerboseMode_settingName);
+      if (value !== null) { setIsVerboseMode(value); }
+    }
+
+    function getNumberSettingValueFromUrl(settingName: string): number | null {
+      if (searchParams.has(settingName)) {
+        const value = Number(searchParams.get(settingName));
+        if (Number.isSafeInteger(value)) {
+          return value;
+        }
+      }
+      return null;
+    }
+
+    function getBooleanSettingValueFromUrl(settingName: string): boolean | null {
+      if (searchParams.has(settingName)) {
+        const value = Boolean(searchParams.get(settingName));
+        return value;
+      }
+      return null;
+    }
+  }
+
+  function handleLoadDefaultSettingsClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void {
+    if (d4ItemImageBorderOverwriteWidth !== d4ItemImageBorderOverwriteWidth_defaultValue) { setD4ItemImageBorderOverwriteWidth(d4ItemImageBorderOverwriteWidth_defaultValue); }
+    if (d4ItemImageMaxWidth !== d4ItemImageMaxWidth_defaultValue) { setD4ItemImageMaxWidth(d4ItemImageMaxWidth_defaultValue); }
+    if (d4ItemImageMinWidth !== d4ItemImageMinWidth_defaultValue) { setD4ItemImageMinWidth(d4ItemImageMinWidth_defaultValue); }
+    if (d4ItemPictureHeight !== d4ItemPictureHeight_defaultValue) { setD4ItemPictureHeight(d4ItemPictureHeight_defaultValue); }
+    if (d4ItemPictureWidth !== d4ItemPictureWidth_defaultValue) { setD4ItemPictureWidth(d4ItemPictureWidth_defaultValue); }
+    if (d4ItemScreenshotBrightnessThreshold !== d4ItemScreenshotBrightnessThreshold_defaultValue) { setD4ItemScreenshotBrightnessThreshold(d4ItemScreenshotBrightnessThreshold_defaultValue); }
+    if (isVerboseMode !== isVerboseMode_defaultValue) { setIsVerboseMode(isVerboseMode_defaultValue); }
+  }
+
   return <>
     <Script src='/code/is_opencv_runtimeInitialized.js' strategy={scriptStrategy} />
     <Script src='https://docs.opencv.org/4.9.0/opencv.js' strategy={scriptStrategy} />
@@ -258,10 +359,16 @@ export default function Home() {
             <label htmlFor={isVerboseModeInputId}>Verbose Mode</label>
             <input id={isVerboseModeInputId} className='mx-4' checked={isVerboseMode} onChange={handleIsVerboseModeInputChange} type='checkbox' />
           </li>
-        </ul>
-      </div>
 
-      <div className={`divide-y-2 divide-gray-800 ${hideIfNotVerboseMode()}`}>
+          <li>
+            (⚗️ Experimental)
+            <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleImportSettingsFromUrlClick} type={buttonInputType} value='Import Settings from URL' />
+            <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleLoadDefaultSettingsClick} type={buttonInputType} value='Load Default Settings' />
+            <a className='mx-2 my-3 px-2 py-1 hover:underline bg-green-700 hover:bg-green-600 rounded' href={exportSettingsAsUrl()}>Current Settings as URL</a>
+            (Experimental 🧪)
+          </li>
+        </ul>
+
         <div>
           Examples:
           <ul className={ulClassName}>
@@ -278,7 +385,9 @@ export default function Home() {
             </li>
           </ul>
         </div>
+      </div>
 
+      <div className={`divide-y-2 divide-gray-800 ${hideIfNotVerboseMode()}`}>
         <div>
           The following defaults settings are derived from our test environment:
           <ul className={ulClassName}>
