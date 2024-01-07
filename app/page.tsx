@@ -262,7 +262,7 @@ export default function Home() {
       (d4ItemPictureHeight === d4ItemPictureHeight_defaultValue) ? '' : formatNameValuePair(d4ItemPictureHeight_settingName, d4ItemPictureHeight),
       (d4ItemPictureWidth === d4ItemPictureWidth_defaultValue) ? '' : formatNameValuePair(d4ItemPictureWidth_settingName, d4ItemPictureWidth),
       (d4ItemScreenshotBrightnessThreshold === d4ItemScreenshotBrightnessThreshold_defaultValue) ? '' : formatNameValuePair(d4ItemScreenshotBrightnessThreshold_settingName, d4ItemScreenshotBrightnessThreshold),
-      (isVerboseMode === isVerboseMode_defaultValue) ? '' : formatNameValuePair(isVerboseMode_settingName, isVerboseMode)
+      (isVerboseMode === isVerboseMode_defaultValue) ? '' : formatNameValuePair(isVerboseMode_settingName, isVerboseMode),
     ];
     const url = settingStrings.filter(str => str !== '').join('&');
     if (url === '') {
@@ -322,8 +322,7 @@ export default function Home() {
 
     function getBooleanSettingValueFromUrl(settingName: string): boolean | null {
       if (searchParams.has(settingName)) {
-        const value = Boolean(searchParams.get(settingName));
-        return value;
+        return searchParams.get(settingName)?.toLowerCase() === 'true';
       }
       return null;
     }
