@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import D4Item from './D4Item';
+import D4Item from '@/code/D4Item';
 import React from 'react';
 import Script from 'next/script';
 
