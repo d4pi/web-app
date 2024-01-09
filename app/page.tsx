@@ -166,6 +166,7 @@ export default function Home() {
             function isD4ItemTextInitialized(): boolean { return globalThis.d4pi_textData[d4Item.textDataId] !== undefined; }
 
             function ProcessD4ItemText() {
+              d4Item.processItemText();
               d4Item.isProcessingCompleted = true;
               setD4Items([...d4pi_d4Items]);
             }
@@ -358,14 +359,6 @@ export default function Home() {
             <label htmlFor={isVerboseModeInputId}>Verbose Mode</label>
             <input id={isVerboseModeInputId} className='mx-4' checked={isVerboseMode} onChange={handleIsVerboseModeInputChange} type='checkbox' />
           </li>
-
-          <li>
-            (⚗️ Experimental)
-            <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleImportSettingsFromUrlClick} type={buttonInputType} value='Import Settings from URL' />
-            <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleLoadDefaultSettingsClick} type={buttonInputType} value='Load Default Settings' />
-            <a className='mx-2 my-3 px-2 py-1 hover:underline bg-green-700 hover:bg-green-600 rounded' href={exportSettingsAsUrl()}>Current Settings as URL</a>
-            (Experimental 🧪)
-          </li>
         </ul>
 
         <div>
@@ -383,6 +376,14 @@ export default function Home() {
               <a className={exampleLinkClassName} href={example3Url}>💾 example-3.jpg (607K)</a>
             </li>
           </ul>
+        </div>
+
+        <div>
+          (🧪 Experimental)
+          <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleImportSettingsFromUrlClick} type={buttonInputType} value='Import Settings from URL' />
+          <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleLoadDefaultSettingsClick} type={buttonInputType} value='Load Default Settings' />
+          <a className='mx-2 my-3 px-2 py-1 hover:underline bg-green-700 hover:bg-green-600 rounded' href={exportSettingsAsUrl()}>Current Settings as URL</a>
+          (Experimental ⚗️)
         </div>
       </div>
 

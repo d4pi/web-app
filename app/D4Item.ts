@@ -1,3 +1,5 @@
+import D4Filterable from "./D4Filterable";
+
 export default class D4Item {
     itemImageProcessorArgument_borderOverwriteWidth = 0;
     itemImageProcessorArgument_imageMaxWidth = 0;
@@ -49,4 +51,10 @@ export default class D4Item {
     get textDataId(): string { return `text-data ${this.id}`; }
     get textImageElement(): HTMLCanvasElement { return document.getElementById(this.textImageElementId) as HTMLCanvasElement; }
     get textImageElementId(): string { return `text-Image ${this.id}`; }
+    get textWords(): string[] { return globalThis.d4pi_textData[this.textDataId]?.words; }
+
+    processItemText() {
+        const d4Filterable = new D4Filterable(this.textWords);
+        console.log(d4Filterable);
+    }
 }

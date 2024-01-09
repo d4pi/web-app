@@ -92,10 +92,15 @@ function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
     }
     let gameItemImage = null;
     if (gameItemImageRectangle === null) {
-        globalThis.d4pi_itemImageBoundingRectangleData[d4ItemItemImageBoundingRectangleDataId] = newItemImageBoundingRectangleData(0);
+        globalThis.d4pi_itemImageBoundingRectangleData[d4ItemItemImageBoundingRectangleDataId] = newItemImageBoundingRectangleData(-1, -1, -1, -1);
         gameItemImage = originalInputImage.clone();
     } else {
-        globalThis.d4pi_itemImageBoundingRectangleData[d4ItemItemImageBoundingRectangleDataId] = newItemImageBoundingRectangleData(gameItemImageRectangle.width);
+        globalThis.d4pi_itemImageBoundingRectangleData[d4ItemItemImageBoundingRectangleDataId] = newItemImageBoundingRectangleData(
+            gameItemImageRectangle.x,
+            gameItemImageRectangle.y,
+            gameItemImageRectangle.width,
+            gameItemImageRectangle.height
+        );
         cv.rectangle(
             gameItemImageDetectionReport,
             new cv.Point(gameItemImageRectangle.x, gameItemImageRectangle.y),
@@ -136,5 +141,12 @@ function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
     convexHulls.delete();
     gameItemImage.delete();
 
-    function newItemImageBoundingRectangleData(width) { return { width: width }; }
+    function newItemImageBoundingRectangleData(x, y, width, height) {
+        return {
+            x: x,
+            y: y,
+            width: width,
+            height: height
+        };
+    }
 }

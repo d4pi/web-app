@@ -8,10 +8,16 @@ function d4pi_fromImage_toText(d4ItemTextImageElement, d4ItemTextLanguageCode, d
         d4ItemTextLanguageCode,
         {} // Tesseract options
     ).catch(() => {
-        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(0, '');
+        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(-1, '', []);
     }).then(result => {
-        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(result.data.confidence, result.data.text);
+        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(result.data.confidence, result.data.text, result.data.words.map(word => word.text));
     });
 
-    function newGameItemData(confidence, text) { return { confidence: confidence, text: text }; }
+    function newGameItemData(confidence, text, words) {
+        return {
+            confidence: confidence,
+            text: text,
+            words: words
+        };
+    }
 }
