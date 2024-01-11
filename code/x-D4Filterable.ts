@@ -91,10 +91,8 @@ export default class D4Filterable {
 
         function find(template: string[]): string | null {
             for (let u = startIndex; u <= rawWords.length - template.length; ++u) {
-                console.log(`rawWords[u]: ${rawWords[u]}`);
                 let i = 0;
                 while (i < template.length && template[i].localeCompare(rawWords[u + i], undefined, { sensitivity: 'base' }) === 0) {
-                    console.log(`rawWords[u+i] template[i]: ${rawWords[u + i]} ${template[i]}`);
                     ++i;
                 }
                 if (i == template.length) {

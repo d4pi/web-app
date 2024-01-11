@@ -1,174 +1,264 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import D4Item from '@/code/D4Item';
 import React from 'react';
+import Screenshot from '@/code/Screenshot';
 import Script from 'next/script';
 
-const d4pi_d4Items = [] as D4Item[];
-let d4pi_isSkipped_becauseDuplicateIds_count = 0;
+const d4pi_screenshots = [] as Screenshot[];
+let d4pi_discardedScreenshotProcessorRequestsCount = 0;
 
 export default function Home() {
-  const d4ItemImageBorderOverwriteWidth_defaultValue = 32;
-  const d4ItemImageMaxWidth_defaultValue = 410;
-  const d4ItemImageMinWidth_defaultValue = 340;
-  const d4ItemPictureHeight_defaultValue = 128;
-  const d4ItemPictureWidth_defaultValue = 128;
-  const d4ItemScreenshotBrightnessThreshold_defaultValue = 25;
-  const isVerboseMode_defaultValue = true;
-  const processorArgumentClassName = 'bg-gray-700 p-1 rounded';
-
-  const [d4ItemImageBorderOverwriteWidth, setD4ItemImageBorderOverwriteWidth] = React.useState(d4ItemImageBorderOverwriteWidth_defaultValue);
-  const [d4ItemImageMaxWidth, setD4ItemImageMaxWidth] = React.useState(d4ItemImageMaxWidth_defaultValue);
-  const [d4ItemImageMinWidth, setD4ItemImageMinWidth] = React.useState(d4ItemImageMinWidth_defaultValue);
-  const [d4ItemPictureHeight, setD4ItemPictureHeight] = React.useState(d4ItemPictureHeight_defaultValue);
-  const [d4ItemPictureWidth, setD4ItemPictureWidth] = React.useState(d4ItemPictureWidth_defaultValue);
-  const [d4Items, setD4Items] = React.useState([...d4pi_d4Items]);
-  const [d4ItemScreenshotBrightnessThreshold, setD4ItemScreenshotBrightnessThreshold] = React.useState(d4ItemScreenshotBrightnessThreshold_defaultValue);
-  const [isSkipped_becauseDuplicateId_count, setIsSkipped_becauseDuplicateId_count] = React.useState(d4pi_isSkipped_becauseDuplicateIds_count);
-  const [isVerboseMode, setIsVerboseMode] = React.useState(isVerboseMode_defaultValue);
-  const buttonInputType = 'button';
-  const d4ItemImageBorderOverwriteWidth_settingName = 'IBOW';
-  const d4ItemImageBorderOverwriteWidthComponent = <code className={processorArgumentClassName}>Item Image Border Overwrite Width</code>;
-  const d4ItemImageBorderOverwriteWidthInputId = 'd4item-image-border-overwrite-width-input';
-  const d4ItemImageMaxWidth_settingName = 'IXW';
-  const d4ItemImageMaxWidthComponent = <code className={processorArgumentClassName}>Item Image Maximum Width</code>;
-  const d4ItemImageMaxWidthInputId = 'd4item-image-max-width-input';
-  const d4ItemImageMinWidth_settingName = 'INW';
-  const d4ItemImageMinWidthComponent = <code className={processorArgumentClassName}>Item Image Minimum Width</code>;
-  const d4ItemImageMinWidthInputId = 'd4item-image-min-width-input';
-  const d4ItemPictureHeight_settingName = 'PH';
-  const d4ItemPictureHeightComponent = <code className={processorArgumentClassName}>Item Picture Height</code>;
-  const d4ItemPictureHeightInputId = 'd4item-picture-Height-input';
-  const d4ItemPictureWidth_settingName = 'PW';
-  const d4ItemPictureWidthComponent = <code className={processorArgumentClassName}>Item Picture Width</code>;
-  const d4ItemPictureWidthInputId = 'd4item-picture-width-input';
-  const d4ItemScreenshotBrightnessThreshold_settingName = 'SBT';
-  const d4ItemScreenshotBrightnessThresholdComponent = <code className={processorArgumentClassName}>Screenshot Brightness Threshold</code>;
-  const d4ItemScreenshotBrightnessThresholdInputId = 'd4item-screenshot-brightness-threshold-input';
-  const d4ItemScreenshotFileInputId = 'd4Item-screenshot-file-input';
-  const defaultTimeout = 250; // Milliseconds
-  const example1Url = '/images/example-1.jpg';
-  const example2Url = '/images/example-2.jpg';
-  const example3Url = '/images/example-3.jpg';
-  const exampleLinkClassName = 'mx-2 my-3 px-2 py-1 hover:underline bg-blue-500 hover:bg-blue-700 rounded';
-  const isVerboseMode_settingName = 'VM';
-  const isVerboseModeInputId = 'd4pi-is-verbose-mode-input';
-  const numberInputClassName = 'text-black mx-4';
+  const _0String = '0';
+  const AppControl_checkboxInputId = 'AppControl CheckboxInput';
+  const AppControl_ShowDemoControl_checkboxInputId = 'AppControl ShowDemoControl CheckboxInput';
+  const AppControl_ShowDevControl_checkboxInputId = 'AppControl ShowDevControl CheckboxInput';
+  const AppControl_ShowDevTestInformation_checkboxInputId = 'AppControl ShowDevTestInformation CheckboxInput';
+  const AppControl_ShowScreenshotProcessorControl_checkboxInputId = 'AppControl ShowScreenshotProcessorControl CheckboxInput';
+  const AppControl_ShowSettingsControl_checkboxInputId = 'AppControl ShowSettingsControl CheckboxInput';
+  const AppControl_ShowStatisticsReport_checkboxInputId = 'AppControl ShowStatisticsReport CheckboxInput';
+  const AppControl_ShowTutorial_checkboxInputId = 'AppControl ShowTutorial CheckboxInput';
+  const checkboxInputType = 'checkbox';
+  const defaultTimeout = 257; // Milliseconds
+  const DevControl_checkboxInputId = 'DevControl CheckboxInput';
+  const DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputId = 'DevControl ShowInputImage_afterBrightnessThreshold CheckboxInput';
+  const DevControl_ShowInputImage_afterItemImageDetection_checkboxInputId = 'DevControl ShowInputImage_afterItemImageDetection CheckboxInput';
+  const DevControl_ShowInputImage_checkboxInputId = 'DevControl ShowInputImage CheckboxInput';
+  const DevControl_ShowItemImage_checkboxInputId = 'DevControl ShowItemImage CheckboxInput';
+  const DevControl_ShowText_checkboxInputId = 'DevControl ShowText CheckboxInput';
+  const DevControl_ShowTextImage_checkboxInputId = 'DevControl ShowTextImage CheckboxInput';
+  const group_divClass = 'border-2 border-dotted border-neutral-600 m-5 max-w-fit p-5 rounded-2xl';
+  const is_AppControl_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowDemoControl_checkboxInputChecked_defaultValue = true;
+  const is_AppControl_ShowDevControl_checkboxInputChecked_defaultValue = true;
+  const is_AppControl_ShowDevTestInformation_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowSettingsControl_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowStatisticsReport_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowTutorial_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_ShowInputImage_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_ShowItemImage_checkboxInputChecked_defaultValue = true;
+  const is_DevControl_ShowText_checkboxInputChecked_defaultValue = false;
+  const is_DevControl_ShowTextImage_checkboxInputChecked_defaultValue = false;
+  const numberInputClass = 'mr-5 text-black text-right w-20';
   const numberInputType = 'number';
-  const runExampleInputClassName = 'bg-blue-500 hover:bg-blue-700 mx-2 my-3 px-2 py-1 rounded';
+  const screenshot_fileInputId = 'Screenshot FileInput';
+  const screenshot_processor_InputImageBrightnessThreshold_defaultValue = 25;
+  const screenshot_processor_InputImageBrightnessThreshold_labelText = 'Input Image Brightness Threshold';
+  const screenshot_processor_InputImageBrightnessThreshold_numberInputId = 'ScreenshotProcessor InputImageBrightnessThreshold NumberInput';
+  const screenshot_processor_ItemImageMaxWidth_defaultValue = 410;
+  const screenshot_processor_ItemImageMaxWidth_labelText = 'Item Image Max Width';
+  const screenshot_processor_ItemImageMaxWidth_numberInputId = 'ScreenshotProcessor ItemImageMaxWidth NumberInput';
+  const screenshot_processor_ItemImageMinWidth_defaultValue = 340;
+  const screenshot_processor_ItemImageMinWidth_labelText = 'Item Image Min Width';
+  const screenshot_processor_ItemImageMinWidth_numberInputId = 'ScreenshotProcessor ItemImageMinWidth NumberInput';
+  const screenshot_processor_ItemPictureHeight_defaultValue = 128;
+  const screenshot_processor_ItemPictureHeight_labelText = 'Item Picture Height';
+  const screenshot_processor_ItemPictureHeight_numberInputId = 'ScreenshotProcessor ItemPictureHeight NumberInput';
+  const screenshot_processor_ItemPictureWidth_defaultValue = 128;
+  const screenshot_processor_ItemPictureWidth_labelText = 'Item Picture Width';
+  const screenshot_processor_ItemPictureWidth_numberInputId = 'ScreenshotProcessor ItemPictureWidth NumberInput';
+  const screenshot_processor_TextImageBorderTrimSize_defaultValue = 32;
+  const screenshot_processor_TextImageBorderTrimSize_labelText = 'Text Image Border Trim Size';
+  const screenshot_processor_TextImageBorderTrimSize_numberInputId = 'ScreenshotProcessor TextImageBorderTrimSize NumberInput';
+  const screenshot_processor_TextImageCornerTrimSize_defaultValue = 25;
+  const screenshot_processor_TextImageCornerTrimSize_labelText = 'Text Image Corner Trim Size';
+  const screenshot_processor_TextImageCornerTrimSize_numberInputId = 'ScreenshotProcessor TextImageCornerTrimSize NumberInput';
   const scriptStrategy = 'beforeInteractive';
-  const searchParams = useSearchParams();
-  const ulClassName = 'list-disc ml-8';
-  const zeroString = '0';
+  const ulClass = 'list-disc list-inside';
 
-  function handleD4ItemScreenshotFileInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    const d4ItemScreenshotFileList = event.target.files!;
-    waitForD4piAppInitialization_then_processD4ItemScreenshotFileList();
+  const [discardedScreenshotProcessorRequestsCount, set_discardedScreenshotProcessorRequestsCount] = React.useState(d4pi_discardedScreenshotProcessorRequestsCount);
+  const [is_AppControl_checkboxInputChecked, set_is_AppControl_checkboxInputChecked] = React.useState(is_AppControl_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowDemoControl_checkboxInputChecked, set_is_AppControl_ShowDemoControl_checkboxInputChecked] = React.useState(is_AppControl_ShowDemoControl_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowDevControl_checkboxInputChecked, set_is_AppControl_ShowDevControl_checkboxInputChecked] = React.useState(is_AppControl_ShowDevControl_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowDevTestInformation_checkboxInputChecked, set_is_AppControl_ShowDevTestInformation_checkboxInputChecked] = React.useState(is_AppControl_ShowDevTestInformation_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked, set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked] = React.useState(is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowSettingsControl_checkboxInputChecked, set_is_AppControl_ShowSettingsControl_checkboxInputChecked] = React.useState(is_AppControl_ShowSettingsControl_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowStatisticsReport_checkboxInputChecked, set_is_AppControl_ShowStatisticsReport_checkboxInputChecked] = React.useState(is_AppControl_ShowStatisticsReport_checkboxInputChecked_defaultValue);
+  const [is_AppControl_ShowTutorial_checkboxInputChecked, set_is_AppControl_ShowTutorial_checkboxInputChecked] = React.useState(is_AppControl_ShowTutorial_checkboxInputChecked_defaultValue);
+  const [is_DevControl_checkboxInputChecked, set_is_DevControl_checkboxInputChecked] = React.useState(is_DevControl_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked, set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked] = React.useState(is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked, set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked] = React.useState(is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowInputImage_checkboxInputChecked, set_is_DevControl_ShowInputImage_checkboxInputChecked] = React.useState(is_DevControl_ShowInputImage_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowItemImage_checkboxInputChecked, set_is_DevControl_ShowItemImage_checkboxInputChecked] = React.useState(is_DevControl_ShowItemImage_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowText_checkboxInputChecked, set_is_DevControl_ShowText_checkboxInputChecked] = React.useState(is_DevControl_ShowText_checkboxInputChecked_defaultValue);
+  const [is_DevControl_ShowTextImage_checkboxInputChecked, set_is_DevControl_ShowTextImage_checkboxInputChecked] = React.useState(is_DevControl_ShowTextImage_checkboxInputChecked_defaultValue);
+  const [screenshot_processor_InputImageBrightnessThreshold, set_screenshot_processor_InputImageBrightnessThreshold] = React.useState(screenshot_processor_InputImageBrightnessThreshold_defaultValue);
+  const [screenshot_processor_ItemImageMaxWidth, set_screenshot_processor_ItemImageMaxWidth] = React.useState(screenshot_processor_ItemImageMaxWidth_defaultValue);
+  const [screenshot_processor_ItemImageMinWidth, set_screenshot_processor_ItemImageMinWidth] = React.useState(screenshot_processor_ItemImageMinWidth_defaultValue);
+  const [screenshot_processor_ItemPictureHeight, set_screenshot_processor_ItemPictureHeight] = React.useState(screenshot_processor_ItemPictureHeight_defaultValue);
+  const [screenshot_processor_ItemPictureWidth, set_screenshot_processor_ItemPictureWidth] = React.useState(screenshot_processor_ItemPictureWidth_defaultValue);
+  const [screenshot_processor_TextImageBorderTrimSize, set_screenshot_processor_TextImageBorderTrimSize] = React.useState(screenshot_processor_TextImageBorderTrimSize_defaultValue);
+  const [screenshot_processor_TextImageCornerTrimSize, set_screenshot_processor_TextImageCornerTrimSize] = React.useState(screenshot_processor_TextImageCornerTrimSize_defaultValue);
+  const [screenshots, set_screenshots] = React.useState(d4pi_screenshots);
 
-    function waitForD4piAppInitialization_then_processD4ItemScreenshotFileList() {
-      if (isD4piAppInitialized()) {
-        processD4ItemScreenshotFileList();
+  function handle_AppControl_ShowDemoControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowDevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowDevTestInformation_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowSettingsControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowSettingsControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowStatisticsReport_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowStatisticsReport_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowTutorial_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowTutorial_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowItemImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowItemImage_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowText_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowText_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowTextImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowTextImage_checkboxInputChecked(event.target.checked); }
+  function handle_screenshot_processor_InputImageBrightnessThreshold_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_InputImageBrightnessThreshold(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemImageMaxWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemImageMaxWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemImageMinWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemImageMinWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemPictureHeight_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemPictureHeight(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemPictureWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemPictureWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_TextImageBorderTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_TextImageBorderTrimSize(Number(event.target.value)); }
+  function handle_screenshot_processor_TextImageCornerTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_TextImageCornerTrimSize(Number(event.target.value)); }
+
+  function handle_AppControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    set_is_AppControl_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowSettingsControl_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowStatisticsReport_checkboxInputChecked(event.target.checked);
+    set_is_AppControl_ShowTutorial_checkboxInputChecked(event.target.checked);
+  }
+
+  function handle_DevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    set_is_DevControl_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowInputImage_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowItemImage_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowText_checkboxInputChecked(event.target.checked);
+    set_is_DevControl_ShowTextImage_checkboxInputChecked(event.target.checked);
+  }
+
+  function handle_RunDemo_buttonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 1', 693354, '/images/example-1.jpg');
+    waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 2', 640421, '/images/example-2.jpg');
+    waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 3', 621025, '/images/example-3.jpg');
+  }
+
+  function handle_screenshot_fileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const screenshotFileList = event.target.files!;
+    waitForAppInitialization_then_processScreenshotFileList();
+
+    function waitForAppInitialization_then_processScreenshotFileList() {
+      if (isAppInitialized()) {
+        processScreenshotFileList();
       } else {
-        setTimeout(() => { waitForD4piAppInitialization_then_processD4ItemScreenshotFileList(); }, defaultTimeout);
+        setTimeout(() => { waitForAppInitialization_then_processScreenshotFileList(); }, defaultTimeout);
       }
 
-      function processD4ItemScreenshotFileList() {
-        const d4ItemScreenshotFiles = Array.from(d4ItemScreenshotFileList);
-        d4ItemScreenshotFiles.forEach(d4ItemScreenshotFile => {
-          const newD4Item = new D4Item(
-            d4ItemImageBorderOverwriteWidth,
-            d4ItemImageMaxWidth,
-            d4ItemImageMinWidth,
-            d4ItemPictureHeight,
-            d4ItemPictureWidth,
-            d4ItemScreenshotBrightnessThreshold,
-            d4ItemScreenshotFile.lastModified,
-            d4ItemScreenshotFile.name,
-            d4ItemScreenshotFile.size
+      function processScreenshotFileList() {
+        const screenshotFiles = Array.from(screenshotFileList);
+        screenshotFiles.forEach(screenshotFile => {
+          const newScreenshot = new Screenshot(
+            screenshotFile.lastModified,
+            screenshotFile.name,
+            screenshotFile.size,
+            screenshot_processor_InputImageBrightnessThreshold,
+            screenshot_processor_ItemImageMaxWidth,
+            screenshot_processor_ItemImageMinWidth,
+            screenshot_processor_ItemPictureHeight,
+            screenshot_processor_ItemPictureWidth,
+            screenshot_processor_TextImageBorderTrimSize,
+            screenshot_processor_TextImageCornerTrimSize
           );
-          if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
-            newD4Item.isSkipped_becauseDuplicateIds = true;
-            ++d4pi_isSkipped_becauseDuplicateIds_count;
-            setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateIds_count);
+          if (d4pi_screenshots.some(screenshot => screenshot.id === newScreenshot.id)) {
+            ++d4pi_discardedScreenshotProcessorRequestsCount;
+            set_discardedScreenshotProcessorRequestsCount(d4pi_discardedScreenshotProcessorRequestsCount);
           } else {
-            d4pi_d4Items.push(newD4Item);
-            setD4Items([...d4pi_d4Items]);
-            const d4ItemScreenshotFileReader = new FileReader();
-            d4ItemScreenshotFileReader.onload = () => {
-              const d4ItemScreenshotDataUrl = d4ItemScreenshotFileReader.result as string;
-              waitForD4ItemRendering_thenInitializeD4ItemScreenshot(newD4Item, d4ItemScreenshotDataUrl);
-            }
-            d4ItemScreenshotFileReader.readAsDataURL(d4ItemScreenshotFile);
+            d4pi_screenshots.push(newScreenshot);
+            set_screenshots([...d4pi_screenshots]);
+            const screenshotFileReader = new FileReader();
+            screenshotFileReader.onload = () => {
+              const screenshotInputImageDataUrl = screenshotFileReader.result as string;
+              waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, screenshotInputImageDataUrl);
+            };
+            screenshotFileReader.readAsDataURL(screenshotFile);
           }
         });
       }
     }
   }
 
-  function isD4piAppInitialized(): boolean { return globalThis.d4pi_is_opencv_runtimeInitialized; }
+  function isAppInitialized() {
+    return (
+      d4pi_isCodeLoaded
+      && d4pi_isOpencvRuntimeInitialized
+    );
+  }
 
-  function waitForD4ItemRendering_thenInitializeD4ItemScreenshot(d4Item: D4Item, screenshotUrl: string) {
-    if (isD4ItemRendered()) {
-      initializeD4ItemScreenshot();
+  function showIfTrue(is_Show_checkboxInputChecked: boolean) { return is_Show_checkboxInputChecked ? '' : 'hidden'; }
+
+  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot: Screenshot, screenshotInputImageUrl: string) {
+    if (isScreenshotsRendered()) {
+      initializeScreenshotInputImage();
     } else {
-      setTimeout(() => { waitForD4ItemRendering_thenInitializeD4ItemScreenshot(d4Item, screenshotUrl); }, defaultTimeout);
+      setTimeout(() => { waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot, screenshotInputImageUrl); }, defaultTimeout);
     }
 
-    function isD4ItemRendered(): boolean {
+    function isScreenshotsRendered() {
       return (
-        d4Item.itemImageElement !== null
-        && d4Item.screenshot_afterBrightnessThreshold_element !== null
-        && d4Item.screenshot_afterItemImageDetection_element !== null
-        && d4Item.screenshotElement !== null
-        && d4Item.textImageElement !== null
+        screenshot.inputImage_afterBrightnessThreshold_canvas !== null
+        && screenshot.inputImage_afterItemImageDetection_canvas !== null
+        && screenshot.inputImage_image !== null
+        && screenshot.itemImage_canvas !== null
+        && screenshot.textImage_canvas !== null
       );
     }
 
-    function initializeD4ItemScreenshot() {
-      d4Item.screenshotElement.src = screenshotUrl;
-      waitForD4ItemScreenshotInitialization_thenProcessD4ItemScreenshot();
+    function initializeScreenshotInputImage() {
+      screenshot.inputImage_image.src = screenshotInputImageUrl;
+      waitForScreenshotInputImageInitialization_then_processScreenshotInputImage();
 
-      function waitForD4ItemScreenshotInitialization_thenProcessD4ItemScreenshot() {
-        if (isD4ItemScreenshotInitialized()) {
-          processD4ItemScreenshot();
+      function waitForScreenshotInputImageInitialization_then_processScreenshotInputImage() {
+        if (isScreenshotInputImageInitialized()) {
+          processScreenshotInputImage();
         } else {
-          setTimeout(() => { waitForD4ItemScreenshotInitialization_thenProcessD4ItemScreenshot() }, defaultTimeout);
+          setTimeout(() => { waitForScreenshotInputImageInitialization_then_processScreenshotInputImage(); }, defaultTimeout);
         }
 
-        function isD4ItemScreenshotInitialized(): boolean { return d4Item.screenshotElement.width !== 0; }
+        function isScreenshotInputImageInitialized() { return screenshot.inputImage_image.width !== 0; }
 
-        function processD4ItemScreenshot() {
-          d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
-            d4Item.screenshotElement,
-            d4Item.itemImageProcessorArgument_screenshotBrightnessThreshold,
-            d4Item.screenshot_afterBrightnessThreshold_elementId,
-            d4Item.itemImageProcessorArgument_imageMinWidth,
-            d4Item.itemImageProcessorArgument_imageMaxWidth,
-            d4Item.itemImageBoundingRectangleDataId,
-            d4Item.screenshot_afterItemImageDetection_elementId,
-            d4Item.itemImageElementId,
-            d4Item.itemImageProcessorArgument_pictureWidth,
-            d4Item.itemImageProcessorArgument_pictureHeight,
-            d4Item.itemImageProcessorArgument_borderOverwriteWidth,
-            d4Item.textImageElementId
+        function processScreenshotInputImage() {
+          d4pi_fromInputImage_toTextImage(
+            screenshot.inputImage_afterBrightnessThreshold_canvasId,
+            screenshot.inputImage_afterItemImageDetection_canvasId,
+            screenshot.inputImage_image,
+            screenshot.itemImage_canvasId,
+            screenshot.itemImage_dataId,
+            screenshot.textImage_canvasId,
+            screenshot.screenshot_processor_InputImageBrightnessThreshold,
+            screenshot.screenshot_processor_ItemImageMaxWidth,
+            screenshot.screenshot_processor_ItemImageMinWidth,
+            screenshot.screenshot_processor_ItemPictureHeight,
+            screenshot.screenshot_processor_ItemPictureWidth,
+            screenshot.screenshot_processor_TextImageBorderTrimSize,
+            screenshot.screenshot_processor_TextImageCornerTrimSize
           );
-          d4pi_fromImage_toText(d4Item.textImageElement, 'eng', d4Item.textDataId);
-          waitForD4ItemTextInitialization_thenProcessD4ItemText(d4Item);
+          d4pi_fromImage_toText(
+            screenshot.text_dataId,
+            screenshot.textImage_canvas
+          );
+          waitForScreenshotTextInitialization_then_processScreenshotText();
 
-          function waitForD4ItemTextInitialization_thenProcessD4ItemText(d4Item: D4Item) {
-            if (isD4ItemTextInitialized()) {
-              ProcessD4ItemText();
+          function waitForScreenshotTextInitialization_then_processScreenshotText() {
+            if (isScreenshotTextInitialized()) {
+              processScreenshotText();
             } else {
-              setTimeout(() => { waitForD4ItemTextInitialization_thenProcessD4ItemText(d4Item); }, defaultTimeout);
+              setTimeout(() => { waitForScreenshotTextInitialization_then_processScreenshotText(); }, defaultTimeout);
             }
 
-            function isD4ItemTextInitialized(): boolean { return globalThis.d4pi_textData[d4Item.textDataId] !== undefined; }
+            function isScreenshotTextInitialized() { return screenshot.text_data_exists; }
 
-            function ProcessD4ItemText() {
-              d4Item.processItemText();
-              d4Item.isProcessingCompleted = true;
-              setD4Items([...d4pi_d4Items]);
+            function processScreenshotText() {
+              screenshot.processText();
+              set_screenshots([...d4pi_screenshots]);
             }
           }
         }
@@ -176,418 +266,243 @@ export default function Home() {
     }
   }
 
-  function handleD4ItemBorderOverwriteWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageBorderOverwriteWidth(Number(event.target.value)); }
-
-  function handleD4ItemImageMaxWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageMaxWidth(Number(event.target.value)); }
-
-  function handleD4ItemImageMinWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemImageMinWidth(Number(event.target.value)); }
-
-  function handleD4ItemPictureHeightInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemPictureHeight(Number(event.target.value)); }
-
-  function handleD4ItemPictureWidthInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemPictureWidth(Number(event.target.value)); }
-
-  function handleD4ItemScreenshotBrightnessInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setD4ItemScreenshotBrightnessThreshold(Number(event.target.value)); }
-
-  function handleIsVerboseModeInputChange(event: React.ChangeEvent<HTMLInputElement>): void { setIsVerboseMode(event.target.checked); }
-
-  function waitForD4piAppInitialization_then_processD4piExample(screenshotUrl: string, d4piExampleName: string) {
-    if (isD4piAppInitialized()) {
-      processD4piExample();
+  function waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp: number, demoExample_dataName: string, demoExample_dataSize: number, demoExample_data: string) {
+    if (isAppInitialized()) {
+      processDemoExample();
     } else {
-      setTimeout(() => { waitForD4piAppInitialization_then_processD4piExample(screenshotUrl, d4piExampleName); }, defaultTimeout);
+      setTimeout(() => { waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp, demoExample_dataName, demoExample_dataSize, demoExample_data); }, defaultTimeout);
     }
 
-    function processD4piExample() {
-      const newD4Item = new D4Item(
-        d4ItemImageBorderOverwriteWidth,
-        d4ItemImageMaxWidth,
-        d4ItemImageMinWidth,
-        d4ItemPictureHeight,
-        d4ItemPictureWidth,
-        d4ItemScreenshotBrightnessThreshold,
-        0,
-        d4piExampleName,
-        0
+    function processDemoExample() {
+      const newScreenshot = new Screenshot(
+        demoExample_dataLastModifiedTimestamp,
+        demoExample_dataName,
+        demoExample_dataSize,
+        screenshot_processor_InputImageBrightnessThreshold,
+        screenshot_processor_ItemImageMaxWidth,
+        screenshot_processor_ItemImageMinWidth,
+        screenshot_processor_ItemPictureHeight,
+        screenshot_processor_ItemPictureWidth,
+        screenshot_processor_TextImageBorderTrimSize,
+        screenshot_processor_TextImageCornerTrimSize
       );
-      if (d4pi_d4Items.some(d4Item => d4Item.id === newD4Item.id)) {
-        newD4Item.isSkipped_becauseDuplicateIds = true;
-        ++d4pi_isSkipped_becauseDuplicateIds_count;
-        setIsSkipped_becauseDuplicateId_count(d4pi_isSkipped_becauseDuplicateIds_count);
+      if (d4pi_screenshots.some(screenshot => screenshot.id === newScreenshot.id)) {
+        ++d4pi_discardedScreenshotProcessorRequestsCount;
+        set_discardedScreenshotProcessorRequestsCount(d4pi_discardedScreenshotProcessorRequestsCount);
       } else {
-        d4pi_d4Items.push(newD4Item);
-        setD4Items([...d4pi_d4Items]);
-        waitForD4ItemRendering_thenInitializeD4ItemScreenshot(newD4Item, screenshotUrl);
+        d4pi_screenshots.push(newScreenshot);
+        set_screenshots([...d4pi_screenshots]);
+        waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, demoExample_data);
       }
     }
   }
 
-  function handleRunExample1InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example1Url, `D4pi Example 1`); }
-
-  function handleRunExample2InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example2Url, `D4pi Example 2`); }
-
-  function handleRunExample3InputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void { waitForD4piAppInitialization_then_processD4piExample(example3Url, `D4pi Example 3`); }
-
-  function hideIfNotVerboseMode(): string { return isVerboseMode ? '' : 'hidden'; }
-
-  function getItemCountersComponent() {
-    const queued = d4Items.length + isSkipped_becauseDuplicateId_count;
-    const completed = d4Items.filter(d4Item => d4Item.isProcessingCompleted).length
-    const inProgress = queued - completed - isSkipped_becauseDuplicateId_count;
-    const warning = d4Items.filter(d4Item => d4Item.itemImageBoundingRectangleWidth === 0).length;
-
-    function inProgressClass(): string { return inProgress === 0 ? 'bg-green-700' : 'bg-yellow-700'; }
-
-    function warningClass(): string { return warning === 0 ? '' : 'bg-orange-700'; }
-
+  function renderStatisticsReport(): React.ReactNode {
+    const card_divClass = 'border-2 border-dotted border-neutral-500 m-2.5 p-2.5 rounded-lg';
+    const totalCount = screenshots.length;
+    const doneScreenshots = screenshots.filter(screenshot => screenshot.isDone);
+    const doneCount = doneScreenshots.length;
+    const averageTime = doneCount > 0 ? Math.round(doneScreenshots.reduce((totalTime, doneScreenshot) => totalTime + doneScreenshot.elapsedTime, 0) / doneCount) / 1000 + 's' : 'N/A';
     return <>
-      <li>
-        <span>(Total Requests: {queued})</span>
-        ===
-        <span>(Completed Requests: {completed})</span>
-        +
-        <span>(Skipped Requests (because of duplicate ids): {isSkipped_becauseDuplicateId_count})</span>
-        +
-        <span className={`p-1 rounded ${inProgressClass()}`}>(Requests being Processed: {inProgress})</span>
-      </li>
-      <li>
-        <span className={`p-1 rounded ${warningClass()}`}>Warning (completed without detecting any game item image): {warning}</span>
-      </li>
+      <div className={card_divClass}>
+        Total {totalCount}
+        <div className={card_divClass}>
+          Done {doneCount}
+          <div className={card_divClass}>
+            Average {averageTime}
+          </div>
+        </div>
+        <div className={card_divClass}>
+          Processing {totalCount - doneCount}
+        </div>
+      </div>
+      <div className={card_divClass}>
+        Discarded {discardedScreenshotProcessorRequestsCount}
+      </div>
+      <div className={card_divClass}>
+        Warning {screenshots.filter(screenshot => screenshot.isDone && screenshot.itemImage_data_candidates.length === 0).length}
+      </div>
     </>;
   }
 
-  function exportSettingsAsUrl(): string {
-    const settingStrings = [
-      (d4ItemImageBorderOverwriteWidth === d4ItemImageBorderOverwriteWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageBorderOverwriteWidth_settingName, d4ItemImageBorderOverwriteWidth),
-      (d4ItemImageMaxWidth === d4ItemImageMaxWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageMaxWidth_settingName, d4ItemImageMaxWidth),
-      (d4ItemImageMinWidth === d4ItemImageMinWidth_defaultValue) ? '' : formatNameValuePair(d4ItemImageMinWidth_settingName, d4ItemImageMinWidth),
-      (d4ItemPictureHeight === d4ItemPictureHeight_defaultValue) ? '' : formatNameValuePair(d4ItemPictureHeight_settingName, d4ItemPictureHeight),
-      (d4ItemPictureWidth === d4ItemPictureWidth_defaultValue) ? '' : formatNameValuePair(d4ItemPictureWidth_settingName, d4ItemPictureWidth),
-      (d4ItemScreenshotBrightnessThreshold === d4ItemScreenshotBrightnessThreshold_defaultValue) ? '' : formatNameValuePair(d4ItemScreenshotBrightnessThreshold_settingName, d4ItemScreenshotBrightnessThreshold),
-      (isVerboseMode === isVerboseMode_defaultValue) ? '' : formatNameValuePair(isVerboseMode_settingName, isVerboseMode),
-    ];
-    const url = settingStrings.filter(str => str !== '').join('&');
-    if (url === '') {
-      return '/';
-    } else {
-      return '/?' + url;
-    }
-
-    function formatNameValuePair<T>(name: string, value: T): string { return `${name}=${value}`; }
-  }
-
-  function handleImportSettingsFromUrlClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void {
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemImageBorderOverwriteWidth_settingName);
-      if (value !== null) { setD4ItemImageBorderOverwriteWidth(value); }
-    }
-
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemImageMaxWidth_settingName);
-      if (value !== null) { setD4ItemImageMaxWidth(value); }
-    }
-
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemImageMinWidth_settingName);
-      if (value !== null) { setD4ItemImageMinWidth(value); }
-    }
-
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemPictureHeight_settingName);
-      if (value !== null) { setD4ItemPictureHeight(value); }
-    }
-
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemPictureWidth_settingName);
-      if (value !== null) { setD4ItemPictureWidth(value); }
-    }
-
-    {
-      const value = getNumberSettingValueFromUrl(d4ItemScreenshotBrightnessThreshold_settingName);
-      if (value !== null) { setD4ItemScreenshotBrightnessThreshold(value); }
-    }
-
-    {
-      const value = getBooleanSettingValueFromUrl(isVerboseMode_settingName);
-      if (value !== null) { setIsVerboseMode(value); }
-    }
-
-    function getNumberSettingValueFromUrl(settingName: string): number | null {
-      if (searchParams.has(settingName)) {
-        const value = Number(searchParams.get(settingName));
-        if (Number.isSafeInteger(value)) {
-          return value;
-        }
-      }
-      return null;
-    }
-
-    function getBooleanSettingValueFromUrl(settingName: string): boolean | null {
-      if (searchParams.has(settingName)) {
-        return searchParams.get(settingName)?.toLowerCase() === 'true';
-      }
-      return null;
-    }
-  }
-
-  function handleLoadDefaultSettingsClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>): void {
-    if (d4ItemImageBorderOverwriteWidth !== d4ItemImageBorderOverwriteWidth_defaultValue) { setD4ItemImageBorderOverwriteWidth(d4ItemImageBorderOverwriteWidth_defaultValue); }
-    if (d4ItemImageMaxWidth !== d4ItemImageMaxWidth_defaultValue) { setD4ItemImageMaxWidth(d4ItemImageMaxWidth_defaultValue); }
-    if (d4ItemImageMinWidth !== d4ItemImageMinWidth_defaultValue) { setD4ItemImageMinWidth(d4ItemImageMinWidth_defaultValue); }
-    if (d4ItemPictureHeight !== d4ItemPictureHeight_defaultValue) { setD4ItemPictureHeight(d4ItemPictureHeight_defaultValue); }
-    if (d4ItemPictureWidth !== d4ItemPictureWidth_defaultValue) { setD4ItemPictureWidth(d4ItemPictureWidth_defaultValue); }
-    if (d4ItemScreenshotBrightnessThreshold !== d4ItemScreenshotBrightnessThreshold_defaultValue) { setD4ItemScreenshotBrightnessThreshold(d4ItemScreenshotBrightnessThreshold_defaultValue); }
-    if (isVerboseMode !== isVerboseMode_defaultValue) { setIsVerboseMode(isVerboseMode_defaultValue); }
-  }
-
   return <>
-    <Script src='/code/is_opencv_runtimeInitialized.js' strategy={scriptStrategy} />
+    <Script src='/code/isOpencvRuntimeInitialized.js' strategy={scriptStrategy} />
     <Script src='https://docs.opencv.org/4.9.0/opencv.js' strategy={scriptStrategy} />
-    <Script src='/code/fromD4ItemScreenshot_toD4ItemTextImage.js' strategy={scriptStrategy} />
-    <Script src='https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js' strategy={scriptStrategy} />
     <Script src='/code/fromImage_toText.js' strategy={scriptStrategy} />
+    <Script src='https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js' strategy={scriptStrategy} />
+    <Script src='/code/fromInputImage_toTextImage.js' strategy={scriptStrategy} />
+    <Script src='/code/isCodeLoaded.js' strategy={scriptStrategy} />
 
     <main>
-      <div>
-        Start here.
-        <ul className={ulClassName}>
-          <li>
-            <label htmlFor={d4ItemScreenshotFileInputId}>Choose Screenshot(s) to be Processed</label>
-            <input id={d4ItemScreenshotFileInputId} className='mx-4' accept='image/*' multiple onChange={handleD4ItemScreenshotFileInputChange} type='file' />
-          </li>
-
-          <li>
-            <label htmlFor={isVerboseModeInputId}>Verbose Mode</label>
-            <input id={isVerboseModeInputId} className='mx-4' checked={isVerboseMode} onChange={handleIsVerboseModeInputChange} type='checkbox' />
-          </li>
-        </ul>
-
-        <div>
-          Examples:
-          <ul className={ulClassName}>
-            <li>
-              <input className={runExampleInputClassName} onClick={handleRunExample1InputClick} type={buttonInputType} value='Run Example 1' />
-              <input className={runExampleInputClassName} onClick={handleRunExample2InputClick} type={buttonInputType} value='Run Example 2' />
-              <input className={runExampleInputClassName} onClick={handleRunExample3InputClick} type={buttonInputType} value='Run Example 3' />
-            </li>
-
-            <li>
-              <a className={exampleLinkClassName} href={example1Url}>💾 example-1.jpg (678K)</a>
-              <a className={exampleLinkClassName} href={example2Url}>💾 example-2.jpg (626K)</a>
-              <a className={exampleLinkClassName} href={example3Url}>💾 example-3.jpg (607K)</a>
-            </li>
-          </ul>
+      <div className='flex flex-wrap'>
+        <div className={`${group_divClass} min-h-24`}>
+          <label htmlFor={screenshot_fileInputId}>Choose Screenshot(s) from Disk to be Processed</label>
+          <input id={screenshot_fileInputId} className='ml-5' accept='image/*' multiple onChange={handle_screenshot_fileInputChange} type='file' />
         </div>
 
-        <div>
-          (🧪 Experimental)
-          <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleImportSettingsFromUrlClick} type={buttonInputType} value='Import Settings from URL' />
-          <input className='bg-green-700 hover:bg-green-600 mx-2 my-3 px-2 py-1 rounded' onClick={handleLoadDefaultSettingsClick} type={buttonInputType} value='Load Default Settings' />
-          <a className='mx-2 my-3 px-2 py-1 hover:underline bg-green-700 hover:bg-green-600 rounded' href={exportSettingsAsUrl()}>Current Settings as URL</a>
-          (Experimental ⚗️)
+        <div className={`${group_divClass} min-h-24 ${showIfTrue(is_AppControl_ShowDemoControl_checkboxInputChecked)}`}>
+          <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-5 px-5 py-2.5 rounded-lg text-neutral-200' onClick={handle_RunDemo_buttonClick} type='button'>Run Demo</button>
+          <span>1 click to convert 3 screenshots (<a className='underline' href='/images/example-1.jpg'>1.jpg</a> <a className='underline' href='/images/example-2.jpg'>2.jpg</a> <a className='underline' href='/images/example-3.jpg'>3.jpg</a>) to filterable items.</span>
         </div>
       </div>
 
-      <div className={`divide-y-2 divide-gray-800 ${hideIfNotVerboseMode()}`}>
-        <div>
-          The following defaults settings are derived from our test environment:
-          <ul className={ulClassName}>
-            <li>
-              Xbox Series X
-            </li>
-
-            <li>
-              1080p (1920*1080)
-            </li>
-
-            <li>
-              (In-Game) GRAPHICS: Font Scale: Small
-            </li>
-
-            <li>
-              (In-Game) GRAPHICS: Brightness: Default
-            </li>
-
-            <li>
-              (In-Game) GAMEPLAY: Advanced Tooltip Information: Enabled
-            </li>
+      <div className='flex flex-wrap'>
+        <div className={`${group_divClass} space-y-2`}>
+          <ul className='space-y-2'>
+            <li><input id={AppControl_checkboxInputId} className='mr-5' checked={is_AppControl_checkboxInputChecked} onChange={handle_AppControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_checkboxInputId}><strong>App Control</strong></label></li>
+            <li><input id={AppControl_ShowDemoControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDemoControl_checkboxInputChecked} onChange={handle_AppControl_ShowDemoControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDemoControl_checkboxInputId}>Demo Control</label></li>
+            <li><input id={AppControl_ShowDevControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDevControl_checkboxInputChecked} onChange={handle_AppControl_ShowDevControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDevControl_checkboxInputId}>Dev Control</label></li>
+            <li><input id={AppControl_ShowDevTestInformation_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDevTestInformation_checkboxInputChecked} onChange={handle_AppControl_ShowDevTestInformation_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDevTestInformation_checkboxInputId}>Dev/Test Information</label></li>
+            <li><input id={AppControl_ShowScreenshotProcessorControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked} onChange={handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowScreenshotProcessorControl_checkboxInputId}>Screenshot Processor Control</label></li>
+            <li><input id={AppControl_ShowSettingsControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowSettingsControl_checkboxInputChecked} onChange={handle_AppControl_ShowSettingsControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowSettingsControl_checkboxInputId}>Settings Control</label></li>
+            <li><input id={AppControl_ShowStatisticsReport_checkboxInputId} className='mr-5' checked={is_AppControl_ShowStatisticsReport_checkboxInputChecked} onChange={handle_AppControl_ShowStatisticsReport_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowStatisticsReport_checkboxInputId}>Statistics Report</label></li>
+            <li><input id={AppControl_ShowTutorial_checkboxInputId} className='mr-5' checked={is_AppControl_ShowTutorial_checkboxInputChecked} onChange={handle_AppControl_ShowTutorial_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowTutorial_checkboxInputId}>Tutorial</label></li>
           </ul>
         </div>
 
-        <div>
-          You may have to adjust these settings as necessary.
-          <ul className={ulClassName}>
-            <li>
-              <label htmlFor={d4ItemScreenshotBrightnessThresholdInputId}>{d4ItemScreenshotBrightnessThresholdComponent}</label>
-              <input id={d4ItemScreenshotBrightnessThresholdInputId} className={numberInputClassName} max='255' min={zeroString} onChange={handleD4ItemScreenshotBrightnessInputChange} type={numberInputType} value={d4ItemScreenshotBrightnessThreshold} />
-
-              <ul className={ulClassName}>
-                <li>
-                  Screenshot pixels darker/brighter than this value are treated as black/white, respectively.
-                </li>
-                <li>
-                  A good threshold value makes the a game item image&apos;s bounding rectangle(s) stand out as if drawn with thick black lines of uniform thickness.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Screenshot after Brightness Threshold&quot; result image.
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <label htmlFor={d4ItemImageMinWidthInputId}>{d4ItemImageMinWidthComponent}</label>
-              <input id={d4ItemImageMinWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemImageMinWidthInputChange} type={numberInputType} value={d4ItemImageMinWidth} />
-
-              <ul className={ulClassName}>
-                <li>
-                  Game item image candidates with widths narrower than this value are discarded.
-                </li>
-                <li>
-                  As a screenshot may contain multiple rectangle-like shapes, a good minimum-width value weeds out undesirable candidates.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Screenshot after after Game Item Image Detection&quot; result image.
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <label htmlFor={d4ItemImageMaxWidthInputId}>{d4ItemImageMaxWidthComponent}</label>
-              <input id={d4ItemImageMaxWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemImageMaxWidthInputChange} type={numberInputType} value={d4ItemImageMaxWidth} />
-
-              <ul className={ulClassName}>
-                <li>
-                  Game item image candidates with widths wider than this value are discarded.
-                </li>
-                <li>
-                  As a screenshot may contain multiple rectangle-like shapes, a good minimum-width value weeds out undesirable candidates.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Screenshot after after Game Item Image Detection&quot; result image.
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <label htmlFor={d4ItemPictureWidthInputId}>{d4ItemPictureWidthComponent}</label>
-              <input id={d4ItemPictureWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemPictureWidthInputChange} type={numberInputType} value={d4ItemPictureWidth} />
-
-              <ul className={ulClassName}>
-                <li>
-                  The top-right-corner game item pictures are removed to improve text recognition accuracy.
-                </li>
-                <li>
-                  A good pair of game item picture width & height values makes it possible to reduce noises without degrading a game item image&apos;s informational value.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Game Item Image&quot; and &quot;Game Text Image&quot; result images.
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <label htmlFor={d4ItemPictureHeightInputId}>{d4ItemPictureHeightComponent}</label>
-              <input id={d4ItemPictureHeightInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemPictureHeightInputChange} type={numberInputType} value={d4ItemPictureHeight} />
-
-              <ul className={ulClassName}>
-                <li>
-                  The top-right-corner game item pictures are removed to improve text recognition accuracy.
-                </li>
-                <li>
-                  A good pair of game item picture width & height values makes it possible to reduce noises without degrading a game item image&apos;s informational value.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Game Item Image&quot; and &quot;Game Text Image&quot; result images.
-                </li>
-              </ul>
-            </li>
-
-            <li>
-              <label htmlFor={d4ItemImageBorderOverwriteWidthInputId}>{d4ItemImageBorderOverwriteWidthComponent}</label>
-              <input id={d4ItemImageBorderOverwriteWidthInputId} className={numberInputClassName} min={zeroString} onChange={handleD4ItemBorderOverwriteWidthInputChange} type={numberInputType} value={d4ItemImageBorderOverwriteWidth} />
-
-              <ul className={ulClassName}>
-                <li>
-                  Game item images&apos; borders are removed to improve text recognition accuracy.
-                </li>
-                <li>
-                  A good border-overwrite-width values makes it possible to reduce noises without degrading a game item image&apos;s informational value.
-                </li>
-                <li>
-                  Run an example and check out its &quot;Game Item Image&quot; and &quot;Game Text Image&quot; result images.
-                </li>
-              </ul>
-            </li>
+        <div className={`${group_divClass} space-y-2 ${showIfTrue(is_AppControl_ShowDevControl_checkboxInputChecked)}`}>
+          <ul className='space-y-2'>
+            <li><input id={DevControl_checkboxInputId} className='mr-5' checked={is_DevControl_checkboxInputChecked} onChange={handle_DevControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_checkboxInputId}><strong>Dev Control</strong></label></li>
+            <li><input id={DevControl_ShowInputImage_checkboxInputId} className='mr-5' checked={is_DevControl_ShowInputImage_checkboxInputChecked} onChange={handle_DevControl_ShowInputImage_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowInputImage_checkboxInputId}>Input Image</label></li>
+            <li><input id={DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputId} className='mr-5' checked={is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked} onChange={handle_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputId}>Input Image after Brightness Threshold</label></li>
+            <li><input id={DevControl_ShowInputImage_afterItemImageDetection_checkboxInputId} className='mr-5' checked={is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked} onChange={handle_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowInputImage_afterItemImageDetection_checkboxInputId}>Input Image after Item Image Detection</label></li>
+            <li><input id={DevControl_ShowItemImage_checkboxInputId} className='mr-5' checked={is_DevControl_ShowItemImage_checkboxInputChecked} onChange={handle_DevControl_ShowItemImage_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowItemImage_checkboxInputId}>Item Image</label></li>
+            <li><input id={DevControl_ShowTextImage_checkboxInputId} className='mr-5' checked={is_DevControl_ShowTextImage_checkboxInputChecked} onChange={handle_DevControl_ShowTextImage_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowTextImage_checkboxInputId}>Text Image</label></li>
+            <li><input id={DevControl_ShowText_checkboxInputId} className='mr-5' checked={is_DevControl_ShowText_checkboxInputChecked} onChange={handle_DevControl_ShowText_checkboxInputChange} type={checkboxInputType} /><label htmlFor={DevControl_ShowText_checkboxInputId}>Text</label></li>
           </ul>
         </div>
 
-        <div>
-          Statistics
-          <ul className={ulClassName}>
-            {getItemCountersComponent()}
+        <div className={`${group_divClass} space-y-2 ${showIfTrue(is_AppControl_ShowDevTestInformation_checkboxInputChecked)}`}>
+          <strong>Dev/Test Information</strong>
+
+          <div>
+            Environment:
+            <ul className={ulClass}>
+              <li>Google Chrome 120</li>
+              <li>Next.js 14.0.4</li>
+              <li>Node.js 20.10.0</li>
+              <li>OpenCV.js 4.9.0</li>
+              <li>Tesseract.js 5.0.4</li>
+            </ul>
+          </div>
+
+          <div>
+            Screenshot Source:
+            <ul className={ulClass}>
+              <li>1080p (1920*1080)</li>
+              <li>Diablo 4: GAMEPLAY: Advanced Tooltip Information: Enabled</li>
+              <li>Diablo 4: GRAPHICS: Brightness: Default</li>
+              <li>Diablo 4: GRAPHICS: Font Scale: Small</li>
+              <li>Xbox Series X</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className={`${group_divClass} space-y-2 ${showIfTrue(is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked)}`}>
+          <strong>Screenshot Processor Control</strong>
+          <ul className='space-y-2'>
+            <li><input id={screenshot_processor_InputImageBrightnessThreshold_numberInputId} className={numberInputClass} max='255' min={_0String} onChange={handle_screenshot_processor_InputImageBrightnessThreshold_numberInputChange} type={numberInputType} value={screenshot_processor_InputImageBrightnessThreshold} /><label htmlFor={screenshot_processor_InputImageBrightnessThreshold_numberInputId}>{screenshot_processor_InputImageBrightnessThreshold_labelText}</label></li>
+            <li><input id={screenshot_processor_ItemImageMaxWidth_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_ItemImageMaxWidth_numberInputChange} type={numberInputType} value={screenshot_processor_ItemImageMaxWidth} /><label htmlFor={screenshot_processor_ItemImageMaxWidth_numberInputId}>{screenshot_processor_ItemImageMaxWidth_labelText}</label></li>
+            <li><input id={screenshot_processor_ItemImageMinWidth_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_ItemImageMinWidth_numberInputChange} type={numberInputType} value={screenshot_processor_ItemImageMinWidth} /><label htmlFor={screenshot_processor_ItemImageMinWidth_numberInputId}>{screenshot_processor_ItemImageMinWidth_labelText}</label></li>
+            <li><input id={screenshot_processor_ItemPictureHeight_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_ItemPictureHeight_numberInputChange} type={numberInputType} value={screenshot_processor_ItemPictureHeight} /><label htmlFor={screenshot_processor_ItemPictureHeight_numberInputId}>{screenshot_processor_ItemPictureHeight_labelText}</label></li>
+            <li><input id={screenshot_processor_ItemPictureWidth_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_ItemPictureWidth_numberInputChange} type={numberInputType} value={screenshot_processor_ItemPictureWidth} /><label htmlFor={screenshot_processor_ItemPictureWidth_numberInputId}>{screenshot_processor_ItemPictureWidth_labelText}</label></li>
+            <li><input id={screenshot_processor_TextImageBorderTrimSize_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_TextImageBorderTrimSize_numberInputChange} type={numberInputType} value={screenshot_processor_TextImageBorderTrimSize} /><label htmlFor={screenshot_processor_TextImageBorderTrimSize_numberInputId}>{screenshot_processor_TextImageBorderTrimSize_labelText}</label></li>
+            <li><input id={screenshot_processor_TextImageCornerTrimSize_numberInputId} className={numberInputClass} min={_0String} onChange={handle_screenshot_processor_TextImageCornerTrimSize_numberInputChange} type={numberInputType} value={screenshot_processor_TextImageCornerTrimSize} /><label htmlFor={screenshot_processor_TextImageCornerTrimSize_numberInputId}>{screenshot_processor_TextImageCornerTrimSize_labelText}</label></li>
           </ul>
         </div>
 
-        <div>
-          Processor Workspaces:
-          <ul className={ulClassName}>
-            {
-              d4Items.map(d4Item =>
-                <li key={d4Item.id}>
-                  Screenshot File Name: <code className='mx-4'>{d4Item.screenshotFileName}</code>
-                  <ul className={ulClassName}>
-                    <li>
-                      Screenshot File Last-Modified: <code>{d4Item.screenshotFileLastModified}</code>
-                    </li>
+        <div className={`${group_divClass} ${showIfTrue(is_AppControl_ShowSettingsControl_checkboxInputChecked)}`}>
+          <strong>Settings Control</strong>
+        </div>
 
-                    <li>
-                      Screenshot File Size: <code>{d4Item.screenshotFileSize}</code>
-                    </li>
+        <div className={`${group_divClass} ${showIfTrue(is_AppControl_ShowStatisticsReport_checkboxInputChecked)}`}>
+          <strong>Statistics Report</strong>
+          {renderStatisticsReport()}
+        </div>
 
-                    <li>
-                      Screenshot:
-                      {
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img id={d4Item.screenshotElementId} className='max-w-none' alt={d4Item.id} />
-                      }
-                    </li>
+        <div className={`${group_divClass} ${showIfTrue(is_AppControl_ShowTutorial_checkboxInputChecked)}`}>
+          <strong>Tutorial</strong>
+        </div>
+      </div>
 
-                    <li>
-                      Screenshot after Brightness Threshold:
-                      ({d4ItemScreenshotBrightnessThresholdComponent}: {d4Item.itemImageProcessorArgument_screenshotBrightnessThreshold})
-                      <canvas id={d4Item.screenshot_afterBrightnessThreshold_elementId} />
-                    </li>
+      <div className='flex flex-wrap'>
+        {
+          screenshots.map(screenshot =>
+            <div key={screenshot.id} className={group_divClass}>
+              <ul className={ulClass}>
+                <li>{screenshot.itemName}</li>
 
-                    <li>
-                      Screenshot after after Game Item Image Detection:
-                      ({d4ItemImageMinWidthComponent}: {d4Item.itemImageProcessorArgument_imageMinWidth})
-                      <span>(Detected Game Item Image Width: {d4Item.itemImageBoundingRectangleWidth})</span>
-                      ({d4ItemImageMaxWidthComponent}: {d4Item.itemImageProcessorArgument_imageMaxWidth})
-                      <canvas id={d4Item.screenshot_afterItemImageDetection_elementId} />
-                    </li>
+                <li>{screenshot.itemType}</li>
 
-                    <li>
-                      Game Item Image:
-                      <canvas id={d4Item.itemImageElementId} />
-                    </li>
-
-                    <li>
-                      Game Text Image:
-                      ({d4ItemPictureWidthComponent}: {d4Item.itemImageProcessorArgument_pictureWidth})
-                      ({d4ItemPictureHeightComponent}: {d4Item.itemImageProcessorArgument_pictureHeight})
-                      <canvas id={d4Item.textImageElementId} />
-                    </li>
-
-                    <li>
-                      Game Item Text:
-                      (confidence: {d4Item.textConfidence})
-                      <pre>{d4Item.text}</pre>
-                    </li>
+                <li className={showIfTrue(is_DevControl_ShowInputImage_checkboxInputChecked)}>
+                  <strong>Input Image</strong>
+                  <ul className={ulClass}>
+                    <li>Data Last Modified Timestamp: {screenshot.dataLastModifiedTimestamp}</li>
+                    <li>Data Name: {screenshot.dataName}</li>
+                    <li>Data Size: {screenshot.dataSize}</li>
                   </ul>
+                  {
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img id={screenshot.inputImage_imageId} className='max-w-none' alt={screenshot.id} />
+                  }
                 </li>
-              )
-            }
-          </ul>
-        </div>
+                <li className={showIfTrue(is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked)}>
+                  <strong>Input Image after Brightness Threshold</strong>
+                  <ul className={ulClass}>
+                    <li>{screenshot_processor_InputImageBrightnessThreshold_labelText}: {screenshot.screenshot_processor_InputImageBrightnessThreshold}</li>
+                  </ul>
+                  <canvas id={screenshot.inputImage_afterBrightnessThreshold_canvasId} />
+                </li>
+                <li className={showIfTrue(is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked)}>
+                  <strong>Input Image after Item Image Detection</strong>
+                  <ul className={ulClass}>
+                    <li>{screenshot_processor_ItemImageMinWidth_labelText}: {screenshot.screenshot_processor_ItemImageMinWidth}</li>
+                    <li>{screenshot_processor_ItemImageMaxWidth_labelText}: {screenshot.screenshot_processor_ItemImageMaxWidth}</li>
+                    {
+                      screenshot.itemImage_data_candidates.length > 0 ?
+                        <li>
+                          Candidates:
+                          <ul className={ulClass}>
+                            {
+                              screenshot.itemImage_data_candidates.map(candidate =>
+                                <li key={`${screenshot.itemImage_dataId} ${candidate.id}`}>
+                                  <span className={screenshot.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
+                                </li>
+                              )
+                            }
+                          </ul>
+                        </li>
+                        :
+                        <></>
+                    }
+                  </ul>
+                  <canvas id={screenshot.inputImage_afterItemImageDetection_canvasId} />
+                </li>
+                <li className={showIfTrue(is_DevControl_ShowItemImage_checkboxInputChecked)}>
+                  <strong>Item Image</strong>
+                  <canvas id={screenshot.itemImage_canvasId} />
+                </li>
+                <li className={showIfTrue(is_DevControl_ShowTextImage_checkboxInputChecked)}>
+                  <strong>Text Image</strong>
+                  <ul className={ulClass}>
+                    <li>{screenshot_processor_ItemPictureHeight_labelText}: {screenshot.screenshot_processor_ItemPictureHeight}</li>
+                    <li>{screenshot_processor_ItemPictureWidth_labelText}: {screenshot.screenshot_processor_ItemPictureWidth}</li>
+                    <li>{screenshot_processor_TextImageBorderTrimSize_labelText}: {screenshot.screenshot_processor_TextImageBorderTrimSize}</li>
+                    <li>{screenshot_processor_TextImageCornerTrimSize_labelText}: {screenshot.screenshot_processor_TextImageCornerTrimSize}</li>
+                  </ul>
+                  <canvas id={screenshot.textImage_canvasId} />
+                </li>
+                <li className={showIfTrue(is_DevControl_ShowText_checkboxInputChecked)}>
+                  <strong>Text</strong>
+                  <div>Confidence: {screenshot.text_data_confidence}</div>
+                  <pre>
+                    {screenshot.text_data_text}
+                  </pre>
+                </li>
+              </ul>
+            </div>
+          )
+        }
       </div>
     </main >
   </>;

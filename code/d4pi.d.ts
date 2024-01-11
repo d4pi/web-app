@@ -1,20 +1,23 @@
-declare function d4pi_fromD4ItemScreenshot_toD4ItemTextImage(
-    d4ItemScreenshotElement: HTMLImageElement,
-    d4ItemScreenshotBrightnessThreshold,
-    d4ItemScreenshot_afterBrightnessThreshold_elementId: string,
-    d4ItemImageMinWidth: number,
-    d4ItemImageMaxWidth: number,
-    d4ItemItemImageBoundingRectangleDataId: string,
-    d4ItemScreenshot_afterItemImageDetection_elementId: string,
-    d4ItemItemImageElementId: string,
-    d4ItemPictureWidth: number,
-    d4ItemPictureHeight: number,
-    d4ItemImageBorderOverwriteWidth: number,
-    d4ItemTextImageElementId: string);
 declare function d4pi_fromImage_toText(
-    d4ItemTextImageElement: HTMLCanvasElement,
-    d4ItemTextLanguageCode: string,
-    d4ItemTextId: string);
-declare var d4pi_is_opencv_runtimeInitialized: boolean;
-declare var d4pi_itemImageBoundingRectangleData: any;
+    text_dataId: string,
+    textImage_canvas: HTMLCanvasElement
+);
+declare function d4pi_fromInputImage_toTextImage(
+    inputImage_afterBrightnessThreshold_canvasId: string,
+    inputImage_afterItemImageDetection_canvasId: string,
+    inputImage_image: HTMLImageElement,
+    itemImage_canvasId: string,
+    itemImage_dataId: string,
+    textImage_canvasId: string,
+    screenshot_processor_InputImageBrightnessThreshold: number,
+    screenshot_processor_ItemImageMaxWidth: number,
+    screenshot_processor_ItemImageMinWidth: number,
+    screenshot_processor_ItemPictureHeight: number,
+    screenshot_processor_ItemPictureWidth: number,
+    screenshot_processor_TextImageBorderTrimSize: number,
+    screenshot_processor_TextImageCornerTrimSize: number
+);
+declare var d4pi_isCodeLoaded: boolean;
+declare var d4pi_isOpencvRuntimeInitialized: boolean;
+declare var d4pi_itemImageData: any;
 declare var d4pi_textData: any;

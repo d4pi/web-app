@@ -1,19 +1,26 @@
 'use strict';
 
-globalThis.d4pi_textData = {};
+var d4pi_textData = {};
 
-function d4pi_fromImage_toText(d4ItemTextImageElement, d4ItemTextLanguageCode, d4ItemTextId) {
+function d4pi_fromImage_toText(
+    text_dataId,
+    textImage_canvas
+) {
     Tesseract.recognize(
-        d4ItemTextImageElement,
-        d4ItemTextLanguageCode,
-        {} // Tesseract options
+        textImage_canvas,
+        'eng',
+        {}
     ).catch(() => {
-        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(-1, '', []);
+        d4pi_textData[text_dataId] = newTextData(0, '', []);
     }).then(result => {
-        globalThis.d4pi_textData[d4ItemTextId] = newGameItemData(result.data.confidence, result.data.text, result.data.words.map(word => word.text));
+        d4pi_textData[text_dataId] = newTextData(
+            result.data.confidence,
+            result.data.text,
+            result.data.words.map(word => word.text)
+        );
     });
 
-    function newGameItemData(confidence, text, words) {
+    function newTextData(confidence, text, words) {
         return {
             confidence: confidence,
             text: text,
