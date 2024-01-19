@@ -17,7 +17,11 @@ declare function d4pi_fromInputImage_toTextImage(
     screenshot_processor_TextImageBorderTrimSize: number,
     screenshot_processor_TextImageCornerTrimSize: number
 );
+declare function d4pi_initialize_filterables_utilities(
+    nextjs_d4pi_filterables,
+    nextjs_set_filterables
+);
 declare var d4pi_isCodeLoaded: boolean;
 declare var d4pi_isOpencvRuntimeInitialized: boolean;
-declare var d4pi_itemImageData: any;
-declare var d4pi_textData: any;
+declare var d4pi_itemImageData;
+declare var d4pi_textData;

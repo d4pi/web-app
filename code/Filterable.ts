@@ -1,9 +1,6 @@
 import ItemAttribute from "./ItemAttribute";
 
-export default class Screenshot {
-    dataLastModifiedTimestamp = 0;
-    dataName = '';
-    dataSize = 0;
+export default class Filterable {
     screenshot_processor_InputImageBrightnessThreshold = 0;
     screenshot_processor_ItemImageMaxWidth = 0;
     screenshot_processor_ItemImageMinWidth = 0;
@@ -11,22 +8,22 @@ export default class Screenshot {
     screenshot_processor_ItemPictureWidth = 0;
     screenshot_processor_TextImageBorderTrimSize = 0;
     screenshot_processor_TextImageCornerTrimSize = 0;
+    screenshotFileLastModifiedTimestamp = 0;
+    screenshotFileName = '';
+    screenshotFileSize = 0;
 
     constructor(
-        dataLastModifiedTimestamp: number,
-        dataName: string,
-        dataSize: number,
         screenshot_processor_InputImageBrightnessThreshold: number,
         screenshot_processor_ItemImageMaxWidth: number,
         screenshot_processor_ItemImageMinWidth: number,
         screenshot_processor_ItemPictureHeight: number,
         screenshot_processor_ItemPictureWidth: number,
         screenshot_processor_TextImageBorderTrimSize: number,
-        screenshot_processor_TextImageCornerTrimSize: number
+        screenshot_processor_TextImageCornerTrimSize: number,
+        screenshotFileLastModifiedTimestamp: number,
+        screenshotFileName: string,
+        screenshotFileSize: number
     ) {
-        this.dataLastModifiedTimestamp = dataLastModifiedTimestamp;
-        this.dataName = dataName;
-        this.dataSize = dataSize;
         this.screenshot_processor_InputImageBrightnessThreshold = screenshot_processor_InputImageBrightnessThreshold;
         this.screenshot_processor_ItemImageMaxWidth = screenshot_processor_ItemImageMaxWidth;
         this.screenshot_processor_ItemImageMinWidth = screenshot_processor_ItemImageMinWidth;
@@ -34,11 +31,14 @@ export default class Screenshot {
         this.screenshot_processor_ItemPictureWidth = screenshot_processor_ItemPictureWidth;
         this.screenshot_processor_TextImageBorderTrimSize = screenshot_processor_TextImageBorderTrimSize;
         this.screenshot_processor_TextImageCornerTrimSize = screenshot_processor_TextImageCornerTrimSize;
+        this.screenshotFileLastModifiedTimestamp = screenshotFileLastModifiedTimestamp;
+        this.screenshotFileName = screenshotFileName;
+        this.screenshotFileSize = screenshotFileSize;
 
-        this.startTime = Date.now();
+        this.processingStartTime = Date.now();
     }
 
-    get id(): string { return `Screenshot (fileName: ${this.dataName}) (fileLastModifiedTimestamp: ${this.dataLastModifiedTimestamp}) (fileSize: ${this.dataSize}) (screenshot_processor_BorderTrimSize: ${this.screenshot_processor_TextImageBorderTrimSize}) (screenshot_processor_BrightnessThreshold: ${this.screenshot_processor_InputImageBrightnessThreshold}) (screenshot_processor_MaxWidth: ${this.screenshot_processor_ItemImageMaxWidth}) (screenshot_processor_MinWidth: ${this.screenshot_processor_ItemImageMinWidth}) (screenshot_processor_PictureHeight: ${this.screenshot_processor_ItemPictureHeight}) (screenshot_processor_PictureWidth: ${this.screenshot_processor_ItemPictureWidth})`; }
+    get id(): string { return `Screenshot (fileName: ${this.screenshotFileName}) (fileLastModifiedTimestamp: ${this.screenshotFileLastModifiedTimestamp}) (fileSize: ${this.screenshotFileSize}) (screenshot_processor_BorderTrimSize: ${this.screenshot_processor_TextImageBorderTrimSize}) (screenshot_processor_BrightnessThreshold: ${this.screenshot_processor_InputImageBrightnessThreshold}) (screenshot_processor_MaxWidth: ${this.screenshot_processor_ItemImageMaxWidth}) (screenshot_processor_MinWidth: ${this.screenshot_processor_ItemImageMinWidth}) (screenshot_processor_PictureHeight: ${this.screenshot_processor_ItemPictureHeight}) (screenshot_processor_PictureWidth: ${this.screenshot_processor_ItemPictureWidth})`; }
 
     get inputImage_afterBrightnessThreshold_canvas(): HTMLCanvasElement { return document.getElementById(this.inputImage_afterBrightnessThreshold_canvasId) as HTMLCanvasElement; }
     get inputImage_afterBrightnessThreshold_canvasId(): string { return `${this.id} inputImage_afterBrightnessThreshold_canvas`; }
@@ -62,11 +62,11 @@ export default class Screenshot {
     get textImage_canvas(): HTMLCanvasElement { return document.getElementById(this.textImage_canvasId) as HTMLCanvasElement; }
     get textImage_canvasId(): string { return `${this.id} textImage_canvas`; }
 
-    startTime = -1;
-    endTime = -1;
-    get elapsedTime(): number { return this.endTime - this.startTime; }
+    processingStartTime = -1;
+    processingEndTime = -1;
+    get processingTime(): number { return this.processingEndTime - this.processingStartTime; }
 
-    isDone = false;
+    isProcessed = false;
 
     itemName = 'Processing Item Name ...';
     itemRarityAndType = 'Processing Item Rarity & Type ...';
@@ -75,6 +75,8 @@ export default class Screenshot {
     itemPower = 'Processing Item Power ...';
     itemPower_index = -1;
     itemAttributes = [] as ItemAttribute[];
+
+    score = 0;
 
     processText() {
         const rawWords = this.text_data_words;
@@ -599,8 +601,8 @@ export default class Screenshot {
             } while (0 <= itemAttribute_rawWords_index);
         });
 
-        this.isDone = true;
-        this.endTime = Date.now();
+        this.isProcessed = true;
+        this.processingEndTime = Date.now();
 
         function findAny(targetWords: string[], startIndex: number): number {
             if (0 < targetWords.length) {

@@ -1,16 +1,15 @@
 'use client';
 
+import Filterable from '@/code/Filterable';
 import React from 'react';
-import Screenshot from '@/code/Screenshot';
 import Script from 'next/script';
 
-const d4pi_screenshots = [] as Screenshot[];
+const d4pi_filterables = [] as Filterable[];
 let d4pi_discardedScreenshotProcessorRequestsCount = 0;
 
 export default function Home(): React.JSX.Element {
   const _0String = '0';
   const AppControl_checkboxInputId = 'AppControl CheckboxInput';
-  const AppControl_ShowDemoControl_checkboxInputId = 'AppControl ShowDemoControl CheckboxInput';
   const AppControl_ShowDevControl_checkboxInputId = 'AppControl ShowDevControl CheckboxInput';
   const AppControl_ShowDevTestInformation_checkboxInputId = 'AppControl ShowDevTestInformation CheckboxInput';
   const AppControl_ShowScreenshotProcessorControl_checkboxInputId = 'AppControl ShowScreenshotProcessorControl CheckboxInput';
@@ -28,13 +27,12 @@ export default function Home(): React.JSX.Element {
   const DevControl_ShowTextImage_checkboxInputId = 'DevControl ShowTextImage CheckboxInput';
   const group_divClass = 'border-2 border-dotted border-neutral-600 m-5 max-w-fit p-5 rounded-2xl';
   const is_AppControl_checkboxInputChecked_defaultValue = false;
-  const is_AppControl_ShowDemoControl_checkboxInputChecked_defaultValue = true;
   const is_AppControl_ShowDevControl_checkboxInputChecked_defaultValue = true;
   const is_AppControl_ShowDevTestInformation_checkboxInputChecked_defaultValue = false;
   const is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked_defaultValue = false;
   const is_AppControl_ShowSettingsControl_checkboxInputChecked_defaultValue = false;
   const is_AppControl_ShowStatisticsReport_checkboxInputChecked_defaultValue = false;
-  const is_AppControl_ShowTutorial_checkboxInputChecked_defaultValue = false;
+  const is_AppControl_ShowTutorial_checkboxInputChecked_defaultValue = true;
   const is_DevControl_checkboxInputChecked_defaultValue = false;
   const is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked_defaultValue = false;
   const is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked_defaultValue = false;
@@ -44,6 +42,7 @@ export default function Home(): React.JSX.Element {
   const is_DevControl_ShowTextImage_checkboxInputChecked_defaultValue = false;
   const numberInputClass = 'mr-5 text-black text-right w-20';
   const numberInputType = 'number';
+  const olClass = 'list-decimal list-inside';
   const screenshot_fileInputId = 'Screenshot FileInput';
   const screenshot_processor_InputImageBrightnessThreshold_defaultValue = 25;
   const screenshot_processor_InputImageBrightnessThreshold_labelText = 'Input Image Brightness Threshold';
@@ -71,8 +70,8 @@ export default function Home(): React.JSX.Element {
   const ulClass = 'list-disc list-inside';
 
   const [discardedScreenshotProcessorRequestsCount, set_discardedScreenshotProcessorRequestsCount] = React.useState(d4pi_discardedScreenshotProcessorRequestsCount);
+  const [filterables, set_filterables] = React.useState(d4pi_filterables);
   const [is_AppControl_checkboxInputChecked, set_is_AppControl_checkboxInputChecked] = React.useState(is_AppControl_checkboxInputChecked_defaultValue);
-  const [is_AppControl_ShowDemoControl_checkboxInputChecked, set_is_AppControl_ShowDemoControl_checkboxInputChecked] = React.useState(is_AppControl_ShowDemoControl_checkboxInputChecked_defaultValue);
   const [is_AppControl_ShowDevControl_checkboxInputChecked, set_is_AppControl_ShowDevControl_checkboxInputChecked] = React.useState(is_AppControl_ShowDevControl_checkboxInputChecked_defaultValue);
   const [is_AppControl_ShowDevTestInformation_checkboxInputChecked, set_is_AppControl_ShowDevTestInformation_checkboxInputChecked] = React.useState(is_AppControl_ShowDevTestInformation_checkboxInputChecked_defaultValue);
   const [is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked, set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked] = React.useState(is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked_defaultValue);
@@ -93,9 +92,7 @@ export default function Home(): React.JSX.Element {
   const [screenshot_processor_ItemPictureWidth, set_screenshot_processor_ItemPictureWidth] = React.useState(screenshot_processor_ItemPictureWidth_defaultValue);
   const [screenshot_processor_TextImageBorderTrimSize, set_screenshot_processor_TextImageBorderTrimSize] = React.useState(screenshot_processor_TextImageBorderTrimSize_defaultValue);
   const [screenshot_processor_TextImageCornerTrimSize, set_screenshot_processor_TextImageCornerTrimSize] = React.useState(screenshot_processor_TextImageCornerTrimSize_defaultValue);
-  const [screenshots, set_screenshots] = React.useState(d4pi_screenshots);
 
-  function handle_AppControl_ShowDemoControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked); }
   function handle_AppControl_ShowDevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked); }
   function handle_AppControl_ShowDevTestInformation_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked); }
   function handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked); }
@@ -118,7 +115,6 @@ export default function Home(): React.JSX.Element {
 
   function handle_AppControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     set_is_AppControl_checkboxInputChecked(event.target.checked);
-    set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked);
     set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked);
     set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked);
     set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked);
@@ -157,28 +153,28 @@ export default function Home(): React.JSX.Element {
       function processScreenshotFileList(): void {
         const screenshotFiles = Array.from(screenshotFileList);
         screenshotFiles.forEach(screenshotFile => {
-          const newScreenshot = new Screenshot(
-            screenshotFile.lastModified,
-            screenshotFile.name,
-            screenshotFile.size,
+          const newFilterable = new Filterable(
             screenshot_processor_InputImageBrightnessThreshold,
             screenshot_processor_ItemImageMaxWidth,
             screenshot_processor_ItemImageMinWidth,
             screenshot_processor_ItemPictureHeight,
             screenshot_processor_ItemPictureWidth,
             screenshot_processor_TextImageBorderTrimSize,
-            screenshot_processor_TextImageCornerTrimSize
+            screenshot_processor_TextImageCornerTrimSize,
+            screenshotFile.lastModified,
+            screenshotFile.name,
+            screenshotFile.size
           );
-          if (d4pi_screenshots.some(screenshot => screenshot.id === newScreenshot.id)) {
+          if (d4pi_filterables.some(filterable => filterable.id === newFilterable.id)) {
             ++d4pi_discardedScreenshotProcessorRequestsCount;
             set_discardedScreenshotProcessorRequestsCount(d4pi_discardedScreenshotProcessorRequestsCount);
           } else {
-            d4pi_screenshots.push(newScreenshot);
-            set_screenshots([...d4pi_screenshots]);
+            d4pi_filterables.push(newFilterable);
+            set_filterables([...d4pi_filterables]);
             const screenshotFileReader = new FileReader();
             screenshotFileReader.onload = () => {
               const screenshotInputImageDataUrl = screenshotFileReader.result as string;
-              waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, screenshotInputImageDataUrl);
+              waitForScreenshotsRendering_then_initializeScreenshotInputImage(newFilterable, screenshotInputImageDataUrl);
             };
             screenshotFileReader.readAsDataURL(screenshotFile);
           }
@@ -196,25 +192,25 @@ export default function Home(): React.JSX.Element {
 
   function showIfTrue(is_Show_checkboxInputChecked: boolean): string { return is_Show_checkboxInputChecked ? '' : 'hidden'; }
 
-  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot: Screenshot, screenshotInputImageUrl: string): void {
+  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(filterable: Filterable, screenshotInputImageUrl: string): void {
     if (isScreenshotsRendered()) {
       initializeScreenshotInputImage();
     } else {
-      setTimeout(() => { waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot, screenshotInputImageUrl); }, defaultTimeout);
+      setTimeout(() => { waitForScreenshotsRendering_then_initializeScreenshotInputImage(filterable, screenshotInputImageUrl); }, defaultTimeout);
     }
 
     function isScreenshotsRendered(): boolean {
       return (
-        screenshot.inputImage_afterBrightnessThreshold_canvas !== null
-        && screenshot.inputImage_afterItemImageDetection_canvas !== null
-        && screenshot.inputImage_image !== null
-        && screenshot.itemImage_canvas !== null
-        && screenshot.textImage_canvas !== null
+        filterable.inputImage_afterBrightnessThreshold_canvas !== null
+        && filterable.inputImage_afterItemImageDetection_canvas !== null
+        && filterable.inputImage_image !== null
+        && filterable.itemImage_canvas !== null
+        && filterable.textImage_canvas !== null
       );
     }
 
     function initializeScreenshotInputImage(): void {
-      screenshot.inputImage_image.src = screenshotInputImageUrl;
+      filterable.inputImage_image.src = screenshotInputImageUrl;
       waitForScreenshotInputImageInitialization_then_processScreenshotInputImage();
 
       function waitForScreenshotInputImageInitialization_then_processScreenshotInputImage(): void {
@@ -224,27 +220,27 @@ export default function Home(): React.JSX.Element {
           setTimeout(() => { waitForScreenshotInputImageInitialization_then_processScreenshotInputImage(); }, defaultTimeout);
         }
 
-        function isScreenshotInputImageInitialized(): boolean { return screenshot.inputImage_image.width !== 0; }
+        function isScreenshotInputImageInitialized(): boolean { return filterable.inputImage_image.width !== 0; }
 
         function processScreenshotInputImage(): void {
           d4pi_fromInputImage_toTextImage(
-            screenshot.inputImage_afterBrightnessThreshold_canvasId,
-            screenshot.inputImage_afterItemImageDetection_canvasId,
-            screenshot.inputImage_image,
-            screenshot.itemImage_canvasId,
-            screenshot.itemImage_dataId,
-            screenshot.textImage_canvasId,
-            screenshot.screenshot_processor_InputImageBrightnessThreshold,
-            screenshot.screenshot_processor_ItemImageMaxWidth,
-            screenshot.screenshot_processor_ItemImageMinWidth,
-            screenshot.screenshot_processor_ItemPictureHeight,
-            screenshot.screenshot_processor_ItemPictureWidth,
-            screenshot.screenshot_processor_TextImageBorderTrimSize,
-            screenshot.screenshot_processor_TextImageCornerTrimSize
+            filterable.inputImage_afterBrightnessThreshold_canvasId,
+            filterable.inputImage_afterItemImageDetection_canvasId,
+            filterable.inputImage_image,
+            filterable.itemImage_canvasId,
+            filterable.itemImage_dataId,
+            filterable.textImage_canvasId,
+            filterable.screenshot_processor_InputImageBrightnessThreshold,
+            filterable.screenshot_processor_ItemImageMaxWidth,
+            filterable.screenshot_processor_ItemImageMinWidth,
+            filterable.screenshot_processor_ItemPictureHeight,
+            filterable.screenshot_processor_ItemPictureWidth,
+            filterable.screenshot_processor_TextImageBorderTrimSize,
+            filterable.screenshot_processor_TextImageCornerTrimSize
           );
           d4pi_fromImage_toText(
-            screenshot.text_dataId,
-            screenshot.textImage_canvas
+            filterable.text_dataId,
+            filterable.textImage_canvas
           );
           waitForScreenshotTextInitialization_then_processScreenshotText();
 
@@ -255,11 +251,15 @@ export default function Home(): React.JSX.Element {
               setTimeout(() => { waitForScreenshotTextInitialization_then_processScreenshotText(); }, defaultTimeout);
             }
 
-            function isScreenshotTextInitialized(): boolean { return screenshot.text_data_exists; }
+            function isScreenshotTextInitialized(): boolean { return filterable.text_data_exists; }
 
             function processScreenshotText(): void {
-              screenshot.processText();
-              set_screenshots([...d4pi_screenshots]);
+              filterable.processText();
+              set_filterables([...d4pi_filterables]);
+              d4pi_initialize_filterables_utilities(
+                d4pi_filterables,
+                set_filterables
+              );
             }
           }
         }
@@ -267,43 +267,43 @@ export default function Home(): React.JSX.Element {
     }
   }
 
-  function waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp: number, demoExample_dataName: string, demoExample_dataSize: number, demoExample_data: string): void {
+  function waitForAppInitialization_then_processDemoExample(demoExample_lastModifiedTimestamp: number, demoExample_name: string, demoExample_size: number, demoExample_data: string): void {
     if (isAppInitialized()) {
       processDemoExample();
     } else {
-      setTimeout(() => { waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp, demoExample_dataName, demoExample_dataSize, demoExample_data); }, defaultTimeout);
+      setTimeout(() => { waitForAppInitialization_then_processDemoExample(demoExample_lastModifiedTimestamp, demoExample_name, demoExample_size, demoExample_data); }, defaultTimeout);
     }
 
     function processDemoExample(): void {
-      const newScreenshot = new Screenshot(
-        demoExample_dataLastModifiedTimestamp,
-        demoExample_dataName,
-        demoExample_dataSize,
+      const newFilterable = new Filterable(
         screenshot_processor_InputImageBrightnessThreshold,
         screenshot_processor_ItemImageMaxWidth,
         screenshot_processor_ItemImageMinWidth,
         screenshot_processor_ItemPictureHeight,
         screenshot_processor_ItemPictureWidth,
         screenshot_processor_TextImageBorderTrimSize,
-        screenshot_processor_TextImageCornerTrimSize
+        screenshot_processor_TextImageCornerTrimSize,
+        demoExample_lastModifiedTimestamp,
+        demoExample_name,
+        demoExample_size
       );
-      if (d4pi_screenshots.some(screenshot => screenshot.id === newScreenshot.id)) {
+      if (d4pi_filterables.some(filterable => filterable.id === newFilterable.id)) {
         ++d4pi_discardedScreenshotProcessorRequestsCount;
         set_discardedScreenshotProcessorRequestsCount(d4pi_discardedScreenshotProcessorRequestsCount);
       } else {
-        d4pi_screenshots.push(newScreenshot);
-        set_screenshots([...d4pi_screenshots]);
-        waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, demoExample_data);
+        d4pi_filterables.push(newFilterable);
+        set_filterables([...d4pi_filterables]);
+        waitForScreenshotsRendering_then_initializeScreenshotInputImage(newFilterable, demoExample_data);
       }
     }
   }
 
   function renderStatisticsReport(): React.JSX.Element {
     const card_divClass = 'border-2 border-dotted border-neutral-500 m-2.5 p-2.5 rounded-lg';
-    const totalCount = screenshots.length;
-    const doneScreenshots = screenshots.filter(screenshot => screenshot.isDone);
+    const totalCount = filterables.length;
+    const doneScreenshots = filterables.filter(screenshot => screenshot.isProcessed);
     const doneCount = doneScreenshots.length;
-    const averageTime = doneCount > 0 ? Math.round(doneScreenshots.reduce((totalTime, doneScreenshot) => totalTime + doneScreenshot.elapsedTime, 0) / doneCount) / 1000 + 's' : 'N/A';
+    const averageTime = doneCount > 0 ? Math.round(doneScreenshots.reduce((totalTime, doneScreenshot) => totalTime + doneScreenshot.processingTime, 0) / doneCount) / 1000 + 's' : 'N/A';
     return <>
       <div className={card_divClass}>
         Total {totalCount}
@@ -321,7 +321,7 @@ export default function Home(): React.JSX.Element {
         Discarded {discardedScreenshotProcessorRequestsCount}
       </div>
       <div className={card_divClass}>
-        Warning {screenshots.filter(screenshot => screenshot.isDone && screenshot.itemImage_data_candidates.length === 0).length}
+        Warning {filterables.filter(screenshot => screenshot.isProcessed && screenshot.itemImage_data_candidates.length === 0).length}
       </div>
     </>;
   }
@@ -332,18 +332,14 @@ export default function Home(): React.JSX.Element {
     <Script src='/code/fromImage_toText.js' strategy={scriptStrategy} />
     <Script src='https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js' strategy={scriptStrategy} />
     <Script src='/code/fromInputImage_toTextImage.js' strategy={scriptStrategy} />
+    <Script src='/code/filterables_utilities.js' strategy={scriptStrategy} />
     <Script src='/code/isCodeLoaded.js' strategy={scriptStrategy} />
 
     <main>
       <div className='flex flex-wrap'>
-        <div className={`${group_divClass} min-h-24`}>
+        <div className={group_divClass}>
           <label htmlFor={screenshot_fileInputId}>Choose Screenshot(s) from Disk to be Processed</label>
           <input id={screenshot_fileInputId} className='ml-5' accept='image/*' multiple onChange={handle_screenshot_fileInputChange} type='file' />
-        </div>
-
-        <div className={`${group_divClass} min-h-24 ${showIfTrue(is_AppControl_ShowDemoControl_checkboxInputChecked)}`}>
-          <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-5 px-5 py-2.5 rounded-lg text-neutral-200' onClick={handle_RunDemo_buttonClick} type='button'>Run Demo</button>
-          <span>1 click to convert 3 screenshots (<a className='underline' href='/images/example-1.jpg'>1.jpg</a> <a className='underline' href='/images/example-2.jpg'>2.jpg</a> <a className='underline' href='/images/example-3.jpg'>3.jpg</a>) to filterable items.</span>
         </div>
       </div>
 
@@ -351,7 +347,6 @@ export default function Home(): React.JSX.Element {
         <div className={`${group_divClass} space-y-2`}>
           <ul className='space-y-2'>
             <li><input id={AppControl_checkboxInputId} className='mr-5' checked={is_AppControl_checkboxInputChecked} onChange={handle_AppControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_checkboxInputId}><strong>App Control</strong></label></li>
-            <li><input id={AppControl_ShowDemoControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDemoControl_checkboxInputChecked} onChange={handle_AppControl_ShowDemoControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDemoControl_checkboxInputId}>Demo Control</label></li>
             <li><input id={AppControl_ShowDevControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDevControl_checkboxInputChecked} onChange={handle_AppControl_ShowDevControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDevControl_checkboxInputId}>Dev Control</label></li>
             <li><input id={AppControl_ShowDevTestInformation_checkboxInputId} className='mr-5' checked={is_AppControl_ShowDevTestInformation_checkboxInputChecked} onChange={handle_AppControl_ShowDevTestInformation_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowDevTestInformation_checkboxInputId}>Dev/Test Information</label></li>
             <li><input id={AppControl_ShowScreenshotProcessorControl_checkboxInputId} className='mr-5' checked={is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked} onChange={handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange} type={checkboxInputType} /><label htmlFor={AppControl_ShowScreenshotProcessorControl_checkboxInputId}>Screenshot Processor Control</label></li>
@@ -384,6 +379,8 @@ export default function Home(): React.JSX.Element {
               <li>Node.js 20.10.0</li>
               <li>OpenCV.js 4.9.0</li>
               <li>Tesseract.js 5.0.4</li>
+              <li><a className='underline' href='https://github.com/d4pi/d4pi.github.io'>Web Host</a></li>
+              <li><a className='underline' href='https://github.com/d4pi/web-app'>Source Code</a></li>
             </ul>
           </div>
 
@@ -423,27 +420,40 @@ export default function Home(): React.JSX.Element {
 
         <div className={`${group_divClass} ${showIfTrue(is_AppControl_ShowTutorial_checkboxInputChecked)}`}>
           <strong>Tutorial</strong>
+
+          <p>D4pi converts Diablo 4 item screenshots to filterable data.  Everything runs locally inside your web browser.</p>
+
+          <div className={small_group_divClass}>
+            <ol className={olClass}>
+              <li>
+                <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-2 my-1.5 px-2 py-1 rounded-lg text-neutral-200' onClick={handle_RunDemo_buttonClick} type='button'>Load Demo Screenshots</button>
+                <code><a className='underline' href='/images/example-1.jpg'>1.jpg</a> <a className='underline' href='/images/example-2.jpg'>2.jpg</a> <a className='underline' href='/images/example-3.jpg'>3.jpg</a></code>
+              </li>
+
+              <li>Wait a few seconds for the screenshots to be processed.</li>
+            </ol>
+          </div>
         </div>
       </div>
 
       <div className='flex flex-wrap'>
         {
-          screenshots.map(screenshot =>
-            <div key={screenshot.id} className={group_divClass}>
+          filterables.toSorted((a, b) => (a.score - b.score) * -1).map(filterable =>
+            <div key={filterable.id} className={group_divClass}>
               <div className={small_group_divClass}>
-                <p><strong>{screenshot.itemName}</strong></p>
-                <p>{screenshot.itemRarityAndType}</p>
-                <p>{screenshot.itemPower}</p>
+                <p><strong>{filterable.itemName}</strong></p>
+                <p>{filterable.itemRarityAndType}</p>
+                <p>{filterable.itemPower}</p>
               </div>
 
               <div className={`${small_group_divClass} divide-dotted divide-neutral-500 divide-y-2`}>
                 {
-                  screenshot.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).length > 0 ?
+                  filterable.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).length > 0 ?
 
                     <div>
                       <ul className={ulClass}>
                         {
-                          screenshot.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
+                          filterable.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
                             <li key={itemAttribute.key}>
                               {itemAttribute.text}
                             </li>
@@ -458,7 +468,7 @@ export default function Home(): React.JSX.Element {
                 <div>
                   <ul className={ulClass}>
                     {
-                      screenshot.itemAttributes.filter(itemAttribute => !itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
+                      filterable.itemAttributes.filter(itemAttribute => !itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
                         <li key={itemAttribute.key}>
                           {itemAttribute.text}
                         </li>
@@ -471,14 +481,14 @@ export default function Home(): React.JSX.Element {
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_checkboxInputChecked)}`}>
                 <strong>Input Image</strong>
                 <ul className={ulClass}>
-                  <li>Data Last Modified Timestamp: {screenshot.dataLastModifiedTimestamp}</li>
-                  <li>Data Name: {screenshot.dataName}</li>
-                  <li>Data Size: {screenshot.dataSize}</li>
+                  <li>Data Last Modified Timestamp: {filterable.screenshotFileLastModifiedTimestamp}</li>
+                  <li>Data Name: {filterable.screenshotFileName}</li>
+                  <li>Data Size: {filterable.screenshotFileSize}</li>
                 </ul>
                 <div>
                   {
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img id={screenshot.inputImage_imageId} className='max-w-none' alt={screenshot.id} />
+                    <img id={filterable.inputImage_imageId} className='max-w-none' alt={filterable.id} />
                   }
                 </div>
               </div>
@@ -486,25 +496,25 @@ export default function Home(): React.JSX.Element {
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked)}`}>
                 <strong>Input Image after Brightness Threshold</strong>
                 <ul className={ulClass}>
-                  <li>{screenshot_processor_InputImageBrightnessThreshold_labelText}: {screenshot.screenshot_processor_InputImageBrightnessThreshold}</li>
+                  <li>{screenshot_processor_InputImageBrightnessThreshold_labelText}: {filterable.screenshot_processor_InputImageBrightnessThreshold}</li>
                 </ul>
                 <div>
-                  <canvas id={screenshot.inputImage_afterBrightnessThreshold_canvasId} />
+                  <canvas id={filterable.inputImage_afterBrightnessThreshold_canvasId} />
                 </div>
               </div>
 
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked)}`}>
                 <strong>Input Image after Item Image Detection</strong>
                 <ul className={ulClass}>
-                  <li>{screenshot_processor_ItemImageMinWidth_labelText}: {screenshot.screenshot_processor_ItemImageMinWidth}</li>
-                  <li>{screenshot_processor_ItemImageMaxWidth_labelText}: {screenshot.screenshot_processor_ItemImageMaxWidth}</li>
+                  <li>{screenshot_processor_ItemImageMinWidth_labelText}: {filterable.screenshot_processor_ItemImageMinWidth}</li>
+                  <li>{screenshot_processor_ItemImageMaxWidth_labelText}: {filterable.screenshot_processor_ItemImageMaxWidth}</li>
                   <div className={small_group_divClass}>
                     <p>Candidates:</p>
                     <ul className={ulClass}>
                       {
-                        screenshot.itemImage_data_candidates.map(candidate =>
-                          <li key={`${screenshot.itemImage_dataId} ${candidate.id}`}>
-                            <span className={screenshot.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
+                        filterable.itemImage_data_candidates.map(candidate =>
+                          <li key={`${filterable.itemImage_dataId} ${candidate.id}`}>
+                            <span className={filterable.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
                           </li>
                         )
                       }
@@ -512,40 +522,40 @@ export default function Home(): React.JSX.Element {
                   </div>
                 </ul>
                 <div>
-                  <canvas id={screenshot.inputImage_afterItemImageDetection_canvasId} />
+                  <canvas id={filterable.inputImage_afterItemImageDetection_canvasId} />
                 </div>
               </div>
 
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowItemImage_checkboxInputChecked)}`}>
                 <strong>Item Image</strong>
                 <div>
-                  <canvas id={screenshot.itemImage_canvasId} />
+                  <canvas id={filterable.itemImage_canvasId} />
                 </div>
               </div>
 
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowTextImage_checkboxInputChecked)}`}>
                 <strong>Text Image</strong>
                 <ul className={ulClass}>
-                  <li>{screenshot_processor_ItemPictureHeight_labelText}: {screenshot.screenshot_processor_ItemPictureHeight}</li>
-                  <li>{screenshot_processor_ItemPictureWidth_labelText}: {screenshot.screenshot_processor_ItemPictureWidth}</li>
-                  <li>{screenshot_processor_TextImageBorderTrimSize_labelText}: {screenshot.screenshot_processor_TextImageBorderTrimSize}</li>
-                  <li>{screenshot_processor_TextImageCornerTrimSize_labelText}: {screenshot.screenshot_processor_TextImageCornerTrimSize}</li>
+                  <li>{screenshot_processor_ItemPictureHeight_labelText}: {filterable.screenshot_processor_ItemPictureHeight}</li>
+                  <li>{screenshot_processor_ItemPictureWidth_labelText}: {filterable.screenshot_processor_ItemPictureWidth}</li>
+                  <li>{screenshot_processor_TextImageBorderTrimSize_labelText}: {filterable.screenshot_processor_TextImageBorderTrimSize}</li>
+                  <li>{screenshot_processor_TextImageCornerTrimSize_labelText}: {filterable.screenshot_processor_TextImageCornerTrimSize}</li>
                 </ul>
                 <div>
-                  <canvas id={screenshot.textImage_canvasId} />
+                  <canvas id={filterable.textImage_canvasId} />
                 </div>
               </div>
 
               <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowText_checkboxInputChecked)}`}>
                 <strong>Text</strong>
                 <ul className={ulClass}>
-                  <li>Confidence: {screenshot.text_data_confidence}</li>
-                  <li>itemType_startIndex: {screenshot.itemRarityAndType_startIndex}</li>
-                  <li>itemType_endIndex: {screenshot.itemRarityAndType_endIndex}</li>
-                  <li>itemPower_itemIndex: {screenshot.itemPower_index}</li>
+                  <li>Confidence: {filterable.text_data_confidence}</li>
+                  <li>itemType_startIndex: {filterable.itemRarityAndType_startIndex}</li>
+                  <li>itemType_endIndex: {filterable.itemRarityAndType_endIndex}</li>
+                  <li>itemPower_itemIndex: {filterable.itemPower_index}</li>
                 </ul>
                 <pre>
-                  {screenshot.text_data_text}
+                  {filterable.text_data_text}
                 </pre>
               </div>
             </div>
