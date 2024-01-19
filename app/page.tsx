@@ -7,7 +7,7 @@ import Script from 'next/script';
 const d4pi_screenshots = [] as Screenshot[];
 let d4pi_discardedScreenshotProcessorRequestsCount = 0;
 
-export default function Home() {
+export default function Home(): React.JSX.Element {
   const _0String = '0';
   const AppControl_checkboxInputId = 'AppControl CheckboxInput';
   const AppControl_ShowDemoControl_checkboxInputId = 'AppControl ShowDemoControl CheckboxInput';
@@ -67,6 +67,7 @@ export default function Home() {
   const screenshot_processor_TextImageCornerTrimSize_labelText = 'Text Image Corner Trim Size';
   const screenshot_processor_TextImageCornerTrimSize_numberInputId = 'ScreenshotProcessor TextImageCornerTrimSize NumberInput';
   const scriptStrategy = 'beforeInteractive';
+  const small_group_divClass = 'border-2 border-dotted border-neutral-600 m-2.5 max-w-fit p-5 rounded-lg';
   const ulClass = 'list-disc list-inside';
 
   const [discardedScreenshotProcessorRequestsCount, set_discardedScreenshotProcessorRequestsCount] = React.useState(d4pi_discardedScreenshotProcessorRequestsCount);
@@ -94,28 +95,28 @@ export default function Home() {
   const [screenshot_processor_TextImageCornerTrimSize, set_screenshot_processor_TextImageCornerTrimSize] = React.useState(screenshot_processor_TextImageCornerTrimSize_defaultValue);
   const [screenshots, set_screenshots] = React.useState(d4pi_screenshots);
 
-  function handle_AppControl_ShowDemoControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowDevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowDevTestInformation_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowSettingsControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowSettingsControl_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowStatisticsReport_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowStatisticsReport_checkboxInputChecked(event.target.checked); }
-  function handle_AppControl_ShowTutorial_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_AppControl_ShowTutorial_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowInputImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowInputImage_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowItemImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowItemImage_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowText_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowText_checkboxInputChecked(event.target.checked); }
-  function handle_DevControl_ShowTextImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_is_DevControl_ShowTextImage_checkboxInputChecked(event.target.checked); }
-  function handle_screenshot_processor_InputImageBrightnessThreshold_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_InputImageBrightnessThreshold(Number(event.target.value)); }
-  function handle_screenshot_processor_ItemImageMaxWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemImageMaxWidth(Number(event.target.value)); }
-  function handle_screenshot_processor_ItemImageMinWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemImageMinWidth(Number(event.target.value)); }
-  function handle_screenshot_processor_ItemPictureHeight_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemPictureHeight(Number(event.target.value)); }
-  function handle_screenshot_processor_ItemPictureWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_ItemPictureWidth(Number(event.target.value)); }
-  function handle_screenshot_processor_TextImageBorderTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_TextImageBorderTrimSize(Number(event.target.value)); }
-  function handle_screenshot_processor_TextImageCornerTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>) { set_screenshot_processor_TextImageCornerTrimSize(Number(event.target.value)); }
+  function handle_AppControl_ShowDemoControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowDevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowDevTestInformation_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowDevTestInformation_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowScreenshotProcessorControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowScreenshotProcessorControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowSettingsControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowSettingsControl_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowStatisticsReport_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowStatisticsReport_checkboxInputChecked(event.target.checked); }
+  function handle_AppControl_ShowTutorial_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_AppControl_ShowTutorial_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowInputImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowInputImage_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowItemImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowItemImage_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowText_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowText_checkboxInputChecked(event.target.checked); }
+  function handle_DevControl_ShowTextImage_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_is_DevControl_ShowTextImage_checkboxInputChecked(event.target.checked); }
+  function handle_screenshot_processor_InputImageBrightnessThreshold_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_InputImageBrightnessThreshold(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemImageMaxWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_ItemImageMaxWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemImageMinWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_ItemImageMinWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemPictureHeight_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_ItemPictureHeight(Number(event.target.value)); }
+  function handle_screenshot_processor_ItemPictureWidth_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_ItemPictureWidth(Number(event.target.value)); }
+  function handle_screenshot_processor_TextImageBorderTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_TextImageBorderTrimSize(Number(event.target.value)); }
+  function handle_screenshot_processor_TextImageCornerTrimSize_numberInputChange(event: React.ChangeEvent<HTMLInputElement>): void { set_screenshot_processor_TextImageCornerTrimSize(Number(event.target.value)); }
 
-  function handle_AppControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handle_AppControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     set_is_AppControl_checkboxInputChecked(event.target.checked);
     set_is_AppControl_ShowDemoControl_checkboxInputChecked(event.target.checked);
     set_is_AppControl_ShowDevControl_checkboxInputChecked(event.target.checked);
@@ -126,7 +127,7 @@ export default function Home() {
     set_is_AppControl_ShowTutorial_checkboxInputChecked(event.target.checked);
   }
 
-  function handle_DevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handle_DevControl_checkboxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     set_is_DevControl_checkboxInputChecked(event.target.checked);
     set_is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked(event.target.checked);
     set_is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked(event.target.checked);
@@ -136,24 +137,24 @@ export default function Home() {
     set_is_DevControl_ShowTextImage_checkboxInputChecked(event.target.checked);
   }
 
-  function handle_RunDemo_buttonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handle_RunDemo_buttonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 1', 693354, '/images/example-1.jpg');
     waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 2', 640421, '/images/example-2.jpg');
     waitForAppInitialization_then_processDemoExample(1704654020, 'Demo Example 3', 621025, '/images/example-3.jpg');
   }
 
-  function handle_screenshot_fileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handle_screenshot_fileInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const screenshotFileList = event.target.files!;
     waitForAppInitialization_then_processScreenshotFileList();
 
-    function waitForAppInitialization_then_processScreenshotFileList() {
+    function waitForAppInitialization_then_processScreenshotFileList(): void {
       if (isAppInitialized()) {
         processScreenshotFileList();
       } else {
         setTimeout(() => { waitForAppInitialization_then_processScreenshotFileList(); }, defaultTimeout);
       }
 
-      function processScreenshotFileList() {
+      function processScreenshotFileList(): void {
         const screenshotFiles = Array.from(screenshotFileList);
         screenshotFiles.forEach(screenshotFile => {
           const newScreenshot = new Screenshot(
@@ -186,23 +187,23 @@ export default function Home() {
     }
   }
 
-  function isAppInitialized() {
+  function isAppInitialized(): boolean {
     return (
       d4pi_isCodeLoaded
       && d4pi_isOpencvRuntimeInitialized
     );
   }
 
-  function showIfTrue(is_Show_checkboxInputChecked: boolean) { return is_Show_checkboxInputChecked ? '' : 'hidden'; }
+  function showIfTrue(is_Show_checkboxInputChecked: boolean): string { return is_Show_checkboxInputChecked ? '' : 'hidden'; }
 
-  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot: Screenshot, screenshotInputImageUrl: string) {
+  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot: Screenshot, screenshotInputImageUrl: string): void {
     if (isScreenshotsRendered()) {
       initializeScreenshotInputImage();
     } else {
       setTimeout(() => { waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot, screenshotInputImageUrl); }, defaultTimeout);
     }
 
-    function isScreenshotsRendered() {
+    function isScreenshotsRendered(): boolean {
       return (
         screenshot.inputImage_afterBrightnessThreshold_canvas !== null
         && screenshot.inputImage_afterItemImageDetection_canvas !== null
@@ -212,20 +213,20 @@ export default function Home() {
       );
     }
 
-    function initializeScreenshotInputImage() {
+    function initializeScreenshotInputImage(): void {
       screenshot.inputImage_image.src = screenshotInputImageUrl;
       waitForScreenshotInputImageInitialization_then_processScreenshotInputImage();
 
-      function waitForScreenshotInputImageInitialization_then_processScreenshotInputImage() {
+      function waitForScreenshotInputImageInitialization_then_processScreenshotInputImage(): void {
         if (isScreenshotInputImageInitialized()) {
           processScreenshotInputImage();
         } else {
           setTimeout(() => { waitForScreenshotInputImageInitialization_then_processScreenshotInputImage(); }, defaultTimeout);
         }
 
-        function isScreenshotInputImageInitialized() { return screenshot.inputImage_image.width !== 0; }
+        function isScreenshotInputImageInitialized(): boolean { return screenshot.inputImage_image.width !== 0; }
 
-        function processScreenshotInputImage() {
+        function processScreenshotInputImage(): void {
           d4pi_fromInputImage_toTextImage(
             screenshot.inputImage_afterBrightnessThreshold_canvasId,
             screenshot.inputImage_afterItemImageDetection_canvasId,
@@ -247,16 +248,16 @@ export default function Home() {
           );
           waitForScreenshotTextInitialization_then_processScreenshotText();
 
-          function waitForScreenshotTextInitialization_then_processScreenshotText() {
+          function waitForScreenshotTextInitialization_then_processScreenshotText(): void {
             if (isScreenshotTextInitialized()) {
               processScreenshotText();
             } else {
               setTimeout(() => { waitForScreenshotTextInitialization_then_processScreenshotText(); }, defaultTimeout);
             }
 
-            function isScreenshotTextInitialized() { return screenshot.text_data_exists; }
+            function isScreenshotTextInitialized(): boolean { return screenshot.text_data_exists; }
 
-            function processScreenshotText() {
+            function processScreenshotText(): void {
               screenshot.processText();
               set_screenshots([...d4pi_screenshots]);
             }
@@ -266,14 +267,14 @@ export default function Home() {
     }
   }
 
-  function waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp: number, demoExample_dataName: string, demoExample_dataSize: number, demoExample_data: string) {
+  function waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp: number, demoExample_dataName: string, demoExample_dataSize: number, demoExample_data: string): void {
     if (isAppInitialized()) {
       processDemoExample();
     } else {
       setTimeout(() => { waitForAppInitialization_then_processDemoExample(demoExample_dataLastModifiedTimestamp, demoExample_dataName, demoExample_dataSize, demoExample_data); }, defaultTimeout);
     }
 
-    function processDemoExample() {
+    function processDemoExample(): void {
       const newScreenshot = new Screenshot(
         demoExample_dataLastModifiedTimestamp,
         demoExample_dataName,
@@ -297,7 +298,7 @@ export default function Home() {
     }
   }
 
-  function renderStatisticsReport(): React.ReactNode {
+  function renderStatisticsReport(): React.JSX.Element {
     const card_divClass = 'border-2 border-dotted border-neutral-500 m-2.5 p-2.5 rounded-lg';
     const totalCount = screenshots.length;
     const doneScreenshots = screenshots.filter(screenshot => screenshot.isDone);
@@ -429,77 +430,124 @@ export default function Home() {
         {
           screenshots.map(screenshot =>
             <div key={screenshot.id} className={group_divClass}>
-              <ul className={ulClass}>
-                <li>{screenshot.itemName}</li>
+              <div className={small_group_divClass}>
+                <p><strong>{screenshot.itemName}</strong></p>
+                <p>{screenshot.itemRarityAndType}</p>
+                <p>{screenshot.itemPower}</p>
+              </div>
 
-                <li>{screenshot.itemType}</li>
+              <div className={`${small_group_divClass} divide-dotted divide-neutral-500 divide-y-2`}>
+                {
+                  screenshot.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).length > 0 ?
 
-                <li className={showIfTrue(is_DevControl_ShowInputImage_checkboxInputChecked)}>
-                  <strong>Input Image</strong>
+                    <div>
+                      <ul className={ulClass}>
+                        {
+                          screenshot.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
+                            <li key={itemAttribute.key}>
+                              {itemAttribute.text}
+                            </li>
+                          )
+                        }
+                      </ul>
+                    </div>
+
+                    : <></>
+                }
+
+                <div>
                   <ul className={ulClass}>
-                    <li>Data Last Modified Timestamp: {screenshot.dataLastModifiedTimestamp}</li>
-                    <li>Data Name: {screenshot.dataName}</li>
-                    <li>Data Size: {screenshot.dataSize}</li>
+                    {
+                      screenshot.itemAttributes.filter(itemAttribute => !itemAttribute.isItemTypeBuiltIn).map(itemAttribute =>
+                        <li key={itemAttribute.key}>
+                          {itemAttribute.text}
+                        </li>
+                      )
+                    }
                   </ul>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_checkboxInputChecked)}`}>
+                <strong>Input Image</strong>
+                <ul className={ulClass}>
+                  <li>Data Last Modified Timestamp: {screenshot.dataLastModifiedTimestamp}</li>
+                  <li>Data Name: {screenshot.dataName}</li>
+                  <li>Data Size: {screenshot.dataSize}</li>
+                </ul>
+                <div>
                   {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img id={screenshot.inputImage_imageId} className='max-w-none' alt={screenshot.id} />
                   }
-                </li>
-                <li className={showIfTrue(is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked)}>
-                  <strong>Input Image after Brightness Threshold</strong>
-                  <ul className={ulClass}>
-                    <li>{screenshot_processor_InputImageBrightnessThreshold_labelText}: {screenshot.screenshot_processor_InputImageBrightnessThreshold}</li>
-                  </ul>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_afterBrightnessThreshold_checkboxInputChecked)}`}>
+                <strong>Input Image after Brightness Threshold</strong>
+                <ul className={ulClass}>
+                  <li>{screenshot_processor_InputImageBrightnessThreshold_labelText}: {screenshot.screenshot_processor_InputImageBrightnessThreshold}</li>
+                </ul>
+                <div>
                   <canvas id={screenshot.inputImage_afterBrightnessThreshold_canvasId} />
-                </li>
-                <li className={showIfTrue(is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked)}>
-                  <strong>Input Image after Item Image Detection</strong>
-                  <ul className={ulClass}>
-                    <li>{screenshot_processor_ItemImageMinWidth_labelText}: {screenshot.screenshot_processor_ItemImageMinWidth}</li>
-                    <li>{screenshot_processor_ItemImageMaxWidth_labelText}: {screenshot.screenshot_processor_ItemImageMaxWidth}</li>
-                    {
-                      screenshot.itemImage_data_candidates.length > 0 ?
-                        <li>
-                          Candidates:
-                          <ul className={ulClass}>
-                            {
-                              screenshot.itemImage_data_candidates.map(candidate =>
-                                <li key={`${screenshot.itemImage_dataId} ${candidate.id}`}>
-                                  <span className={screenshot.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
-                                </li>
-                              )
-                            }
-                          </ul>
-                        </li>
-                        :
-                        <></>
-                    }
-                  </ul>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowInputImage_afterItemImageDetection_checkboxInputChecked)}`}>
+                <strong>Input Image after Item Image Detection</strong>
+                <ul className={ulClass}>
+                  <li>{screenshot_processor_ItemImageMinWidth_labelText}: {screenshot.screenshot_processor_ItemImageMinWidth}</li>
+                  <li>{screenshot_processor_ItemImageMaxWidth_labelText}: {screenshot.screenshot_processor_ItemImageMaxWidth}</li>
+                  <div className={small_group_divClass}>
+                    <p>Candidates:</p>
+                    <ul className={ulClass}>
+                      {
+                        screenshot.itemImage_data_candidates.map(candidate =>
+                          <li key={`${screenshot.itemImage_dataId} ${candidate.id}`}>
+                            <span className={screenshot.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
+                          </li>
+                        )
+                      }
+                    </ul>
+                  </div>
+                </ul>
+                <div>
                   <canvas id={screenshot.inputImage_afterItemImageDetection_canvasId} />
-                </li>
-                <li className={showIfTrue(is_DevControl_ShowItemImage_checkboxInputChecked)}>
-                  <strong>Item Image</strong>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowItemImage_checkboxInputChecked)}`}>
+                <strong>Item Image</strong>
+                <div>
                   <canvas id={screenshot.itemImage_canvasId} />
-                </li>
-                <li className={showIfTrue(is_DevControl_ShowTextImage_checkboxInputChecked)}>
-                  <strong>Text Image</strong>
-                  <ul className={ulClass}>
-                    <li>{screenshot_processor_ItemPictureHeight_labelText}: {screenshot.screenshot_processor_ItemPictureHeight}</li>
-                    <li>{screenshot_processor_ItemPictureWidth_labelText}: {screenshot.screenshot_processor_ItemPictureWidth}</li>
-                    <li>{screenshot_processor_TextImageBorderTrimSize_labelText}: {screenshot.screenshot_processor_TextImageBorderTrimSize}</li>
-                    <li>{screenshot_processor_TextImageCornerTrimSize_labelText}: {screenshot.screenshot_processor_TextImageCornerTrimSize}</li>
-                  </ul>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowTextImage_checkboxInputChecked)}`}>
+                <strong>Text Image</strong>
+                <ul className={ulClass}>
+                  <li>{screenshot_processor_ItemPictureHeight_labelText}: {screenshot.screenshot_processor_ItemPictureHeight}</li>
+                  <li>{screenshot_processor_ItemPictureWidth_labelText}: {screenshot.screenshot_processor_ItemPictureWidth}</li>
+                  <li>{screenshot_processor_TextImageBorderTrimSize_labelText}: {screenshot.screenshot_processor_TextImageBorderTrimSize}</li>
+                  <li>{screenshot_processor_TextImageCornerTrimSize_labelText}: {screenshot.screenshot_processor_TextImageCornerTrimSize}</li>
+                </ul>
+                <div>
                   <canvas id={screenshot.textImage_canvasId} />
-                </li>
-                <li className={showIfTrue(is_DevControl_ShowText_checkboxInputChecked)}>
-                  <strong>Text</strong>
-                  <div>Confidence: {screenshot.text_data_confidence}</div>
-                  <pre>
-                    {screenshot.text_data_text}
-                  </pre>
-                </li>
-              </ul>
+                </div>
+              </div>
+
+              <div className={`${small_group_divClass} ${showIfTrue(is_DevControl_ShowText_checkboxInputChecked)}`}>
+                <strong>Text</strong>
+                <ul className={ulClass}>
+                  <li>Confidence: {screenshot.text_data_confidence}</li>
+                  <li>itemType_startIndex: {screenshot.itemRarityAndType_startIndex}</li>
+                  <li>itemType_endIndex: {screenshot.itemRarityAndType_endIndex}</li>
+                  <li>itemPower_itemIndex: {screenshot.itemPower_index}</li>
+                </ul>
+                <pre>
+                  {screenshot.text_data_text}
+                </pre>
+              </div>
             </div>
           )
         }
