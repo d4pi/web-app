@@ -35,50 +35,57 @@ export default class Filterable {
         this.screenshotFileName = screenshotFileName;
         this.screenshotFileSize = screenshotFileSize;
 
-        this.processingStartTime = Date.now();
+        this.processTime_start = Date.now();
     }
 
-    get id(): string { return `Screenshot (fileName: ${this.screenshotFileName}) (fileLastModifiedTimestamp: ${this.screenshotFileLastModifiedTimestamp}) (fileSize: ${this.screenshotFileSize}) (screenshot_processor_BorderTrimSize: ${this.screenshot_processor_TextImageBorderTrimSize}) (screenshot_processor_BrightnessThreshold: ${this.screenshot_processor_InputImageBrightnessThreshold}) (screenshot_processor_MaxWidth: ${this.screenshot_processor_ItemImageMaxWidth}) (screenshot_processor_MinWidth: ${this.screenshot_processor_ItemImageMinWidth}) (screenshot_processor_PictureHeight: ${this.screenshot_processor_ItemPictureHeight}) (screenshot_processor_PictureWidth: ${this.screenshot_processor_ItemPictureWidth})`; }
+    get key(): string { return `Screenshot (fileName: ${this.screenshotFileName}) (fileLastModifiedTimestamp: ${this.screenshotFileLastModifiedTimestamp}) (fileSize: ${this.screenshotFileSize}) (screenshot_processor_BorderTrimSize: ${this.screenshot_processor_TextImageBorderTrimSize}) (screenshot_processor_BrightnessThreshold: ${this.screenshot_processor_InputImageBrightnessThreshold}) (screenshot_processor_MaxWidth: ${this.screenshot_processor_ItemImageMaxWidth}) (screenshot_processor_MinWidth: ${this.screenshot_processor_ItemImageMinWidth}) (screenshot_processor_PictureHeight: ${this.screenshot_processor_ItemPictureHeight}) (screenshot_processor_PictureWidth: ${this.screenshot_processor_ItemPictureWidth})`; }
 
-    get inputImage_afterBrightnessThreshold_canvas(): HTMLCanvasElement { return document.getElementById(this.inputImage_afterBrightnessThreshold_canvasId) as HTMLCanvasElement; }
-    get inputImage_afterBrightnessThreshold_canvasId(): string { return `${this.id} inputImage_afterBrightnessThreshold_canvas`; }
-    get inputImage_afterItemImageDetection_canvas(): HTMLCanvasElement { return document.getElementById(this.inputImage_afterItemImageDetection_canvasId) as HTMLCanvasElement; }
-    get inputImage_afterItemImageDetection_canvasId(): string { return `${this.id} inputImage_afterItemImageDetection_canvas`; }
-    get inputImage_image(): HTMLImageElement { return document.getElementById(this.inputImage_imageId) as HTMLImageElement; }
-    get inputImage_imageId(): string { return `${this.id} inputImage_image`; };
-    get itemImage_canvas(): HTMLCanvasElement { return document.getElementById(this.itemImage_canvasId) as HTMLCanvasElement; }
-    get itemImage_canvasId(): string { return `${this.id} itemImage_canvas`; }
+    get inputImage_afterBrightnessThreshold_canvas_id(): string { return `${this.key} inputImage_afterBrightnessThreshold_canvas`; }
+    get inputImage_afterItemImageDetection_canvas_id(): string { return `${this.key} inputImage_afterItemImageDetection_canvas`; }
+    get inputImage_image_id(): string { return `${this.key} inputImage_image`; };
+    get itemImage_canvas_id(): string { return `${this.key} itemImage_canvas`; }
     get itemImage_data_candidates(): IRectangle[] { return this.itemImage_data_exists ? this.itemImage_data.candidates : []; }
     get itemImage_data_exists(): boolean { return this.itemImage_data !== undefined; }
+    get itemImage_data_id(): string { return `${this.key} itemImage_data`; }
     get itemImage_data_winner(): IRectangle { return this.itemImage_data.winner; }
-    get itemImage_data() { return d4pi_itemImageData[this.itemImage_dataId]; }
-    get itemImage_dataId(): string { return `${this.id} itemImage_data`; }
+    get itemImage_data() { return _itemImageData[this.itemImage_data_id]; }
     get text_data_confidence(): number { return this.text_data_exists ? this.text_data.confidence : -1; }
     get text_data_exists(): boolean { return this.text_data !== undefined; }
     get text_data_text(): string { return this.text_data_exists ? this.text_data.text : ''; }
     get text_data_words(): string[] { return this.text_data_exists ? this.text_data.words : []; }
-    get text_data() { return d4pi_textData[this.text_dataId]; }
-    get text_dataId(): string { return `${this.id} text_data`; }
-    get textImage_canvas(): HTMLCanvasElement { return document.getElementById(this.textImage_canvasId) as HTMLCanvasElement; }
-    get textImage_canvasId(): string { return `${this.id} textImage_canvas`; }
+    get text_data() { return _textData[this.text_dataId]; }
+    get text_dataId(): string { return `${this.key} text_data`; }
+    get textImage_canvas_id(): string { return `${this.key} textImage_canvas`; }
 
-    processingStartTime = -1;
-    processingEndTime = -1;
-    get processingTime(): number { return this.processingEndTime - this.processingStartTime; }
+    processTime_end = -1;
+    processTime_start = -1;
+    processTime_Image_end = -1;
+    processTime_Image_start = -1;
+    processTime_Text_end = -1;
+    processTime_Text_start = -1;
 
-    isProcessed = false;
+    get isProcessed(): boolean { return this.processTime_end !== -1; }
+    get isProcessing_Image(): boolean { return this.processTime_Image_start !== -1 && this.processTime_Image_end === -1; }
+    get isProcessing_Text(): boolean { return this.processTime_Text_start !== -1 && this.processTime_Text_end === -1; }
+    get processTime_Image(): number { return this.processTime_Image_end - this.processTime_Image_start; }
+    get processTime_Text(): number { return this.processTime_Text_end - this.processTime_Text_start; }
+    get processTime(): number { return this.processTime_end - this.processTime_start; }
+    end_Processing_Image() { this.processTime_Image_end = Date.now(); }
+    end_Processing_Text() { this.processTime_Text_end = Date.now(); }
+    start_Processing_Image() { this.processTime_Image_start = Date.now(); }
+    start_Processing_Text() { this.processTime_Text_start = Date.now(); }
 
     itemName = 'Processing Item Name ...';
-    itemRarityAndType = 'Processing Item Rarity & Type ...';
-    itemRarityAndType_endIndex = -1;
-    itemRarityAndType_startIndex = -1;
+    itemType = 'Processing Item Type ...';
+    itemType_endIndex = -1;
+    itemType_startIndex = -1;
     itemPower = 'Processing Item Power ...';
     itemPower_index = -1;
     itemAttributes = [] as ItemAttribute[];
 
     score = 0;
 
-    processText() {
+    processTextData() {
         const rawWords = this.text_data_words;
 
         const itemType_Amulet = 'Amulet';
@@ -103,9 +110,9 @@ export default class Filterable {
         const itemType_Wand = 'Wand';
 
         this.itemName = 'Unknown Item Name';
-        this.itemRarityAndType = 'Unknown Item Rarity & Type';
+        this.itemType = 'Unknown Item Type';
         let itemType = 'Unknown Item Type';
-        const itemRarityAndType_start_markers = [
+        const itemType_start_markers = [
             'Ancestral',
             'Common',
             'Legendary',
@@ -114,13 +121,13 @@ export default class Filterable {
             'Sacred',
             'Unique'
         ];
-        this.itemRarityAndType_startIndex = findAny(itemRarityAndType_start_markers, 0);
-        if (0 <= this.itemRarityAndType_startIndex) {
-            if (1 <= this.itemRarityAndType_startIndex) {
-                this.itemName = rawWords.slice(0, this.itemRarityAndType_startIndex).map(word => word.replaceAll(/[@©®]/g, 'O')).join(' ');
+        this.itemType_startIndex = findAny(itemType_start_markers, 0);
+        if (0 <= this.itemType_startIndex) {
+            if (1 <= this.itemType_startIndex) {
+                this.itemName = rawWords.slice(0, this.itemType_startIndex).map(word => word.replaceAll(/[@©®]/g, 'O')).join(' ');
             }
 
-            const itemRarityAndType_end_markers = [
+            const itemType_end_markers = [
                 itemType_Amulet,
                 itemType_Armor,
                 itemType_Axe,
@@ -142,10 +149,10 @@ export default class Filterable {
                 itemType_Totem,
                 itemType_Wand
             ];
-            this.itemRarityAndType_endIndex = findAny(itemRarityAndType_end_markers, this.itemRarityAndType_startIndex);
-            if (this.itemRarityAndType_startIndex < this.itemRarityAndType_endIndex) {
-                this.itemRarityAndType = rawWords.slice(this.itemRarityAndType_startIndex, this.itemRarityAndType_endIndex + 1).join(' ');
-                itemType = rawWords[this.itemRarityAndType_endIndex];
+            this.itemType_endIndex = findAny(itemType_end_markers, this.itemType_startIndex);
+            if (this.itemType_startIndex < this.itemType_endIndex) {
+                this.itemType = rawWords.slice(this.itemType_startIndex, this.itemType_endIndex + 1).join(' ');
+                itemType = rawWords[this.itemType_endIndex];
             }
         }
 
@@ -154,7 +161,7 @@ export default class Filterable {
             'Item',
             'Power'
         ];
-        this.itemPower_index = findAll(itemPower_markers, this.itemRarityAndType_endIndex + 1);
+        this.itemPower_index = findAll(itemPower_markers, this.itemType_endIndex + 1);
         if (0 <= this.itemPower_index) {
             this.itemPower = rawWords.slice(this.itemPower_index, this.itemPower_index + itemPower_markers.length).join(' ');
         } else {
@@ -186,310 +193,315 @@ export default class Filterable {
         let itemAttribute_markers_Wand_Lucky_Hit_Chance = [] as (string | RegExp)[];
 
         const itemAttribute_markers_array = [
-            [/^\+[\d,]+$/,  /**/ ...'All Stats'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Attack Speed'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Barrier Generation'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Basic Skill Attack Speed'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Basic Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Berserking Duration'.split(' ')],
-            itemAttribute_markers_Shield_Block_Chance =
-            [/^[\d.]+%$/,   /**/ ...'Block Chance'.split(' ')],
-            itemAttribute_markers_Shield_Blocked_Damage_Reduction =
-            [/^[\d.]+%$/,   /**/ ...'Blocked Damage Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Blood Orb Healing'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Blood Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Bone Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Brawling Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Cold Damage'.split(' ')],
-            itemAttribute_markers_Ring_Cold_Resistance =
-            [/^\+[\d.]+%$/, /**/ ...'Cold Resistance'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Companion Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Conjuration Skill Damage'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Control Impaired Duration Reduction'.split(' ')],
+            ['Lucky', 'Hit:', 'Up', 'to', 'a', '5%', 'Chance', 'to', 'Heal', /^\+[\d,.]+$/, 'Life'],
+            ['Lucky', 'Hit:', 'Up', 'to', 'a', '5%', 'Chance', 'to', 'Restore', /^\+[\d,.]+%$/, 'Primary', 'Resource'],
+            ['Lucky', 'Hit:', 'Up', 'to', 'a', /^\+[\d,.]+%$/, 'Chance', 'to', 'Execute', 'Injured', 'Non-Elites'],
+            ['Lucky', 'Hit:', 'Up', 'to', 'a', /^\+[\d,.]+%$/, 'Chance', 'to', 'Slow'],
+            ['Minions', 'Inherit', /^\+[\d,.]+%$/, 'of', 'Your', 'Thorns'],
+            ['Trap', 'Skill', 'Arm', 'Time', 'Reduced', 'by', /^[\d,.]+$/, /^Seconds?$/i],
+            [/^[\d,.]+%$/, 'Control', 'Impaired', 'Duration', 'Reduction'],
             itemAttribute_markers_Focus_Cooldown_Reduction =
             itemAttribute_markers_Totem_Cooldown_Reduction =
-            [/^[\d.]+%$/,   /**/ ...'Cooldown Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Core Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Crackling Energy Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Chance'.split(' '), /^[^A].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Chance Against Injured Enemies'.split(' ')],
+            [/^[\d,.]+%$/, 'Cooldown', 'Reduction'], // Focus, Totem
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Bleeding', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Burning', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Close', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Distant', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Poisoned', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'from', 'Shadow', 'Damage', 'Over', 'Time-Affected', 'Enemies'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'while', 'Control', 'Impaired'], // Topaz
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'while', 'Fortified'], // Sapphire
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', 'while', 'Injured'],
+            [/^[\d,.]+%$/, 'Damage', 'Reduction', /^[^fw].*$/i], // #from, #while
+            [/^[\d,.]+%$/, 'Dodge', 'Chance', 'Against', 'Close', 'Enemies'],
+            [/^[\d,.]+%$/, 'Dodge', 'Chance', 'Against', 'Distant', 'Enemies'],
+            [/^[\d,.]+%$/, 'Dodge', 'Chance', /^[^A].*$/i], // #Against
+            [/^[\d,.]+%$/, 'Energy', 'Cost', 'Reduction'],
+            [/^[\d,.]+%$/, 'Essence', 'Cost', 'Reduction'],
+            [/^[\d,.]+%$/, 'Fury', 'Cost', 'Reduction'],
+            [/^[\d,.]+%$/, 'Imbuement', 'Skill', 'Cooldown', 'Reduction'],
+            [/^[\d,.]+%$/, 'Mana', 'Cost', 'Reduction'],
+            [/^[\d,.]+%$/, 'Maximum', 'Minion', 'Life'],
+            [/^[\d,.]+%$/, 'Resource', 'Generation'],
+            [/^[\d,.]+%$/, 'Slow', 'Duration', 'Reduction'],
+            [/^[\d,.]+%$/, 'Spirit', 'Cost', 'Reduction'],
+            [/^[\d,.]+%$/, 'Storm', 'Skill', 'Cooldown', 'Reduction'],
+            [/^[\d,.]+%$/, 'Trap', 'Skill', 'Cooldown', 'Reduction'],
+            [/^\+[\d,.]+%$/, 'Attack', 'Speed'],
+            [/^\+[\d,.]+%$/, 'Barrier', 'Generation'], // Diamond
+            [/^\+[\d,.]+%$/, 'Basic', 'Skill', 'Attack', 'Speed'],
+            [/^\+[\d,.]+%$/, 'Basic', 'Skill', 'Damage'], // Topaz
+            [/^\+[\d,.]+%$/, 'Berserking', 'Duration'],
+            itemAttribute_markers_Shield_Block_Chance =
+            [/^\+[\d,.]+%$/, 'Block', 'Chance'], // Shield
+            itemAttribute_markers_Shield_Blocked_Damage_Reduction =
+            [/^\+[\d,.]+%$/, 'Blocked', 'Damage', 'Reduction'], // Shield
+            [/^\+[\d,.]+%$/, 'Blood', 'Orb', 'Healing'],
+            [/^\+[\d,.]+%$/, 'Blood', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Bone', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Brawling', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Cold', 'Damage'],
+            itemAttribute_markers_Ring_Cold_Resistance =
+            [/^\+[\d,.]+%$/, 'Cold', 'Resistance'], // Ring, Sapphire
+            [/^\+[\d,.]+%$/, 'Companion', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Conjuration', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Core', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Crackling', 'Energy', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Chance', 'Against', 'Injured', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Chance', /^[^A].*$/i], // #Against
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'to', 'Crowd', 'Controlled', 'Enemies'], // Sapphire
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'to', 'Vulnerable', 'Enemies'], // Emerald
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'with', 'Bone', 'Skills'],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'with', 'Earth', 'Skills'],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'with', 'Imbued', 'Skills'],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', 'with', 'Werewolf', 'Skills'],
             itemAttribute_markers_Sword_Critical_Strike_Damage =
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Damage'.split(' '), /^[^tw].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Damage with Bone Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Damage with Earth Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Damage with Imbued Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Critical Strike Damage with Werewolf Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Crowd Control Duration'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Cutthroat Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage'.split(' '), /^[^Otw].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Damage Over Time'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction'.split(' '), /^[^f].*$/i],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Bleeding Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Burning Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Close Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Distant Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Poisoned Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction from Shadow Damage Over Time-Affected Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction while Fortified'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Damage Reduction while Injured'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Bleeding Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Burning Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Chilled Enemies'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Critical', 'Strike', 'Damage', /^[^tw].*$/i], // Sword, #to, #with
+            [/^\+[\d,.]+%$/, 'Crowd', 'Control', 'Duration'],
+            [/^\+[\d,.]+%$/, 'Cutthroat', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Damage', 'Over', 'Time'], // Amethyst
+            [/^\+[\d,.]+%$/, 'Damage', 'Taken', 'Over', 'Time', 'Reduction'], // Amethyst
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Bleeding', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Burning', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Chilled', 'Enemies'],
             itemAttribute_markers_Dagger_Damage_to_Close_Enemies =
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Close Enemies'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Close', 'Enemies'], // Dagger
             itemAttribute_markers_Staff_Damage_to_Crowd_Controlled_Enemies =
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Crowd Controlled Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Daze Enemies'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Crowd', 'Controlled', 'Enemies'], // Staff
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Daze', 'Enemies'],
             itemAttribute_markers_Bow_Damage_to_Distant_Enemies =
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Distant Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Enemies Affected by Trap Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Freeze Enemies'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Distant', 'Enemies'], // Bow
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Enemies', 'Affected', 'by', 'Trap', 'Skills'],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Freeze', 'Enemies'],
             itemAttribute_markers_Axe_Damage_to_Healthy_Enemies =
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Healthy Enemies'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Healthy', 'Enemies'], // Axe
             itemAttribute_markers_Polearm_Damage_to_Injured_Enemies =
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Injured Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Poisoned Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Shadow Damage Over Time-Affected Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage to Stun Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage while Berserking'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage while in Human'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage while Shapeshifted'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage with Dual-Wielded Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage with Ranged Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage with Skills that Swap to New Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage with Two-Handed Bludgeoning Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Damage with Two-Handed Slashing Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Darkness Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Dexterity'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Dexterity'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Dodge Chance'.split(' '), /^[^A].*$/i],
-            [/^[\d.]+%$/,   /**/ ...'Dodge Chance Against Close Enemies'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Dodge Chance Against Distant Enemies'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Earth Skill Damage'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Energy Cost Reduction'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Essence Cost Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Fire Damage'.split(' '), /^[^O].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Fire Damage Over Time'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Injured', 'Enemies'], // Polearm
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Poisoned', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Shadow', 'Damage', 'Over', 'Time-Affected', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Damage', 'to', 'Stun', 'Enemies'],
+            [/^\+[\d,.]+%$/, 'Damage', 'while', 'Berserking'],
+            [/^\+[\d,.]+%$/, 'Damage', 'while', 'in', 'Human'],
+            [/^\+[\d,.]+%$/, 'Damage', 'while', 'Shapeshifted'],
+            [/^\+[\d,.]+%$/, 'Damage', 'with', 'Dual-Wielded', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Damage', 'with', 'Ranged', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Damage', 'with', 'Skills', 'that', 'Swap', 'to', 'New', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Damage', 'with', 'Two-Handed', 'Bludgeoning', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Damage', 'with', 'Two-Handed', 'Slashing', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Damage', /^[^OTtw].*$/i], // #Over, #Taken, #to, #while, #with
+            [/^\+[\d,.]+%$/, 'Darkness', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Dexterity'],
+            [/^\+[\d,.]+%$/, 'Earth', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Fire', 'Damage', 'Over', 'Time'],
+            [/^\+[\d,.]+%$/, 'Fire', 'Damage', /^[^O].*$/i], // #Over
             itemAttribute_markers_Ring_Fire_Resistance =
-            [/^\+[\d.]+%$/, /**/ ...'Fire Resistance'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Fortify Generation'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Frost Skill Damage'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Fury Cost Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Healing Received'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Imbued Skill Damage'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Imbuement Skill Cooldown Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Imbuement Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Intelligence'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Intelligence'.split(' ')],
-            itemAttribute_markers_Scythe_Life_On_Kill =
-            [/^\+[\d,]+$/,  /**/ ...'Life On Kill'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Life Regeneration while Not Damaged Recently'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Lightning Critical Strike Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Lightning Damage'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Fire', 'Resistance'], // Ring, Ruby
+            [/^\+[\d,.]+%$/, 'Fortify', 'Generation'],
+            [/^\+[\d,.]+%$/, 'Frost', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Healing', 'Received'], // Skull
+            [/^\+[\d,.]+%$/, 'Imbued', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Imbuement', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Intelligence'],
+            [/^\+[\d,.]+%$/, 'Lightning', 'Critical', 'Strike', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Lightning', 'Damage'],
             itemAttribute_markers_Ring_Lightning_Resistance =
-            [/^\+[\d.]+%$/, /**/ ...'Lightning Resistance'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Lightning', 'Resistance'], // Ring, Topaz
+            [/^\+[\d,.]+%$/, 'Lucky', 'Hit', 'Chance', 'while', 'You', 'Have', 'a', 'Barrier'],
             itemAttribute_markers_Wand_Lucky_Hit_Chance =
-            [/^\+[\d.]+%$/, /**/ ...'Lucky Hit Chance'.split(' '), /^[^w].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Lucky Hit Chance while You Have a Barrier'.split(' ')],
-            [               /**/ ...'Lucky Hit: Up to a'.split(' '), /^\+[\d.]+%$/, ...'Chance to Execute Injured Non-Elites'.split(' ')],
-            [               /**/ ...'Lucky Hit: Up to a'.split(' '), /^\+[\d.]+%$/, ...'Chance to Slow'.split(' ')],
-            [               /**/ ...'Lucky Hit: Up to a 5% Chance to Heal'.split(' '), /^\+[\d,]+$/, 'Life'],
-            [               /**/ ...'Lucky Hit: Up to a 5% Chance to Restore'.split(' '), /^\+[\d.]+%$/, ...'Primary Resource'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Mana Cost Reduction'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Lucky', 'Hit', 'Chance', /^[^w].*$/i], // Wand, #while
             itemAttribute_markers_Shield_Main_Hand_Weapon_Damage =
-            [/^\+[\d.]+%$/, /**/ ...'Main Hand Weapon Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Marksman Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Mastery Skill Damage'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Energy'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Essence'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Fury'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Life'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Mana'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Maximum Minion Life'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Maximum Spirit'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Minion Attack Speed'.split(' ')],
-            [               /**/ ...'Minions Inherit'.split(' '), /^\+[\d.]+%$/, ...'of Your Thorns'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Movement Speed'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Main', 'Hand', 'Weapon', 'Damage'], // Shield
+            [/^\+[\d,.]+%$/, 'Marksman', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Mastery', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Minion', 'Attack', 'Speed'],
+            [/^\+[\d,.]+%$/, 'Movement', 'Speed'],
+            [/^\+[\d,.]+%$/, 'Overpower', 'Damage', 'with', 'Two-Handed', 'Bludgeoning', 'Weapons'],
+            [/^\+[\d,.]+%$/, 'Overpower', 'Damage', 'with', 'Werebear', 'Skills'],
             itemAttribute_markers_Mace_Overpower_Damage =
-            [/^\+[\d.]+%$/, /**/ ...'Overpower Damage'.split(' '), /^[^w].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Overpower Damage with Two-Handed Bludgeoning Weapons'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Overpower Damage with Werebear Skills'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Physical Damage'.split(' '), /^[^O].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Physical Damage Over Time'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Poison Damage'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Overpower', 'Damage', /^[^w].*$/i], // Mace, Ruby, #with
+            [/^\+[\d,.]+%$/, 'Physical', 'Damage', 'Over', 'Time'],
+            [/^\+[\d,.]+%$/, 'Physical', 'Damage', /^[^O].*$/i], // #Over
+            [/^\+[\d,.]+%$/, 'Poison', 'Damage'],
             itemAttribute_markers_Ring_Poison_Resistance =
-            [/^\+[\d.]+%$/, /**/ ...'Poison Resistance'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Potion Capacity'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Potion Drop Rate'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Pyromancy Skill Damage'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Agility Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Brawling Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Companion Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Conjuration Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Corpse Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Curse Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Defensive Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Imbuement Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Macabre Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Mastery Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Subterfuge Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Weapon Mastery Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of All Wrath Skills'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ball Lightning'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Barrage'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blight'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blizzard'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blood Howl'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blood Lance'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blood Mist'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Blood Surge'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Bone Prison'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Bone Spear'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Bone Spirit'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Boulder'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Caltrops'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Chain Lightning'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Challenging Shout'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Charge'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Charged Bolts'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Cold Imbuement'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Concealment'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Corpse Explosion'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Corpse Tendrils'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Cyclone Armor'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Dark Shroud'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Dash'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Death Blow'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Debilitating Roar'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Decrepify'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Double Swing'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Earthen Bulwark'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Fireball'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Firewall'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Flame Shield'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Flurry'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Frost Nova'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Frozen Orb'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ground Stomp'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Hammer of the Ancients'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Hurricane'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Hydra'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ice Armor'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ice Blades'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ice Shards'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Incinerate'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Iron Maiden'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Iron Skin'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Kick'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Leap'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Lightning Spear'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Lightning Storm'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Meteor'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Penetrating Shot'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Poison Creeper'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Poison Imbuement'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Poison Trap'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Pulverize'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Rabies'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Rallying Cry'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Rapid Fire'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Ravens'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Rend'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Rupture'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Sever'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Shadow Imbuement'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Shadow Step'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Shred'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Smoke Grenade'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Steel Grasp'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Teleport'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Amplify Damage Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Brute Force Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Call of the Wild Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Coalesced Blood Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Compound Fracture Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Conjuration Mastery Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Counteroffensive Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Crushing Earth Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Cut to the Bone Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Deadly Venom Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ..."Ranks of the Death's Reach Passive".split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Defiance Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Devouring Blaze Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Elemental Dominance Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Endless Pyre Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Envenom Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Evulsion Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Exploit Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Frigid Finesse Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Fueled by Death Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Glass Cannon Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Gloom Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Heavy Handed Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Hellbent Commander Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Hoarfrost Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Icy Touch Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Imperfectly Balanced Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Impetus Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Inner Flames Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Malice Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Natural Disaster Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ..."Ranks of the Nature's Reach Passive".split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the No Mercy Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Outburst Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Permafrost Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Quickshift Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Resonance Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Shocking Impact Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Slaying Strike Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Stone Guard Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Terror Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Tides of Blood Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Tough as Nails Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Toxic Claws Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Wallop Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Weapon Mastery Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of the Wild Impulses Passive'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Tornado'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Trample'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Twisting Blades'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Upheaval'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of War Cry'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Whirlwind'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Ranks of Wolves'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Poison', 'Resistance'], // Ring, Emerald
+            [/^\+[\d,.]+%$/, 'Potion', 'Drop', 'Rate'],
+            [/^\+[\d,.]+%$/, 'Pyromancy', 'Skill', 'Damage'],
             itemAttribute_markers_Amulet_Resistance_to_All_Elements =
             itemAttribute_markers_Ring_Resistance_to_All_Elements =
-            [/^\+[\d.]+%$/, /**/ ...'Resistance to All Elements'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Resource Generation'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Shadow Damage'.split(' '), /^[^O].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Shadow Damage Over Time'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Resistance', 'to', 'All', 'Elements'], // Amulet, Ring, Diamond
+            [/^\+[\d,.]+%$/, 'Shadow', 'Damage', 'Over', 'Time'],
+            [/^\+[\d,.]+%$/, 'Shadow', 'Damage', /^[^O].*$/i], // #Over
             itemAttribute_markers_Ring_Shadow_Resistance =
-            [/^\+[\d.]+%$/, /**/ ...'Shadow Resistance'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Shock Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Shrine Buff Duration'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Slow Duration Reduction'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Spirit Cost Reduction'.split(' ')],
-            [/^[\d.]+%$/,   /**/ ...'Storm Skill Cooldown Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Storm Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Strength'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Strength'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Summoning Skill Damage'.split(' ')],
-            itemAttribute_markers_Shield_Thorns =
-            [/^\+[\d,]+$/,  /**/ ...'Thorns'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Total Armor'.split(' '), /^[^w].*$/i],
-            [/^\+[\d.]+%$/, /**/ ...'Total Armor while in Werebear Form'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Total Armor while in Werewolf Form'.split(' ')],
-            [               /**/ ...'Trap Skill Arm Time Reduced by'.split(' '), /^[\d,]+$/, /^Second(s)?$/i],
-            [/^[\d.]+%$/,   /**/ ...'Trap Skill Cooldown Reduction'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Trap Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Ultimate Skill Damage'.split(' ')],
+            [/^\+[\d,.]+%$/, 'Shadow', 'Resistance'], // Ring, Amethyst
+            [/^\+[\d,.]+%$/, 'Shock', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Shrine', 'Buff', 'Duration'],
+            [/^\+[\d,.]+%$/, 'Storm', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Strength'],
+            [/^\+[\d,.]+%$/, 'Summoning', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Total', 'Armor', 'while', 'in', 'Werebear', 'Form'],
+            [/^\+[\d,.]+%$/, 'Total', 'Armor', 'while', 'in', 'Werewolf', 'Form'],
+            [/^\+[\d,.]+%$/, 'Total', 'Armor', /^[^w].*$/i], // #while
+            [/^\+[\d,.]+%$/, 'Trap', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Ultimate', 'Skill', 'Damage'], // Diamond
             itemAttribute_markers_Crossbow_Vulnerable_Damage =
-            [/^\+[\d.]+%$/, /**/ ...'Vulnerable Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Weapon Mastery Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Werebear Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Werewolf Skill Damage'.split(' ')],
-            [/^\+[\d.]+%$/, /**/ ...'Willpower'.split(' ')],
-            [/^\+[\d,]+$/,  /**/ ...'Willpower'.split(' ')]
+            [/^\+[\d,.]+%$/, 'Vulnerable', 'Damage'], // Crossbow
+            [/^\+[\d,.]+%$/, 'Weapon', 'Mastery', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Werebear', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Werewolf', 'Skill', 'Damage'],
+            [/^\+[\d,.]+%$/, 'Willpower'],
+            [/^\+[\d,.]+$/, 'All', 'Stats'],
+            [/^\+[\d,.]+$/, 'Armor'], // Skull
+            [/^\+[\d,.]+$/, 'Dexterity'],
+            [/^\+[\d,.]+$/, 'Intelligence'],
+            itemAttribute_markers_Scythe_Life_On_Kill =
+            [/^\+[\d,.]+$/, 'Life', 'On', 'Kill'], // Scythe, Skull
+            [/^\+[\d,.]+$/, 'Life', 'Regeneration', 'while', 'Not', 'Damaged', 'Recently'],
+            [/^\+[\d,.]+$/, 'Maximum', 'Energy'],
+            [/^\+[\d,.]+$/, 'Maximum', 'Essence'],
+            [/^\+[\d,.]+$/, 'Maximum', 'Fury'],
+            [/^\+[\d,.]+$/, 'Maximum', 'Life'], // Ruby
+            [/^\+[\d,.]+$/, 'Maximum', 'Mana'],
+            [/^\+[\d,.]+$/, 'Maximum', 'Spirit'],
+            [/^\+[\d,.]+$/, 'Potion', 'Capacity'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Agility', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Brawling', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Companion', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Conjuration', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Corpse', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Curse', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Defensive', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Imbuement', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Macabre', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Mastery', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Subterfuge', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Weapon', 'Mastery', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'All', 'Wrath', 'Skills'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ball', 'Lightning'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Barrage'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blight'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blizzard'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blood', 'Howl'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blood', 'Lance'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blood', 'Mist'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Blood', 'Surge'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Bone', 'Prison'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Bone', 'Spear'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Bone', 'Spirit'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Boulder'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Caltrops'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Chain', 'Lightning'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Challenging', 'Shout'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Charge'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Charged', 'Bolts'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Cold', 'Imbuement'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Concealment'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Corpse', 'Explosion'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Corpse', 'Tendrils'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Cyclone', 'Armor'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Dark', 'Shroud'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Dash'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Death', 'Blow'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Debilitating', 'Roar'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Decrepify'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Double', 'Swing'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Earthen', 'Bulwark'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Fireball'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Firewall'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Flame', 'Shield'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Flurry'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Frost', 'Nova'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Frozen', 'Orb'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ground', 'Stomp'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Hammer', 'of', 'the', 'Ancients'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Hurricane'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Hydra'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ice', 'Armor'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ice', 'Blades'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ice', 'Shards'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Incinerate'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Iron', 'Maiden'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Iron', 'Skin'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Kick'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Leap'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Lightning', 'Spear'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Lightning', 'Storm'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Meteor'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Penetrating', 'Shot'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Poison', 'Creeper'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Poison', 'Imbuement'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Poison', 'Trap'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Pulverize'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Rabies'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Rallying', 'Cry'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Rapid', 'Fire'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Ravens'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Rend'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Rupture'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Sever'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Shadow', 'Imbuement'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Shadow', 'Step'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Shred'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Smoke', 'Grenade'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Steel', 'Grasp'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Teleport'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Amplify', 'Damage', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Brute', 'Force', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Call', 'of', 'the', 'Wild', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Coalesced', 'Blood', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Compound', 'Fracture', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Conjuration', 'Mastery', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Counteroffensive', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Crushing', 'Earth', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Cut', 'to', 'the', 'Bone', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Deadly', 'Venom', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Defiance', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Devouring', 'Blaze', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Elemental', 'Dominance', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Endless', 'Pyre', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Envenom', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Evulsion', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Exploit', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Frigid', 'Finesse', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Fueled', 'by', 'Death', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Glass', 'Cannon', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Gloom', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Heavy', 'Handed', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Hellbent', 'Commander', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Hoarfrost', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Icy', 'Touch', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Imperfectly', 'Balanced', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Impetus', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Inner', 'Flames', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Malice', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Natural', 'Disaster', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'No', 'Mercy', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Outburst', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Permafrost', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Quickshift', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Resonance', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Shocking', 'Impact', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Slaying', 'Strike', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Stone', 'Guard', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Terror', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Tides', 'of', 'Blood', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Tough', 'as', 'Nails', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Toxic', 'Claws', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Wallop', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Weapon', 'Mastery', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', 'Wild', 'Impulses', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', "Death's", 'Reach', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'the', "Nature's", 'Reach', 'Passive'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Tornado'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Trample'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Twisting', 'Blades'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Upheaval'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'War', 'Cry'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Whirlwind'],
+            [/^\+[\d,.]+$/, 'Ranks', 'of', 'Wolves'],
+            [/^\+[\d,.]+$/, 'Strength'],
+            itemAttribute_markers_Shield_Thorns =
+            [/^\+[\d,.]+$/, 'Thorns'], // Shield, Emerald
+            [/^\+[\d,.]+$/, 'Willpower'],
         ];
         itemAttribute_markers_array.forEach(itemAttribute_markers => {
             let itemAttribute_rawWords_index = 0 - itemAttribute_markers.length;
@@ -601,8 +613,7 @@ export default class Filterable {
             } while (0 <= itemAttribute_rawWords_index);
         });
 
-        this.isProcessed = true;
-        this.processingEndTime = Date.now();
+        this.processTime_end = Date.now();
 
         function findAny(targetWords: string[], startIndex: number): number {
             if (0 < targetWords.length) {

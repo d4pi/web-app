@@ -1,14 +1,14 @@
-declare function d4pi_fromImage_toText(
-    text_dataId: string,
+declare function _fromImage_toText(
+    text_data_id: string,
     textImage_canvas: HTMLCanvasElement
 );
-declare function d4pi_fromInputImage_toTextImage(
-    inputImage_afterBrightnessThreshold_canvasId: string,
-    inputImage_afterItemImageDetection_canvasId: string,
+declare function _fromInputImage_toTextImage(
+    inputImage_afterBrightnessThreshold_canvas_id: string,
+    inputImage_afterItemImageDetection_canvas_id: string,
     inputImage_image: HTMLImageElement,
-    itemImage_canvasId: string,
-    itemImage_dataId: string,
-    textImage_canvasId: string,
+    itemImage_canvas_id: string,
+    itemImage_data_id: string,
+    textImage_canvas_id: string,
     screenshot_processor_InputImageBrightnessThreshold: number,
     screenshot_processor_ItemImageMaxWidth: number,
     screenshot_processor_ItemImageMinWidth: number,
@@ -17,11 +17,7 @@ declare function d4pi_fromInputImage_toTextImage(
     screenshot_processor_TextImageBorderTrimSize: number,
     screenshot_processor_TextImageCornerTrimSize: number
 );
-declare function d4pi_initialize_filterables_utilities(
-    nextjs_d4pi_filterables,
-    nextjs_set_filterables
-);
-declare var d4pi_isCodeLoaded: boolean;
-declare var d4pi_isOpencvRuntimeInitialized: boolean;
-declare var d4pi_itemImageData;
-declare var d4pi_textData;
+declare var _isCodeLoaded: boolean;
+declare var _isOpencvRuntimeInitialized: boolean;
+declare var _itemImageData;
+declare var _textData;
