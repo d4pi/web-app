@@ -77,6 +77,11 @@ export default function Home() {
           </li>
 
           <li>
+            <input id={AppControl_Tutorial_CheckboxInput_id} className='mr-5' checked={AppControl_Tutorial_CheckboxInput_checked} onChange={event => set_AppControl_Tutorial_CheckboxInput_checked(event.target.checked)} type='checkbox' />
+            <label htmlFor={AppControl_Tutorial_CheckboxInput_id}>{AppControl_Tutorial_text}</label>
+          </li>
+
+          <li>
             <input id={AppControl_AttributeFilters_CheckboxInput_id} className='mr-5' checked={AppControl_AttributeFilters_CheckboxInput_checked} onChange={event => set_AppControl_AttributeFilters_CheckboxInput_checked(event.target.checked)} type='checkbox' />
             <label htmlFor={AppControl_AttributeFilters_CheckboxInput_id}>{AppControl_AttributeFilters_text}</label>
           </li>
@@ -102,11 +107,6 @@ export default function Home() {
           </li>
 
           <li>
-            <input id={AppControl_Tutorial_CheckboxInput_id} className='mr-5' checked={AppControl_Tutorial_CheckboxInput_checked} onChange={event => set_AppControl_Tutorial_CheckboxInput_checked(event.target.checked)} type='checkbox' />
-            <label htmlFor={AppControl_Tutorial_CheckboxInput_id}>{AppControl_Tutorial_text}</label>
-          </li>
-
-          <li>
             <input id={AppControl_TypeFilters_CheckboxInput_id} className='mr-5' checked={AppControl_TypeFilters_CheckboxInput_checked} onChange={event => set_AppControl_TypeFilters_CheckboxInput_checked(event.target.checked)} type='checkbox' />
             <label htmlFor={AppControl_TypeFilters_CheckboxInput_id}>{AppControl_TypeFilters_text}</label>
           </li>
@@ -118,9 +118,13 @@ export default function Home() {
         </ul>
 
         <div className='border-2 border-dotted rounded-lg p-3 border-neutral-600'>
-          <label htmlFor={AppControl_LoadScreenshots_id}><strong>Load Screenshots</strong></label>
+          <label htmlFor={AppControl_LoadScreenshots_id}><strong>Load Screenshots from Disk</strong></label>
           <br />
           <input id={AppControl_LoadScreenshots_id} className='file:bg-blue-700 file:border-0 file:font-bold file:hover:bg-blue-600 file:px-2 file:py-1 file:rounded-lg file:text-neutral-200 w-40 text-black mt-2' accept='image/*' multiple onChange={handle_AppControl_LoadScreenshots_FileInput_change} type='file' />
+        </div>
+
+        <div>
+          <code className='text-neutral-700'>202401220403</code>
         </div>
       </div>
     );
@@ -136,48 +140,48 @@ export default function Home() {
       set_AppControl_TypeFilters_CheckboxInput_checked(eventTargetChecked);
       set_AppControl_ViewControl_CheckboxInput_checked(eventTargetChecked);
     }
+  }
 
-    function handle_AppControl_LoadScreenshots_FileInput_change(event: React.ChangeEvent<HTMLInputElement>): void {
-      const screenshotFileList = event.target.files!;
-      waitForAppInitialization_then_processScreenshotFileList();
+  function handle_AppControl_LoadScreenshots_FileInput_change(event: React.ChangeEvent<HTMLInputElement>): void {
+    const screenshotFileList = event.target.files!;
+    waitForAppInitialization_then_processScreenshotFileList();
 
-      function waitForAppInitialization_then_processScreenshotFileList(): void {
-        if (isAppInitialized()) {
-          processScreenshotFileList();
-        } else {
-          setTimeout(() => waitForAppInitialization_then_processScreenshotFileList(), defaultTimeout);
-        }
+    function waitForAppInitialization_then_processScreenshotFileList(): void {
+      if (isAppInitialized()) {
+        processScreenshotFileList();
+      } else {
+        setTimeout(() => waitForAppInitialization_then_processScreenshotFileList(), defaultTimeout);
+      }
 
-        function processScreenshotFileList(): void {
-          const screenshotFiles = Array.from(screenshotFileList);
-          screenshotFiles.forEach(screenshotFile => {
-            const newFilterable = new Filterable(
-              getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
-              getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
-              screenshotFile.lastModified,
-              screenshotFile.name,
-              screenshotFile.size
-            );
-            if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
-              ++_discardedScreenshots_count;
-              set_discardedScreenshots_count(_discardedScreenshots_count);
-            } else {
-              _filterables.push(newFilterable);
-              set_filterables([..._filterables]);
-              const screenshotFileReader = new FileReader();
-              screenshotFileReader.onload = () => {
-                const screenshotDataUrl = screenshotFileReader.result as string;
-                waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, screenshotDataUrl);
-              };
-              screenshotFileReader.readAsDataURL(screenshotFile);
-            }
-          });
-        }
+      function processScreenshotFileList(): void {
+        const screenshotFiles = Array.from(screenshotFileList);
+        screenshotFiles.forEach(screenshotFile => {
+          const newFilterable = new Filterable(
+            getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
+            screenshotFile.lastModified,
+            screenshotFile.name,
+            screenshotFile.size
+          );
+          if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
+            ++_discardedScreenshots_count;
+            set_discardedScreenshots_count(_discardedScreenshots_count);
+          } else {
+            _filterables.push(newFilterable);
+            set_filterables([..._filterables]);
+            const screenshotFileReader = new FileReader();
+            screenshotFileReader.onload = () => {
+              const screenshotDataUrl = screenshotFileReader.result as string;
+              waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, screenshotDataUrl);
+            };
+            screenshotFileReader.readAsDataURL(screenshotFile);
+          }
+        });
       }
     }
   }
@@ -268,6 +272,17 @@ export default function Home() {
       <strong>{AppControl_DevInfo_text}</strong>
 
       <div>
+        Screenshot Source:
+        <ul className={ul_class}>
+          <li>1080p (1920*1080)</li>
+          <li>Diablo 4: GAMEPLAY: Advanced Tooltip Information: Enabled</li>
+          <li>Diablo 4: GRAPHICS: Brightness: Default</li>
+          <li>Diablo 4: GRAPHICS: Font Scale: Small</li>
+          <li>Xbox Series X</li>
+        </ul>
+      </div>
+
+      <div>
         Environment:
         <ul className={ul_class}>
           <li>Google Chrome 120</li>
@@ -279,17 +294,6 @@ export default function Home() {
           <li><a className='underline' href='https://github.com/d4pi/web-app'>Source Code</a></li>
         </ul>
       </div>
-
-      <div>
-        Screenshot Source:
-        <ul className={ul_class}>
-          <li>1080p (1920*1080)</li>
-          <li>Diablo 4: GAMEPLAY: Advanced Tooltip Information: Enabled</li>
-          <li>Diablo 4: GRAPHICS: Brightness: Default</li>
-          <li>Diablo 4: GRAPHICS: Font Scale: Small</li>
-          <li>Xbox Series X</li>
-        </ul>
-      </div>
     </div>;
   }
 
@@ -298,7 +302,9 @@ export default function Home() {
     return filterables.toSorted((a, b) => b.score - a.score).map(filterable =>
       <div key={filterable.key} className={outer_group_div_class}>
         <div>
-          Score: <code>{filterable.score}</code>
+          <span className={filterable.score === 0 ? 'text-neutral-700' : ''}>
+            Score: <code>{filterable.score}</code>
+          </span>
         </div>
 
         <div className={inner_group_div_class}>
@@ -531,60 +537,20 @@ export default function Home() {
         </table>
       </div>
     </div>;
-  }
 
-  function handle_NameFilters_AddFilter_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    const pattern = getInputValue(NameFilters_Pattern_TextInput_id);
-    if (pattern !== '') {
-      const newFilter = new Filter(
-        0,
-        new RegExp(pattern, getInputValue(NameFilters_Options_TextInput_id)),
-        getNumberInputValue(NameFilters_Score_NumberInput_id)
-      );
-      if (_nameFilters.every(filter => filter.key !== newFilter.key)) {
-        _nameFilters.push(newFilter);
-        set_nameFilters([..._nameFilters]);
-        applyFilters_and_setFilterables();
-      }
-    }
-  }
-
-  // ## Screenshots LoadDemo Button
-  function handle_Screenshots_LoadDemo_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 1', 693354, '/images/demo-screenshot-1.jpg');
-    waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 2', 640421, '/images/demo-screenshot-2.jpg');
-    waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 3', 621025, '/images/demo-screenshot-3.jpg');
-    waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 4', 612918, '/images/demo-screenshot-4.jpg');
-    waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 5', 643168, '/images/demo-screenshot-5.jpg');
-  }
-
-  function waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp: number, demoScreenshot_name: string, demoScreenshot_size: number, demoScreenshot_url: string): void {
-    if (isAppInitialized()) {
-      processDemoScreenshot();
-    } else {
-      setTimeout(() => waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp, demoScreenshot_name, demoScreenshot_size, demoScreenshot_url), defaultTimeout);
-    }
-
-    function processDemoScreenshot(): void {
-      const newFilterable = new Filterable(
-        getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
-        getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
-        demoScreenshot_lastModified_timestamp,
-        demoScreenshot_name,
-        demoScreenshot_size
-      );
-      if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
-        ++_discardedScreenshots_count;
-        set_discardedScreenshots_count(_discardedScreenshots_count);
-      } else {
-        _filterables.push(newFilterable);
-        set_filterables([..._filterables]);
-        waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, demoScreenshot_url);
+    function handle_NameFilters_AddFilter_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+      const pattern = getInputValue(NameFilters_Pattern_TextInput_id);
+      if (pattern !== '') {
+        const newFilter = new Filter(
+          0,
+          new RegExp(pattern, getInputValue(NameFilters_Options_TextInput_id)),
+          getNumberInputValue(NameFilters_Score_NumberInput_id)
+        );
+        if (_nameFilters.every(filter => filter.key !== newFilter.key)) {
+          _nameFilters.push(newFilter);
+          set_nameFilters([..._nameFilters]);
+          applyFilters_and_setFilterables();
+        }
       }
     }
   }
@@ -652,24 +618,139 @@ export default function Home() {
 
   // ## Tutorial
   function Tutorial() {
-    return <div className={`${outer_group_div_class} ${showIfTrue(AppControl_Tutorial_CheckboxInput_checked)}`}>
-      <strong>{AppControl_Tutorial_text}</strong>
+    const Tutorial_AttributeFilters_CheckboxInput_id = 'Tutorial_AttributeFilters_CheckboxInput_id';
+    const Tutorial_NameFilters_CheckboxInput_id = 'Tutorial_NameFilters_CheckboxInput_id';
+    const Tutorial_TypeFilters_CheckboxInput_id = 'Tutorial_TypeFilters_CheckboxInput_id';
 
-      <p>D4pi turns screenshots into searchable & filterable items.  Everything runs locally inside your web browser.</p>
+    return (
+      <div className={`${outer_group_div_class} space-y-4 max-w-3xl ${showIfTrue(AppControl_Tutorial_CheckboxInput_checked)}`}>
+        <span><strong>{AppControl_Tutorial_text}</strong> -- Start Here!</span>
 
-      <div className={inner_group_div_class}>
-        <ol className={ol_class}>
-          <li>
-            <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-2 my-1.5 px-2 py-1 rounded-lg text-neutral-200' onClick={handle_Screenshots_LoadDemo_button_click}>Load Demo Screenshots</button>
-            <code><a className='underline' href='/images/demo-screenshot-1.jpg'>1.jpg</a> <a className='underline' href='/images/demo-screenshot-2.jpg'>2.jpg</a> <a className='underline' href='/images/demo-screenshot-3.jpg'>3.jpg</a> <a className='underline' href='/images/demo-screenshot-4.jpg'>4.jpg</a> <a className='underline' href='/images/demo-screenshot-5.jpg'>5.jpg</a></code>
-          </li>
+        <div>
+          <ol className={`${ol_class} space-y-2`}>
+            <li>
+              <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-3 my-1 px-2 py-1 rounded-lg text-neutral-200' onClick={handle_Screenshots_LoadDemo_button_click}>Click Here to Load the Demo</button>
+              <span className='text-neutral-500'>-- This directly loads demo screenshots <code><a className='underline' href='/images/demo-screenshot-01.jpg'>1</a> <a className='underline' href='/images/demo-screenshot-02.jpg'>2</a> <a className='underline' href='/images/demo-screenshot-03.jpg'>3</a> <a className='underline' href='/images/demo-screenshot-04.jpg'>4</a> <a className='underline' href='/images/demo-screenshot-05.jpg'>5</a></code>; and should take only a few seconds.</span>
+            </li>
 
-          <li>Wait a few seconds for the screenshots to be processed.</li>
+            <li>
+              Click to enable
+              <span className='border-2 border-dotted border-neutral-600 m-2 px-2 py-1 rounded-lg'>
+                <input id={Tutorial_AttributeFilters_CheckboxInput_id} className='mr-5' checked={AppControl_AttributeFilters_CheckboxInput_checked} onChange={event => set_AppControl_AttributeFilters_CheckboxInput_checked(event.target.checked)} type='checkbox' />
+                <label htmlFor={Tutorial_AttributeFilters_CheckboxInput_id}>{AppControl_AttributeFilters_text}</label>
+              </span>
+              <span className='text-neutral-500'>-- This checkbox (and other controls) can also be found under <code>App Control</code> at the top-left corner.</span>
+            </li>
 
-          <li> --- --- </li>
-        </ol>
-      </div>
-    </div>;
+            <li>
+              Under <em><strong>Attribute Filters</strong></em>&apos;s <em><strong>Pattern</strong></em> label, enter the word <code><strong>resource</strong></code>.
+            </li>
+
+            <li>
+              Under <em><strong>MinValue</strong></em>, enter <code><strong>7</strong></code>.
+            </li>
+
+            <li>
+              Under <em><strong>Score</strong></em>, enter <code><strong>10</strong></code>.
+            </li>
+
+            <li>
+              Click the button <em><strong>Add Filter</strong></em>
+              -- Notice that <code className='text-yellow-300'>GHOUL HEIRLOOM</code> is now assigned a score of <code>10</code> and sorted first (top-left)
+              because of its attribute &ldquo;<code><strong>9.0% Resource Generation</strong></code>&rdquo;.
+            </li>
+
+            <li>
+              Download additional demo screenshots: <code><a className='underline' href='/images/demo-screenshot-06.jpg'>6</a> <a className='underline' href='/images/demo-screenshot-07.jpg'>7</a> <a className='underline' href='/images/demo-screenshot-08.jpg'>8</a> <a className='underline' href='/images/demo-screenshot-09.jpg'>9</a> <a className='underline' href='/images/demo-screenshot-10.jpg'>10</a></code>;
+              and load them from disk: <input className='file:bg-blue-700 file:border-0 file:font-bold file:hover:bg-blue-600 file:px-2 file:py-1 file:rounded-lg file:text-neutral-200 w-32 text-black' accept='image/*' multiple onChange={handle_AppControl_LoadScreenshots_FileInput_change} type='file' />
+              <span className='text-neutral-500'>-- This file input (and other controls) can also be found under <code>App Control</code> at the top-left corner.</span>
+            </li>
+
+            <li>
+              Under <em><strong>Attribute Filters</strong></em>&apos;s <em><strong>Pattern</strong></em> label, enter the words <code><strong>mana cost</strong></code>.
+            </li>
+
+            <li>
+              Under <em><strong>MinValue</strong></em>, enter <code><strong>15</strong></code>.
+            </li>
+
+            <li>
+              Under <em><strong>Score</strong></em>, enter <code><strong>20</strong></code>.
+            </li>
+
+            <li>
+              Click the button <em><strong>Add Filter</strong></em>
+              -- Notice that the <code className='text-orange-500'>AMULET OF DISOBEDIENCE</code> and <code className='text-yellow-300'>HERALD FLESH</code> are now each assigned a score of <code>20</code> and sorted first
+              because of their &ldquo;<code><strong>Mana Cost Reduction</strong></code>&rdquo; attributes.
+            </li>
+
+            <li>
+              Feel free to experiment with the
+              <span className='border-2 border-dotted border-neutral-600 m-2 px-2 py-1 rounded-lg'>
+                <input id={Tutorial_NameFilters_CheckboxInput_id} className='mr-5' checked={AppControl_NameFilters_CheckboxInput_checked} onChange={event => set_AppControl_NameFilters_CheckboxInput_checked(event.target.checked)} type='checkbox' />
+                <label htmlFor={Tutorial_NameFilters_CheckboxInput_id}>{AppControl_NameFilters_text}</label>
+              </span>
+              and
+              <span className='border-2 border-dotted border-neutral-600 m-2 px-2 py-1 rounded-lg'>
+                <input id={Tutorial_TypeFilters_CheckboxInput_id} className='mr-5' checked={AppControl_TypeFilters_CheckboxInput_checked} onChange={event => set_AppControl_TypeFilters_CheckboxInput_checked(event.target.checked)} type='checkbox' />
+                <label htmlFor={Tutorial_TypeFilters_CheckboxInput_id}>{AppControl_TypeFilters_text}</label>
+              </span>
+              <span className='text-neutral-500'>-- These checkboxes (and other controls) can also be found under <code>App Control</code> at the top-left corner.</span>
+              .
+            </li>
+          </ol>
+        </div>
+
+        <div className={`${inner_group_div_class} space-y-4`}>
+          <div>
+            Thank you for trying out D4pi -- <em>&ldquo;Diablo 4 Item Filter inside Web Browser&rdquo;</em>.
+          </div>
+
+          <div>
+            Please do send us your feedback at <a className='underline' href='https://github.com/d4pi/web-app'><code>https://github.com/d4pi/web-app</code></a> -- thanks again!
+          </div>
+        </div>
+      </div >
+    );
+
+    function handle_Screenshots_LoadDemo_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 01', 693354, '/images/demo-screenshot-01.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 02', 640421, '/images/demo-screenshot-02.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 03', 621025, '/images/demo-screenshot-03.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 04', 612918, '/images/demo-screenshot-04.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 05', 643168, '/images/demo-screenshot-05.jpg');
+
+      function waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp: number, demoScreenshot_name: string, demoScreenshot_size: number, demoScreenshot_url: string): void {
+        if (isAppInitialized()) {
+          processDemoScreenshot();
+        } else {
+          setTimeout(() => waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp, demoScreenshot_name, demoScreenshot_size, demoScreenshot_url), defaultTimeout);
+        }
+
+        function processDemoScreenshot(): void {
+          const newFilterable = new Filterable(
+            getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
+            demoScreenshot_lastModified_timestamp,
+            demoScreenshot_name,
+            demoScreenshot_size
+          );
+          if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
+            ++_discardedScreenshots_count;
+            set_discardedScreenshots_count(_discardedScreenshots_count);
+          } else {
+            _filterables.push(newFilterable);
+            set_filterables([..._filterables]);
+            waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, demoScreenshot_url);
+          }
+        }
+      }
+    }
   }
 
   // ## TypeFilters
@@ -878,58 +959,48 @@ export default function Home() {
 
     function initializeFilterableInputImage(): void {
       getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id).src = filterableInputImageUrl;
-      waitForFilterableInputImageInitialization_then_processFilterableInputImage();
+      getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id).decode().then(() => processFilterableInputImage());
 
-      function waitForFilterableInputImageInitialization_then_processFilterableInputImage(): void {
-        if (isFilterableInputImageInitialized()) {
-          processFilterableInputImage();
-        } else {
-          setTimeout(() => waitForFilterableInputImageInitialization_then_processFilterableInputImage(), defaultTimeout);
-        }
+      function processFilterableInputImage(): void {
+        filterable.start_Processing_Image();
+        _fromInputImage_toTextImage(
+          filterable.inputImage_afterBrightnessThreshold_canvas_id,
+          filterable.inputImage_afterItemImageDetection_canvas_id,
+          getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id),
+          filterable.itemImage_canvas_id,
+          filterable.itemImage_data_id,
+          filterable.textImage_canvas_id,
+          filterable.screenshot_processor_InputImageBrightnessThreshold,
+          filterable.screenshot_processor_ItemImageMaxWidth,
+          filterable.screenshot_processor_ItemImageMinWidth,
+          filterable.screenshot_processor_ItemPictureHeight,
+          filterable.screenshot_processor_ItemPictureWidth,
+          filterable.screenshot_processor_TextImageBorderTrimSize,
+          filterable.screenshot_processor_TextImageCornerTrimSize
+        );
+        filterable.end_Processing_Image();
+        set_filterables([..._filterables]);
 
-        function isFilterableInputImageInitialized(): boolean { return getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id).width !== 0; }
+        filterable.start_Processing_Text();
+        _fromImage_toText(
+          filterable.text_dataId,
+          getHtmlElement<HTMLCanvasElement>(filterable.textImage_canvas_id)
+        );
+        waitForFilterableTextDataInitialization_then_processFilterableTextData();
 
-        function processFilterableInputImage(): void {
-          filterable.start_Processing_Image();
-          _fromInputImage_toTextImage(
-            filterable.inputImage_afterBrightnessThreshold_canvas_id,
-            filterable.inputImage_afterItemImageDetection_canvas_id,
-            getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id),
-            filterable.itemImage_canvas_id,
-            filterable.itemImage_data_id,
-            filterable.textImage_canvas_id,
-            filterable.screenshot_processor_InputImageBrightnessThreshold,
-            filterable.screenshot_processor_ItemImageMaxWidth,
-            filterable.screenshot_processor_ItemImageMinWidth,
-            filterable.screenshot_processor_ItemPictureHeight,
-            filterable.screenshot_processor_ItemPictureWidth,
-            filterable.screenshot_processor_TextImageBorderTrimSize,
-            filterable.screenshot_processor_TextImageCornerTrimSize
-          );
-          filterable.end_Processing_Image();
-          set_filterables([..._filterables]);
+        function waitForFilterableTextDataInitialization_then_processFilterableTextData(): void {
+          if (isFilterableTextDataInitialized()) {
+            processFilterableTextData();
+          } else {
+            setTimeout(() => waitForFilterableTextDataInitialization_then_processFilterableTextData(), defaultTimeout);
+          }
 
-          filterable.start_Processing_Text();
-          _fromImage_toText(
-            filterable.text_dataId,
-            getHtmlElement<HTMLCanvasElement>(filterable.textImage_canvas_id)
-          );
-          waitForFilterableTextDataInitialization_then_processFilterableTextData();
+          function isFilterableTextDataInitialized(): boolean { return filterable.text_data_exists; }
 
-          function waitForFilterableTextDataInitialization_then_processFilterableTextData(): void {
-            if (isFilterableTextDataInitialized()) {
-              processFilterableTextData();
-            } else {
-              setTimeout(() => waitForFilterableTextDataInitialization_then_processFilterableTextData(), defaultTimeout);
-            }
-
-            function isFilterableTextDataInitialized(): boolean { return filterable.text_data_exists; }
-
-            function processFilterableTextData(): void {
-              filterable.end_Processing_Text();
-              filterable.processTextData();
-              applyFilters_and_setFilterables();
-            }
+          function processFilterableTextData(): void {
+            filterable.end_Processing_Text();
+            filterable.processTextData();
+            applyFilters_and_setFilterables();
           }
         }
       }
@@ -948,6 +1019,8 @@ export default function Home() {
       <div className='flex flex-wrap'>
         {AppControl()}
 
+        {Tutorial()}
+
         {AttributeFilters()}
 
         {DevInfo()}
@@ -957,8 +1030,6 @@ export default function Home() {
         {NameFilters()}
 
         {StatusReport()}
-
-        {Tutorial()}
 
         {TypeFilters()}
 
