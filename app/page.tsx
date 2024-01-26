@@ -87,11 +87,6 @@ export default function Home() {
           </li>
 
           <li>
-            <input id={AppControl_DevInfo_CheckboxInput_id} className='mr-5' checked={AppControl_DevInfo_CheckboxInput_checked} onChange={event => set_AppControl_DevInfo_CheckboxInput_checked(event.target.checked)} type='checkbox' />
-            <label htmlFor={AppControl_DevInfo_CheckboxInput_id}>{AppControl_DevInfo_text}</label>
-          </li>
-
-          <li>
             <input id={AppControl_ImageProcessorControl_CheckboxInput_id} className='mr-5' checked={AppControl_ImageProcessorControl_CheckboxInput_checked} onChange={event => set_AppControl_ImageProcessorControl_CheckboxInput_checked(event.target.checked)} type='checkbox' />
             <label htmlFor={AppControl_ImageProcessorControl_CheckboxInput_id}>{AppControl_ImageProcessorControl_text}</label>
           </li>
@@ -123,8 +118,29 @@ export default function Home() {
           <input id={AppControl_LoadScreenshots_id} className='file:bg-blue-700 file:border-0 file:font-bold file:hover:bg-blue-600 file:px-2 file:py-1 file:rounded-lg file:text-neutral-200 w-40 text-black mt-2' accept='image/*' multiple onChange={handle_AppControl_LoadScreenshots_FileInput_change} type='file' />
         </div>
 
-        <div>
-          <code className='text-neutral-700'>202401220403</code>
+        <div className='text-neutral-500'>
+          <ul className='space-y-1'>
+            <li>
+              <code>202401261151</code>
+            </li>
+
+            <li>
+              <code><a href='https://discord.gg/sxUMgj3VcA'>Discord</a></code>
+            </li>
+
+            <li>
+              <code><a href='https://github.com/d4pi/web-app'>GitHub</a></code>
+            </li>
+
+            <li>
+              <code><a href='https://www.reddit.com/r/D4pi/'>Reddit</a></code>
+            </li>
+
+            <li>
+              <input id={AppControl_DevInfo_CheckboxInput_id} className='mr-5' checked={AppControl_DevInfo_CheckboxInput_checked} onChange={event => set_AppControl_DevInfo_CheckboxInput_checked(event.target.checked)} type='checkbox' />
+              <label htmlFor={AppControl_DevInfo_CheckboxInput_id}>{AppControl_DevInfo_text}</label>
+            </li>
+          </ul>
         </div>
       </div>
     );
@@ -275,9 +291,9 @@ export default function Home() {
         Screenshot Source:
         <ul className={ul_class}>
           <li>1080p (1920*1080)</li>
-          <li>Diablo 4: GAMEPLAY: Advanced Tooltip Information: Enabled</li>
-          <li>Diablo 4: GRAPHICS: Brightness: Default</li>
-          <li>Diablo 4: GRAPHICS: Font Scale: Small</li>
+          <li>Diablo4: GAMEPLAY: Advanced Tooltip Information: Enabled</li>
+          <li>Diablo4: GRAPHICS: Brightness: Default</li>
+          <li>Diablo4: GRAPHICS: Font Scale: Small</li>
           <li>Xbox Series X</li>
         </ul>
       </div>
@@ -290,8 +306,6 @@ export default function Home() {
           <li>Node.js 20.10.0</li>
           <li>OpenCV.js 4.9.0</li>
           <li>Tesseract.js 5.0.4</li>
-          <li><a className='underline' href='https://github.com/d4pi/d4pi.github.io'>Web Host</a></li>
-          <li><a className='underline' href='https://github.com/d4pi/web-app'>Source Code</a></li>
         </ul>
       </div>
     </div>;
@@ -703,11 +717,11 @@ export default function Home() {
 
         <div className={`${inner_group_div_class} space-y-4`}>
           <div>
-            Thank you for trying out D4pi -- <em>&ldquo;Diablo 4 Item Filter inside Web Browser&rdquo;</em>.
+            Thank you for trying out D4pi -- a free, safety-first, open-source, fan-made, &ldquo;Diablo4 Item Filter&rdquo;.
           </div>
 
           <div>
-            Please do send us your feedback at <a className='underline' href='https://github.com/d4pi/web-app'><code>https://github.com/d4pi/web-app</code></a> -- thanks again!
+            Feedback is the best way to help D4pi out.  <code className='mx-2'><a className='underline' href='https://discord.gg/sxUMgj3VcA'>Discord</a> | <a className='underline' href='https://github.com/d4pi/web-app'>GitHub</a> | <a className='underline' href='https://www.reddit.com/r/D4pi/'>Reddit</a></code>  Thank you!
           </div>
         </div>
       </div >

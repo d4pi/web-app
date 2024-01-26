@@ -1,11 +1,31 @@
-# D4pi: Diablo 4 Item Filter inside Web Browser
+# D4pi: Diablo4 Item Filter
 
-https://d4pi.com/ (hosted at https://github.com/d4pi/d4pi.github.io )
+[D4pi](https://d4pi.com/) is a free, safety-first,
+[open-source](https://github.com/d4pi/web-app), fan-made, Diablo4 Item
+Filter web app.
 
-# Contributing
+[Demo](https://d4pi.com/) - https://d4pi.com/ (hassle-free,
+click-and-go!)
 
-This is a [Next.js](https://nextjs.org/docs/getting-started) project --
-see commits 579cfc8bf3ffcb3033e5739e969e674747f6a938 and
-ab0c45acfa10db79f8f85e18b30eb9fe27de78e4 for more details.
+## Safety First
 
-Please do coordinate before investing in this codebase.
+* D4pi **never** directly interfaces with Diablo4's game program -- D4pi
+  deals with only user-supplied screenshots.
+* D4pi by default operates entirely inside its user's web browser --
+  D4pi has only limited access to its user's computer.
+* D4pi is open-source -- D4pi can be audited and/or self-hosted.
+
+## Feedback is Always Much Appreciated
+
+* [Reddit](https://www.reddit.com/r/D4pi/) -
+  https://www.reddit.com/r/D4pi/
+* [Discord](https://discord.gg/sxUMgj3VcA) -
+  https://discord.gg/sxUMgj3VcA
+* [GitHub](https://github.com/d4pi/web-app) -
+  https://github.com/d4pi/web-app
+
+Honest feedback like
+[these](https://www.reddit.com/r/diablo4/comments/19cxffr/i_made_an_opensource_item_filter_web_app/)
+is the best way to help D4pi out.
+
+Thank you.
