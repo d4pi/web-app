@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  description: 'D4pi - Diablo4 Item Filter inside Web Browser',
-  title: 'D4pi - Diablo4 Item Filter inside Web Browser',
+  description: 'D4pi - Diablo4 Item Filter',
+  title: 'D4pi - Diablo4 Item Filter'
 }
 
 export default function RootLayout({

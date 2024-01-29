@@ -1,16 +1,19 @@
 'use client';
 
-import Filter from '@/code/Filter';
-import Filterable from '@/code/Filterable';
+import AttributeFilter from '@/code/AttributeFilter';
+import NameFilter from '@/code/NameFilter';
 import React from 'react';
+import Screenshot from '@/code/Screenshot';
 import Script from 'next/script';
+import TypeFilter from '@/code/TypeFilter';
+import { findAllInRenderedTree } from 'react-dom/test-utils';
 
 // # App
 
-const _attributeFilters = [] as Filter[];
-const _filterables = [] as Filterable[];
-const _nameFilters = [] as Filter[];
-const _typeFilters = [] as Filter[];
+const _attributeFilters: AttributeFilter[] = [];
+const _nameFilters: NameFilter[] = [];
+const _screenshots: Screenshot[] = [];
+const _typeFilters: TypeFilter[] = [];
 let _discardedScreenshots_count = 0;
 
 export default function Home() {
@@ -19,8 +22,8 @@ export default function Home() {
 
   const [attributeFilters, set_attributeFilters] = React.useState(_attributeFilters);
   const [discardedScreenshots_count, set_discardedScreenshots_count] = React.useState(_discardedScreenshots_count);
-  const [filterables, set_filterables] = React.useState(_filterables);
   const [nameFilters, set_nameFilters] = React.useState(_nameFilters);
+  const [screenshots, set_screenshots] = React.useState(_screenshots);
   const [typeFilters, set_typeFilters] = React.useState(_typeFilters);
   const defaultTimeout = 127;
 
@@ -61,7 +64,8 @@ export default function Home() {
     const AppControl_AttributeFilters_CheckboxInput_id = 'AppControl_AttributeFilters_CheckboxInput_id';
     const AppControl_DevInfo_CheckboxInput_id = 'AppControl_DevInfo_CheckboxInput_id';
     const AppControl_ImageProcessorControl_CheckboxInput_id = 'AppControl_ImageProcessorControl_CheckboxInput_id';
-    const AppControl_LoadScreenshots_id = 'AppControl_LoadScreenshots_id';
+    const AppControl_LoadScreenshotsFromDisk_id = 'AppControl_LoadScreenshotsFromDisk_id';
+    const AppControl_LoadScreenshotsFromUrl_id = 'AppControl_LoadScreenshotsFromUrl_id';
     const AppControl_NameFilters_CheckboxInput_id = 'AppControl_NameFilters_CheckboxInput_id';
     const AppControl_StatusReport_CheckboxInput_id = 'AppControl_StatusReport_CheckboxInput_id';
     const AppControl_Tutorial_CheckboxInput_id = 'AppControl_Tutorial_CheckboxInput_id';
@@ -113,15 +117,15 @@ export default function Home() {
         </ul>
 
         <div className='border-2 border-dotted rounded-lg p-3 border-neutral-600'>
-          <label htmlFor={AppControl_LoadScreenshots_id}><strong>Load Screenshots from Disk</strong></label>
+          <label htmlFor={AppControl_LoadScreenshotsFromDisk_id}><strong>Load Screenshots from Disk</strong></label>
           <br />
-          <input id={AppControl_LoadScreenshots_id} className='file:bg-blue-700 file:border-0 file:font-bold file:hover:bg-blue-600 file:px-2 file:py-1 file:rounded-lg file:text-neutral-200 w-40 text-black mt-2' accept='image/*' multiple onChange={handle_AppControl_LoadScreenshots_FileInput_change} type='file' />
+          <input id={AppControl_LoadScreenshotsFromDisk_id} className='file:bg-blue-700 file:border-0 file:font-bold file:hover:bg-blue-600 file:px-2 file:py-1 file:rounded-lg file:text-neutral-200 w-40 text-black mt-2' accept='image/*' multiple onChange={handle_AppControl_LoadScreenshots_FileInput_change} type='file' />
         </div>
 
         <div className='text-neutral-500'>
           <ul className='space-y-1'>
             <li>
-              <code>202401261151</code>
+              <code>202401291613</code>
             </li>
 
             <li>
@@ -142,6 +146,14 @@ export default function Home() {
             </li>
           </ul>
         </div>
+
+        <div className='border-2 border-dotted rounded-lg p-3 border-neutral-600'>
+          <code>EXPERIMENTAL</code>
+          <br />
+          <input id={AppControl_LoadScreenshotsFromUrl_id} className='text-black' defaultValue='/images/demo-screenshot-11.jpg' type='url' />
+          <br />
+          <button className='bg-gray-700 font-bold hover:bg-gray-600 my-1 px-2 py-1 rounded-lg text-neutral-200' onClick={handle_AppControl_LoadScreenshotsFromUrl_button_click}>Load Screenshots from URL</button>
+        </div>
       </div>
     );
 
@@ -156,58 +168,18 @@ export default function Home() {
       set_AppControl_TypeFilters_CheckboxInput_checked(eventTargetChecked);
       set_AppControl_ViewControl_CheckboxInput_checked(eventTargetChecked);
     }
-  }
 
-  function handle_AppControl_LoadScreenshots_FileInput_change(event: React.ChangeEvent<HTMLInputElement>): void {
-    const screenshotFileList = event.target.files!;
-    waitForAppInitialization_then_processScreenshotFileList();
-
-    function waitForAppInitialization_then_processScreenshotFileList(): void {
-      if (isAppInitialized()) {
-        processScreenshotFileList();
-      } else {
-        setTimeout(() => waitForAppInitialization_then_processScreenshotFileList(), defaultTimeout);
-      }
-
-      function processScreenshotFileList(): void {
-        const screenshotFiles = Array.from(screenshotFileList);
-        screenshotFiles.forEach(screenshotFile => {
-          const newFilterable = new Filterable(
-            getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
-            screenshotFile.lastModified,
-            screenshotFile.name,
-            screenshotFile.size
-          );
-          if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
-            ++_discardedScreenshots_count;
-            set_discardedScreenshots_count(_discardedScreenshots_count);
-          } else {
-            _filterables.push(newFilterable);
-            set_filterables([..._filterables]);
-            const screenshotFileReader = new FileReader();
-            screenshotFileReader.onload = () => {
-              const screenshotDataUrl = screenshotFileReader.result as string;
-              waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, screenshotDataUrl);
-            };
-            screenshotFileReader.readAsDataURL(screenshotFile);
-          }
-        });
-      }
+    function handle_AppControl_LoadScreenshotsFromUrl_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 05', -1, getInputValue(AppControl_LoadScreenshotsFromUrl_id));
     }
   }
 
   // ## AttributeFilters
   function AttributeFilters() {
+    const AttributeFilters_AttributePattern_TextInput_id = 'AttributeFilters_AttributePattern_TextInput_id';
     const AttributeFilters_MinValue_NumberInput_id = 'AttributeFilters_MinValue_NumberInput_id';
-    const AttributeFilters_Options_TextInput_id = 'AttributeFilters_Options_TextInput_id';
-    const AttributeFilters_Pattern_TextInput_id = 'AttributeFilters_Pattern_TextInput_id';
     const AttributeFilters_Score_NumberInput_id = 'AttributeFilters_Score_NumberInput_id';
+    const AttributeFilters_TypePattern_TextInput_id = 'AttributeFilters_TypePattern_TextInput_id';
 
     return (
       <div className={`${outer_group_div_class} ${showIfTrue(AppControl_AttributeFilters_CheckboxInput_checked)}`}>
@@ -215,15 +187,15 @@ export default function Home() {
 
         <div className={`${inner_group_div_class} flex flex-wrap`}>
           <div className='mr-2.5'>
-            <label htmlFor={AttributeFilters_Pattern_TextInput_id}>Pattern</label>
+            <label htmlFor={AttributeFilters_TypePattern_TextInput_id}>Type Pattern</label>
             <br />
-            <input id={AttributeFilters_Pattern_TextInput_id} className='px-2 text-black' type='text' />
+            <input id={AttributeFilters_TypePattern_TextInput_id} className='px-2 text-black' defaultValue='.*' type='text' />
           </div>
 
           <div className='mx-2.5'>
-            <label htmlFor={AttributeFilters_Options_TextInput_id}>Options</label>
+            <label htmlFor={AttributeFilters_AttributePattern_TextInput_id}>Attribute Pattern</label>
             <br />
-            <input id={AttributeFilters_Options_TextInput_id} className='px-2 text-black' defaultValue='i' size={5} type='text' />
+            <input id={AttributeFilters_AttributePattern_TextInput_id} className='px-2 text-black' type='text' />
           </div>
 
           <div className='mx-2.5'>
@@ -247,16 +219,22 @@ export default function Home() {
           <table className='border-collapse border table-auto'>
             <thead>
               <tr>
-                <th className='px-10'>RegExp</th>
+                <th className='px-10'>Type RegExp</th>
+                <th className='px-10'>Attribute RegExp</th>
                 <th className='px-10'>MinValue</th>
                 <th className='px-10'>Score</th>
+                <th className='px-10'>Enabled</th>
               </tr>
             </thead>
             <tbody>
               {attributeFilters.map(filter => <tr key={filter.key}>
-                <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.regexp.toString()}</code></td>
+                <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.typeRegExp.toString()}</code></td>
+                <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.attributeRegExp.toString()}</code></td>
                 <td className='border border-dotted border-neutral-600 px-3 py-2 text-right'><code>{filter.minValue}</code></td>
                 <td className='border border-dotted border-neutral-600 px-3 py-2 text-right'><code>{filter.score}</code></td>
+                <td className='border border-dotted border-neutral-600 px-3 py-2 text-center'>
+                  <input checked={filter.isEnabled} onChange={handle_AttributeFilters_Enabled_checkbox_change} type='checkbox' value={filter.key} />
+                </td>
               </tr>
               )}
             </tbody>
@@ -266,19 +244,27 @@ export default function Home() {
     );
 
     function handle_AttributeFilters_AddFilter_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-      const pattern = getInputValue(AttributeFilters_Pattern_TextInput_id);
-      if (pattern !== '') {
-        const newFilter = new Filter(
+      const attributePattern = getInputValue(AttributeFilters_AttributePattern_TextInput_id);
+      if (attributePattern !== '') {
+        const newFilter = new AttributeFilter(
+          attributePattern,
           getNumberInputValue(AttributeFilters_MinValue_NumberInput_id),
-          new RegExp(pattern, getInputValue(AttributeFilters_Options_TextInput_id)),
-          getNumberInputValue(AttributeFilters_Score_NumberInput_id)
+          getNumberInputValue(AttributeFilters_Score_NumberInput_id),
+          getInputValue(AttributeFilters_TypePattern_TextInput_id)
         );
         if (_attributeFilters.every(filter => filter.key !== newFilter.key)) {
           _attributeFilters.push(newFilter);
           set_attributeFilters([..._attributeFilters]);
-          applyFilters_and_setFilterables();
+          applyFilters_and_setScreenshots();
         }
       }
+    }
+
+    function handle_AttributeFilters_Enabled_checkbox_change(event: React.ChangeEvent<HTMLInputElement>): void {
+      const filter = _attributeFilters.find(filter => filter.key === event.target.value)!;
+      filter.isEnabled = event.target.checked;
+      set_attributeFilters([..._attributeFilters]);
+      applyFilters_and_setScreenshots();
     }
   }
 
@@ -309,126 +295,6 @@ export default function Home() {
         </ul>
       </div>
     </div>;
-  }
-
-  // ## Filterables
-  function Filterables() {
-    return filterables.toSorted((a, b) => b.score - a.score).map(filterable =>
-      <div key={filterable.key} className={outer_group_div_class}>
-        <div>
-          <span className={filterable.score === 0 ? 'text-neutral-700' : ''}>
-            Score: <code>{filterable.score}</code>
-          </span>
-        </div>
-
-        <div className={inner_group_div_class}>
-          <p><strong>{filterable.itemName}</strong></p>
-          <p>{filterable.itemType}</p>
-          <p>{filterable.itemPower}</p>
-        </div>
-
-        <div className={`${inner_group_div_class} divide-dotted divide-neutral-500 divide-y-2`}>
-          {filterable.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).length > 0 ?
-
-            <div>
-              <ul className={ul_class}>
-                {filterable.itemAttributes.filter(itemAttribute => itemAttribute.isItemTypeBuiltIn).map(itemAttribute => <li key={itemAttribute.key}>
-                  {itemAttribute.text}
-                </li>
-                )}
-              </ul>
-            </div>
-
-            : <></>}
-
-          <div>
-            <ul className={ul_class}>
-              {filterable.itemAttributes.filter(itemAttribute => !itemAttribute.isItemTypeBuiltIn).map(itemAttribute => <li key={itemAttribute.key}>
-                {itemAttribute.text}
-              </li>
-              )}
-            </ul>
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_InputImage_text}</strong>
-          <ul className={ul_class}>
-            <li>Data Last Modified Timestamp: {filterable.screenshotFileLastModifiedTimestamp}</li>
-            <li>Data Name: {filterable.screenshotFileName}</li>
-            <li>Data Size: {filterable.screenshotFileSize}</li>
-          </ul>
-          <div>
-            {
-              // eslint-disable-next-line @next/next/no-img-element
-              <img id={filterable.inputImage_image_id} className='max-w-none' alt={filterable.key} />}
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_afterBrightnessThreshold_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_InputImage_afterBrightnessThreshold_text}</strong>
-          <ul className={ul_class}>
-            <li>{ImageProcessorControl_InputImageBrightnessThreshold_text}: {filterable.screenshot_processor_InputImageBrightnessThreshold}</li>
-          </ul>
-          <div>
-            <canvas id={filterable.inputImage_afterBrightnessThreshold_canvas_id} />
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_afterItemImageDetection_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_InputImage_afterItemImageDetection_text}</strong>
-          <ul className={ul_class}>
-            <li>{ImageProcessorControl_ItemImageMinWidth_text}: {filterable.screenshot_processor_ItemImageMinWidth}</li>
-            <li>{ImageProcessorControl_ItemImageMaxWidth_text}: {filterable.screenshot_processor_ItemImageMaxWidth}</li>
-            <div className={inner_group_div_class}>
-              <p>Candidates:</p>
-              <ul className={ul_class}>
-                {filterable.itemImage_data_candidates.map(candidate => <li key={`${filterable.itemImage_data_id} ${candidate.id}`}>
-                  <span className={filterable.itemImage_data_winner.id === candidate.id ? 'font-bold' : ''}>{candidate.id}</span>
-                </li>
-                )}
-              </ul>
-            </div>
-          </ul>
-          <div>
-            <canvas id={filterable.inputImage_afterItemImageDetection_canvas_id} />
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_ItemImage_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_ItemImage_text}</strong>
-          <div>
-            <canvas id={filterable.itemImage_canvas_id} />
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_TextImage_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_TextImage_text}</strong>
-          <ul className={ul_class}>
-            <li>{ImageProcessorControl_ItemPictureHeight_text}: {filterable.screenshot_processor_ItemPictureHeight}</li>
-            <li>{ImageProcessorControl_ItemPictureWidth_text}: {filterable.screenshot_processor_ItemPictureWidth}</li>
-            <li>{ImageProcessorControl_TextImageBorderTrimSize_text}: {filterable.screenshot_processor_TextImageBorderTrimSize}</li>
-            <li>{ImageProcessorControl_TextImageCornerTrimSize_text}: {filterable.screenshot_processor_TextImageCornerTrimSize}</li>
-          </ul>
-          <div>
-            <canvas id={filterable.textImage_canvas_id} />
-          </div>
-        </div>
-
-        <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_Text_CheckboxInput_checked)}`}>
-          <strong>{ViewControl_Text_text}</strong>
-          <ul className={ul_class}>
-            <li>Confidence: {filterable.text_data_confidence}</li>
-            <li>itemType_startIndex: {filterable.itemType_startIndex}</li>
-            <li>itemType_endIndex: {filterable.itemType_endIndex}</li>
-            <li>itemPower_itemIndex: {filterable.itemPower_index}</li>
-          </ul>
-          <pre>
-            {filterable.text_data_text}
-          </pre>
-        </div>
-      </div>
-    );
   }
 
   // ## ImageProcessorControl
@@ -501,25 +367,25 @@ export default function Home() {
   }
 
   // ## NameFilters
-  const NameFilters_Options_TextInput_id = 'NameFilters_Options_TextInput_id';
-  const NameFilters_Pattern_TextInput_id = 'NameFilters_Pattern_TextInput_id';
-  const NameFilters_Score_NumberInput_id = 'NameFilters_Score_NumberInput_id';
-
   function NameFilters() {
+    const NameFilters_NamePattern_TextInput_id = 'NameFilters_NamePattern_TextInput_id';
+    const NameFilters_Score_NumberInput_id = 'NameFilters_Score_NumberInput_id';
+    const NameFilters_TypePattern_TextInput_id = 'NameFilters_TypePattern_TextInput_id';
+
     return <div className={`${outer_group_div_class} ${showIfTrue(AppControl_NameFilters_CheckboxInput_checked)}`}>
       <strong>{AppControl_NameFilters_text}</strong>
 
       <div className={`${inner_group_div_class} flex flex-wrap`}>
         <div className='mr-2.5'>
-          <label htmlFor={NameFilters_Pattern_TextInput_id}>Pattern</label>
+          <label htmlFor={NameFilters_TypePattern_TextInput_id}>Type Pattern</label>
           <br />
-          <input id={NameFilters_Pattern_TextInput_id} className='px-2 text-black' type='text' />
+          <input id={NameFilters_TypePattern_TextInput_id} className='px-2 text-black' defaultValue='.*' type='text' />
         </div>
 
         <div className='mx-2.5'>
-          <label htmlFor={NameFilters_Options_TextInput_id}>Options</label>
+          <label htmlFor={NameFilters_NamePattern_TextInput_id}>Name Pattern</label>
           <br />
-          <input id={NameFilters_Options_TextInput_id} className='px-2 text-black' defaultValue='i' size={5} type='text' />
+          <input id={NameFilters_NamePattern_TextInput_id} className='px-2 text-black' type='text' />
         </div>
 
         <div className='mx-2.5'>
@@ -537,14 +403,21 @@ export default function Home() {
         <table className='border-collapse border table-auto'>
           <thead>
             <tr>
-              <th className='px-10'>RegExp</th>
+              <th className='px-10'>Type RegExp</th>
+              <th className='px-10'>Name RegExp</th>
               <th className='px-10'>Score</th>
+              <th className='px-10'>Enabled</th>
             </tr>
           </thead>
           <tbody>
             {nameFilters.map(filter => <tr key={filter.key}>
-              <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.regexp.toString()}</code></td>
+              <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.typeRegExp.toString()}</code></td>
+              <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.nameRegExp.toString()}</code></td>
               <td className='border border-dotted border-neutral-600 px-3 py-2 text-right'><code>{filter.score}</code></td>
+              <td className='border border-dotted border-neutral-600 px-3 py-2 text-center'>
+                <input checked={filter.isEnabled} onChange={handle_NameFilters_Enabled_checkbox_change} type='checkbox' value={filter.key} />
+              </td>
+
             </tr>
             )}
           </tbody>
@@ -553,57 +426,173 @@ export default function Home() {
     </div>;
 
     function handle_NameFilters_AddFilter_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-      const pattern = getInputValue(NameFilters_Pattern_TextInput_id);
-      if (pattern !== '') {
-        const newFilter = new Filter(
-          0,
-          new RegExp(pattern, getInputValue(NameFilters_Options_TextInput_id)),
-          getNumberInputValue(NameFilters_Score_NumberInput_id)
+      const namePattern = getInputValue(NameFilters_NamePattern_TextInput_id);
+      if (namePattern !== '') {
+        const newFilter = new NameFilter(
+          namePattern,
+          getNumberInputValue(NameFilters_Score_NumberInput_id),
+          getInputValue(NameFilters_TypePattern_TextInput_id)
         );
         if (_nameFilters.every(filter => filter.key !== newFilter.key)) {
           _nameFilters.push(newFilter);
           set_nameFilters([..._nameFilters]);
-          applyFilters_and_setFilterables();
+          applyFilters_and_setScreenshots();
         }
       }
     }
+
+    function handle_NameFilters_Enabled_checkbox_change(event: React.ChangeEvent<HTMLInputElement>): void {
+      const filter = _nameFilters.find(filter => filter.key === event.target.value)!;
+      filter.isEnabled = event.target.checked;
+      set_nameFilters([..._nameFilters]);
+      applyFilters_and_setScreenshots();
+    }
+  }
+
+  // ## Screenshots
+  function Screenshots() {
+    return screenshots.toSorted((a, b) => b.itemScore - a.itemScore).map(screenshot =>
+      <div key={screenshot.key} className={outer_group_div_class}>
+        <div>
+          <span className={screenshot.itemScore === 0 ? 'text-neutral-700' : ''}>
+            Score: <code>{screenshot.itemScore}</code>
+          </span>
+        </div>
+
+        <div className={inner_group_div_class}>
+          <p><strong>{screenshot.itemName}</strong></p>
+          <p>{screenshot.itemType}</p>
+          <p>{screenshot.itemPower}</p>
+        </div>
+
+        <div className={inner_group_div_class}>
+          <div>
+            <ul className={ul_class}>
+              {
+                screenshot.itemAttributes.map(itemAttribute =>
+                  <li key={itemAttribute.key}>
+                    {itemAttribute.text}
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div className='flex flex-wrap'>
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_InputImage_text}</strong>
+            <ul className={ul_class}>
+              <li>Data Last Modified Timestamp: {screenshot.screenshotFile_lastModified_timestamp}</li>
+              <li>Data Name: {screenshot.screenshotFile_name}</li>
+              <li>Data Size: {screenshot.screenshotFile_size}</li>
+            </ul>
+            <div>
+              {
+                // eslint-disable-next-line @next/next/no-img-element
+                <img id={screenshot.inputImage_image_id} className='max-w-none' alt={screenshot.key} />}
+            </div>
+          </div>
+
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_afterBrightnessThreshold_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_InputImage_afterBrightnessThreshold_text}</strong>
+            <ul className={ul_class}>
+              <li>{ImageProcessorControl_InputImageBrightnessThreshold_text}: {screenshot.imageProcessor_InputImageBrightnessThreshold}</li>
+            </ul>
+            <div>
+              <canvas id={screenshot.inputImage_afterBrightnessThreshold_canvas_id} />
+            </div>
+          </div>
+
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_InputImage_afterItemImageDetection_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_InputImage_afterItemImageDetection_text}</strong>
+            <ul className={ul_class}>
+              <li>{ImageProcessorControl_ItemImageMinWidth_text}: {screenshot.imageProcessor_ItemImageMinWidth}</li>
+              <li>{ImageProcessorControl_ItemImageMaxWidth_text}: {screenshot.imageProcessor_ItemImageMaxWidth}</li>
+              <div className={inner_group_div_class}>
+                <p>Candidates:</p>
+                <ul className={ul_class}>
+                  {screenshot.itemImage_data_candidates.map(candidate => <li key={`${screenshot.itemImage_data_id} ${candidate.key}`}>
+                    <span className={screenshot.itemImage_data_bestCandidate.key === candidate.key ? 'font-bold' : ''}>{candidate.key}</span>
+                  </li>
+                  )}
+                </ul>
+              </div>
+            </ul>
+            <div>
+              <canvas id={screenshot.inputImage_afterItemImageDetection_canvas_id} />
+            </div>
+          </div>
+
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_ItemImage_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_ItemImage_text}</strong>
+            <div>
+              <canvas id={screenshot.itemImage_canvas_id} />
+            </div>
+          </div>
+
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_TextImage_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_TextImage_text}</strong>
+            <ul className={ul_class}>
+              <li>{ImageProcessorControl_ItemPictureHeight_text}: {screenshot.imageProcessor_ItemPictureHeight}</li>
+              <li>{ImageProcessorControl_ItemPictureWidth_text}: {screenshot.imageProcessor_ItemPictureWidth}</li>
+              <li>{ImageProcessorControl_TextImageBorderTrimSize_text}: {screenshot.imageProcessor_TextImageBorderTrimSize}</li>
+              <li>{ImageProcessorControl_TextImageCornerTrimSize_text}: {screenshot.imageProcessor_TextImageCornerTrimSize}</li>
+            </ul>
+            <div>
+              <canvas id={screenshot.textImage_canvas_id} />
+            </div>
+          </div>
+
+          <div className={`${inner_group_div_class} ${showIfTrue(ViewControl_Text_CheckboxInput_checked)}`}>
+            <strong>{ViewControl_Text_text}</strong>
+            <ul className={ul_class}>
+              <li>Confidence: {screenshot.text_data_confidence}</li>
+            </ul>
+            <pre>
+              {screenshot.text_data_text}
+            </pre>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // ## StatusReport
   function StatusReport() {
     const card_div_class = 'border-2 border-dotted border-neutral-500 m-2.5 p-2.5 rounded-lg';
 
-    const processingFilterables = filterables.filter(filterable => !filterable.isProcessed);
-    const processingFilterables_Image = processingFilterables.filter(filterable => filterable.isProcessing_Image);
-    const processingFilterables_Text = processingFilterables.filter(filterable => filterable.isProcessing_Text);
+    const processingScreenshots = screenshots.filter(screenshot => screenshot.isProcessing);
+    const processingScreenshots_Image = processingScreenshots.filter(screenshot => screenshot.isProcessing_Image);
+    const processingScreenshots_Text = processingScreenshots.filter(screenshot => screenshot.isProcessing_Text);
 
-    const processedFilterables = filterables.filter(screenshot => screenshot.isProcessed);
-    const averageTime = processedFilterables.length > 0 ? Math.round(processedFilterables.reduce((totalTime, processedFilterable) => totalTime + processedFilterable.processTime, 0) / processedFilterables.length) / 1000 : 'N/A';
-    const averageTime_Image = processedFilterables.length > 0 ? Math.round(processedFilterables.reduce((totalTime, processedFilterable) => totalTime + processedFilterable.processTime_Image, 0) / processedFilterables.length) / 1000 : 'N/A';
-    const averageTime_Text = processedFilterables.length > 0 ? Math.round(processedFilterables.reduce((totalTime, processedFilterable) => totalTime + processedFilterable.processTime_Text, 0) / processedFilterables.length) / 1000 : 'N/A';
-    const lowConfidence = processedFilterables.filter(filterable => filterable.itemImage_data_candidates.length === 0);
+    const processedScreenshots = screenshots.filter(screenshot => !screenshot.isProcessing);
+    const averageTime = processedScreenshots.length > 0 ? Math.round(processedScreenshots.reduce((totalTime, processedScreenshot) => totalTime + processedScreenshot.processTime, 0) / processedScreenshots.length) / 1000 : 'N/A';
+    const averageTime_Image = processedScreenshots.length > 0 ? Math.round(processedScreenshots.reduce((totalTime, processedScreenshot) => totalTime + processedScreenshot.processTime_Image, 0) / processedScreenshots.length) / 1000 : 'N/A';
+    const averageTime_Text = processedScreenshots.length > 0 ? Math.round(processedScreenshots.reduce((totalTime, processedScreenshot) => totalTime + processedScreenshot.processTime_Text, 0) / processedScreenshots.length) / 1000 : 'N/A';
+    const lowConfidence = processedScreenshots.filter(screenshot => screenshot.itemImage_data_candidates.length === 0);
 
     return <div className={`${outer_group_div_class} ${showIfTrue(AppControl_StatusReport_CheckboxInput_checked)}`}>
       <strong>{AppControl_StatusReport_text}</strong>
 
       <div className={card_div_class}>
-        Total <code>{filterables.length}</code>
+        Total <code>{screenshots.length}</code>
 
         <div className='flex flex-wrap'>
-          <div className={`${card_div_class} ${processingFilterables.length > 0 ? 'border-yellow-500' : ''}`}>
-            <span className={`${processingFilterables.length > 0 ? 'text-yellow-500' : ''}`}>Processing <code>{processingFilterables.length}</code></span>
+          <div className={`${card_div_class} ${processingScreenshots.length > 0 ? 'border-yellow-500' : ''}`}>
+            <span className={`${processingScreenshots.length > 0 ? 'text-yellow-500' : ''}`}>Processing <code>{processingScreenshots.length}</code></span>
 
-            <div className={`${card_div_class} ${processingFilterables_Image.length > 0 ? 'border-yellow-500' : ''}`}>
-              <span className={`${processingFilterables_Image.length > 0 ? 'text-yellow-500' : ''}`}>Image <code>{processingFilterables_Image.length}</code></span>
+            <div className={`${card_div_class} ${processingScreenshots_Image.length > 0 ? 'border-yellow-500' : ''}`}>
+              <span className={`${processingScreenshots_Image.length > 0 ? 'text-yellow-500' : ''}`}>Image <code>{processingScreenshots_Image.length}</code></span>
             </div>
 
-            <div className={`${card_div_class} ${processingFilterables_Text.length > 0 ? 'border-yellow-500' : ''}`}>
-              <span className={`${processingFilterables_Text.length > 0 ? 'text-yellow-500' : ''}`}>Text <code>{processingFilterables_Text.length}</code></span>
+            <div className={`${card_div_class} ${processingScreenshots_Text.length > 0 ? 'border-yellow-500' : ''}`}>
+              <span className={`${processingScreenshots_Text.length > 0 ? 'text-yellow-500' : ''}`}>Text <code>{processingScreenshots_Text.length}</code></span>
             </div>
           </div>
 
           <div className={card_div_class}>
-            Processed <code>{processedFilterables.length}</code>
+            Processed <code>{processedScreenshots.length}</code>
 
             <div className={card_div_class}>
               Average Time <code>{averageTime}</code> s
@@ -637,14 +626,14 @@ export default function Home() {
     const Tutorial_TypeFilters_CheckboxInput_id = 'Tutorial_TypeFilters_CheckboxInput_id';
 
     return (
-      <div className={`${outer_group_div_class} space-y-4 max-w-3xl ${showIfTrue(AppControl_Tutorial_CheckboxInput_checked)}`}>
+      <div className={`${outer_group_div_class} space-y-4 ${showIfTrue(AppControl_Tutorial_CheckboxInput_checked)}`}>
         <span><strong>{AppControl_Tutorial_text}</strong> -- Start Here!</span>
 
         <div>
           <ol className={`${ol_class} space-y-2`}>
             <li>
               <button className='bg-blue-700 font-bold hover:bg-blue-600 mx-3 my-1 px-2 py-1 rounded-lg text-neutral-200' onClick={handle_Screenshots_LoadDemo_button_click}>Click Here to Load the Demo</button>
-              <span className='text-neutral-500'>-- This directly loads demo screenshots <code><a className='underline' href='/images/demo-screenshot-01.jpg'>1</a> <a className='underline' href='/images/demo-screenshot-02.jpg'>2</a> <a className='underline' href='/images/demo-screenshot-03.jpg'>3</a> <a className='underline' href='/images/demo-screenshot-04.jpg'>4</a> <a className='underline' href='/images/demo-screenshot-05.jpg'>5</a></code>; and should take only a few seconds.</span>
+              <span className='text-neutral-500'>-- This directly loads demo screenshots <code><a className='underline' href='/images/demo-screenshot-01.jpg'>1</a> <a className='underline' href='/images/demo-screenshot-02.jpg'>2</a> <a className='underline' href='/images/demo-screenshot-03.jpg'>3</a> <a className='underline' href='/images/demo-screenshot-04.jpg'>4</a> <a className='underline' href='/images/demo-screenshot-05.jpg'>5</a></code>; and should take only a few seconds to process.</span>
             </li>
 
             <li>
@@ -657,21 +646,32 @@ export default function Home() {
             </li>
 
             <li>
-              Under <em><strong>Attribute Filters</strong></em>&apos;s <em><strong>Pattern</strong></em> label, enter the word <code><strong>resource</strong></code>.
+              Let&apos;s add an Attribute Filter.
+              Under <em><strong>Attribute Filters</strong></em>,
+
+              <ul className={ul_class}>
+                <li>For &ldquo;<em>Type Pattern</em>&rdquo;, enter the word <code><strong>focus</strong></code></li>
+
+                <li>For &ldquo;<em>Attribute Pattern</em>&rdquo;, enter the word <code><strong>cooldown</strong></code></li>
+
+                <li>For &ldquo;<em>MinValue</em>&rdquo;, enter <code><strong>5</strong></code></li>
+
+                <li>For &ldquo;<em>Score</em>&rdquo;, enter <code><strong>10</strong></code></li>
+              </ul>
             </li>
 
             <li>
-              Under <em><strong>MinValue</strong></em>, enter <code><strong>7</strong></code>.
-            </li>
+              Click the button <em><strong>Add Filter</strong></em>.
 
-            <li>
-              Under <em><strong>Score</strong></em>, enter <code><strong>10</strong></code>.
-            </li>
+              <ul className={ul_class}>
+                <li>Notice that <code className='text-yellow-300'>GHOUL HEIRLOOM</code> is now assigned a score of <code>10</code> and sorted first (leftmost) -- This is because:</li>
 
-            <li>
-              Click the button <em><strong>Add Filter</strong></em>
-              -- Notice that <code className='text-yellow-300'>GHOUL HEIRLOOM</code> is now assigned a score of <code>10</code> and sorted first (top-left)
-              because of its attribute &ldquo;<code><strong>9.0% Resource Generation</strong></code>&rdquo;.
+                <li><code className='text-yellow-300'>GHOUL HEIRLOOM</code> is an &ldquo;Ancestral Rare Focus&rdquo;, which matches &ldquo;<em>Type Pattern</em>&rdquo; <code><strong>focus</strong></code>.</li>
+
+                <li><code className='text-yellow-300'>GHOUL HEIRLOOM</code>&apos;s &ldquo;<code><strong>7.0% Cooldown Reduction</strong></code>&rdquo; attribute matches &ldquo;<em>Attribute Pattern</em>&rdquo; <code><strong>cooldown</strong></code> and &ldquo;<code><strong>7.0</strong></code>&rdquo; is greater than or equal to &ldquo;<em>MinValue</em>&rdquo; <code><strong>5</strong></code>.</li>
+
+                <li>On the other hand, <code className='text-orange-500'>AMULET OF DISOBEDIENCE</code> (with an attribute of &ldquo;<code><strong>9.2% Cooldown Reduction</strong></code>&rdquo;) still has a score of <code>0</code> because it is an Amulet.</li>
+              </ul>
             </li>
 
             <li>
@@ -681,21 +681,28 @@ export default function Home() {
             </li>
 
             <li>
-              Under <em><strong>Attribute Filters</strong></em>&apos;s <em><strong>Pattern</strong></em> label, enter the words <code><strong>mana cost</strong></code>.
-            </li>
+              Let&apos;s add another Attribute Filter.
+              Under <em><strong>Attribute Filters</strong></em>,
 
-            <li>
-              Under <em><strong>MinValue</strong></em>, enter <code><strong>15</strong></code>.
-            </li>
+              <ul className={ul_class}>
+                <li>For &ldquo;<em>Type Pattern</em>&rdquo;, enter the characters <code><strong>.*</strong></code> (a dot followed by an asterisk)</li>
 
-            <li>
-              Under <em><strong>Score</strong></em>, enter <code><strong>20</strong></code>.
+                <li>For &ldquo;<em>Attribute Pattern</em>&rdquo;, enter the word <code><strong>mana cost</strong></code></li>
+
+                <li>For &ldquo;<em>MinValue</em>&rdquo;, enter <code><strong>5</strong></code></li>
+
+                <li>For &ldquo;<em>Score</em>&rdquo;, enter <code><strong>20</strong></code></li>
+              </ul>
             </li>
 
             <li>
               Click the button <em><strong>Add Filter</strong></em>
-              -- Notice that the <code className='text-orange-500'>AMULET OF DISOBEDIENCE</code> and <code className='text-yellow-300'>HERALD FLESH</code> are now each assigned a score of <code>20</code> and sorted first
-              because of their &ldquo;<code><strong>Mana Cost Reduction</strong></code>&rdquo; attributes.
+
+              <ul className={ul_class}>
+                <li>Notice that amulets <code className='text-orange-500'>AMULET OF DISOBEDIENCE</code>, <code className='text-yellow-300'>HERALD FLESH</code> and boots <code className='text-yellow-300'>PAIN HOOVES</code> are now each assigned a score of <code>20</code> because of their &ldquo;<code><strong>Mana Cost Reduction</strong></code>&rdquo; attributes.</li>
+
+                <li>The RegExp pattern <code><strong>.*</strong></code> (a dot followed by an asterisk) matches any string, so this new filter is applied to all types of items.</li>
+              </ul>
             </li>
 
             <li>
@@ -713,7 +720,7 @@ export default function Home() {
               .
             </li>
           </ol>
-        </div>
+        </div >
 
         <div className={`${inner_group_div_class} space-y-4`}>
           <div>
@@ -728,49 +735,17 @@ export default function Home() {
     );
 
     function handle_Screenshots_LoadDemo_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 01', 693354, '/images/demo-screenshot-01.jpg');
-      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 02', 640421, '/images/demo-screenshot-02.jpg');
-      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 03', 621025, '/images/demo-screenshot-03.jpg');
-      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 04', 612918, '/images/demo-screenshot-04.jpg');
-      waitForAppInitialization_then_processDemoScreenshot(1705833567, 'Demo Screenshot 05', 643168, '/images/demo-screenshot-05.jpg');
-
-      function waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp: number, demoScreenshot_name: string, demoScreenshot_size: number, demoScreenshot_url: string): void {
-        if (isAppInitialized()) {
-          processDemoScreenshot();
-        } else {
-          setTimeout(() => waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp, demoScreenshot_name, demoScreenshot_size, demoScreenshot_url), defaultTimeout);
-        }
-
-        function processDemoScreenshot(): void {
-          const newFilterable = new Filterable(
-            getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
-            getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
-            demoScreenshot_lastModified_timestamp,
-            demoScreenshot_name,
-            demoScreenshot_size
-          );
-          if (_filterables.some(filterable => filterable.key === newFilterable.key)) {
-            ++_discardedScreenshots_count;
-            set_discardedScreenshots_count(_discardedScreenshots_count);
-          } else {
-            _filterables.push(newFilterable);
-            set_filterables([..._filterables]);
-            waitForFilterablesRendering_then_initializeFilterableInputImage(newFilterable, demoScreenshot_url);
-          }
-        }
-      }
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 01', 693354, '/images/demo-screenshot-01.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 02', 640421, '/images/demo-screenshot-02.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 03', 621025, '/images/demo-screenshot-03.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 04', 612918, '/images/demo-screenshot-04.jpg');
+      waitForAppInitialization_then_processDemoScreenshot(-1, 'Demo Screenshot 05', 643168, '/images/demo-screenshot-05.jpg');
     }
   }
 
   // ## TypeFilters
   function TypeFilters() {
-    const TypeFilters_Options_TextInput_id = 'TypeFilters_Options_TextInput_id';
-    const TypeFilters_Pattern_TextInput_id = 'TypeFilters_Pattern_TextInput_id';
+    const TypeFilters_TypePattern_TextInput_id = 'TypeFilters_TypePattern_TextInput_id';
     const TypeFilters_Score_NumberInput_id = 'TypeFilters_Score_NumberInput_id';
 
     return (
@@ -779,15 +754,9 @@ export default function Home() {
 
         <div className={`${inner_group_div_class} flex flex-wrap`}>
           <div className='mr-2.5'>
-            <label htmlFor={TypeFilters_Pattern_TextInput_id}>Pattern</label>
+            <label htmlFor={TypeFilters_TypePattern_TextInput_id}>Type Pattern</label>
             <br />
-            <input id={TypeFilters_Pattern_TextInput_id} className='px-2 text-black' type='text' />
-          </div>
-
-          <div className='mx-2.5'>
-            <label htmlFor={TypeFilters_Options_TextInput_id}>Options</label>
-            <br />
-            <input id={TypeFilters_Options_TextInput_id} className='px-2 text-black' defaultValue='i' size={5} type='text' />
+            <input id={TypeFilters_TypePattern_TextInput_id} className='px-2 text-black' defaultValue='.*' type='text' />
           </div>
 
           <div className='mx-2.5'>
@@ -805,14 +774,18 @@ export default function Home() {
           <table className='border-collapse border table-auto'>
             <thead>
               <tr>
-                <th className='px-10'>RegExp</th>
+                <th className='px-10'>Type RegExp</th>
                 <th className='px-10'>Score</th>
+                <th className='px-10'>Enabled</th>
               </tr>
             </thead>
             <tbody>
               {typeFilters.map(filter => <tr key={filter.key}>
-                <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.regexp.toString()}</code></td>
+                <td className='border border-dotted border-neutral-600 px-3 py-2'><code>{filter.typeRegExp.toString()}</code></td>
                 <td className='border border-dotted border-neutral-600 px-3 py-2 text-right'><code>{filter.score}</code></td>
+                <td className='border border-dotted border-neutral-600 px-3 py-2 text-center'>
+                  <input checked={filter.isEnabled} onChange={handle_TypeFilters_Enabled_checkbox_change} type='checkbox' value={filter.key} />
+                </td>
               </tr>
               )}
             </tbody>
@@ -822,19 +795,25 @@ export default function Home() {
     );
 
     function handle_TypeFilters_AddFilter_button_click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
-      const pattern = getInputValue(TypeFilters_Pattern_TextInput_id);
-      if (pattern !== '') {
-        const newFilter = new Filter(
-          0,
-          new RegExp(pattern, getInputValue(TypeFilters_Options_TextInput_id)),
-          getNumberInputValue(TypeFilters_Score_NumberInput_id)
+      const typePattern = getInputValue(TypeFilters_TypePattern_TextInput_id);
+      if (typePattern !== '') {
+        const newFilter = new TypeFilter(
+          getNumberInputValue(TypeFilters_Score_NumberInput_id),
+          typePattern
         );
         if (_typeFilters.every(filter => filter.key !== newFilter.key)) {
           _typeFilters.push(newFilter);
           set_typeFilters([..._typeFilters]);
-          applyFilters_and_setFilterables();
+          applyFilters_and_setScreenshots();
         }
       }
+    }
+
+    function handle_TypeFilters_Enabled_checkbox_change(event: React.ChangeEvent<HTMLInputElement>): void {
+      const filter = _typeFilters.find(filter => filter.key === event.target.value)!;
+      filter.isEnabled = event.target.checked;
+      set_typeFilters([..._typeFilters]);
+      applyFilters_and_setScreenshots();
     }
   }
 
@@ -918,103 +897,180 @@ export default function Home() {
 
   // # Utilities
 
-  function applyFilters_and_setFilterables(): void {
-    _filterables.forEach(filterable => {
-      filterable.score = 0;
+  function applyFilters_and_setScreenshots(): void {
+    _screenshots.forEach(screenshot => {
+      screenshot.itemScore = 0;
       _nameFilters.forEach(filter => {
-        if (filter.regexp.test(filterable.itemName)) {
-          filterable.score += filter.score;
+        if (filter.isEnabled && filter.typeRegExp.test(screenshot.itemType) && filter.nameRegExp.test(screenshot.itemName)) {
+          screenshot.itemScore += filter.score;
         }
       });
       _typeFilters.forEach(filter => {
-        if (filter.regexp.test(filterable.itemType)) {
-          filterable.score += filter.score;
+        if (filter.isEnabled && filter.typeRegExp.test(screenshot.itemType)) {
+          screenshot.itemScore += filter.score;
         }
       });
-      filterable.itemAttributes.filter(itemAttribute => !itemAttribute.isItemTypeBuiltIn).forEach(itemAttribute => {
-        _attributeFilters.forEach(filter => {
-          if (filter.regexp.test(itemAttribute.text) && filter.minValue <= itemAttribute.value) {
-            filterable.score += filter.score;
-          }
-        });
+      _attributeFilters.forEach(filter => {
+        if (filter.isEnabled && filter.typeRegExp.test(screenshot.itemType)) {
+          screenshot.itemAttributes.forEach(attribute => {
+            if (filter.attributeRegExp.test(attribute.text) && filter.minValue <= attribute.value) {
+              screenshot.itemScore += filter.score;
+            }
+          });
+        }
       });
     });
-    set_filterables([..._filterables]);
+    set_screenshots([..._screenshots]);
   }
 
   function getHtmlElement<T extends HTMLElement>(htmlElement_id: string) { return document.getElementById(htmlElement_id) as T; }
 
-  function getInputValue(numberInput_id: string): string { return getHtmlElement<HTMLInputElement>(numberInput_id).value; }
+  function getInputValue(input_id: string): string { return getHtmlElement<HTMLInputElement>(input_id).value; }
 
   function getNumberInputValue(numberInput_id: string): number { return Number(getInputValue(numberInput_id)); }
+
+  function handle_AppControl_LoadScreenshots_FileInput_change(event: React.ChangeEvent<HTMLInputElement>): void {
+    const screenshotFileList = event.target.files!;
+    waitForAppInitialization_then_processScreenshotFileList();
+
+    function waitForAppInitialization_then_processScreenshotFileList(): void {
+      if (isAppInitialized()) {
+        processScreenshotFileList();
+      } else {
+        setTimeout(() => waitForAppInitialization_then_processScreenshotFileList(), defaultTimeout);
+      }
+
+      function processScreenshotFileList(): void {
+        const screenshotFiles = Array.from(screenshotFileList);
+        screenshotFiles.forEach(screenshotFile => {
+          const newScreenshot = new Screenshot(
+            getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
+            getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
+            screenshotFile.lastModified,
+            screenshotFile.name,
+            screenshotFile.size
+          );
+          if (_screenshots.some(screenshot => screenshot.key === newScreenshot.key)) {
+            ++_discardedScreenshots_count;
+            set_discardedScreenshots_count(_discardedScreenshots_count);
+          } else {
+            _screenshots.push(newScreenshot);
+            set_screenshots([..._screenshots]);
+            const screenshotFileReader = new FileReader();
+            screenshotFileReader.onload = () => {
+              const screenshotDataUrl = screenshotFileReader.result as string;
+              waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, screenshotDataUrl);
+            };
+            screenshotFileReader.readAsDataURL(screenshotFile);
+          }
+        });
+      }
+    }
+  }
 
   function isAppInitialized(): boolean { return _isCodeLoaded && _isOpencvRuntimeInitialized; }
 
   function showIfTrue(b: boolean): string { return b ? '' : 'hidden'; }
 
-  function waitForFilterablesRendering_then_initializeFilterableInputImage(filterable: Filterable, filterableInputImageUrl: string): void {
-    if (isFilterablesRendered()) {
-      initializeFilterableInputImage();
+  function waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp: number, demoScreenshot_name: string, demoScreenshot_size: number, demoScreenshot_url: string): void {
+    if (isAppInitialized()) {
+      processDemoScreenshot();
     } else {
-      setTimeout(() => waitForFilterablesRendering_then_initializeFilterableInputImage(filterable, filterableInputImageUrl), defaultTimeout);
+      setTimeout(() => waitForAppInitialization_then_processDemoScreenshot(demoScreenshot_lastModified_timestamp, demoScreenshot_name, demoScreenshot_size, demoScreenshot_url), defaultTimeout);
     }
 
-    function isFilterablesRendered(): boolean {
+    function processDemoScreenshot(): void {
+      const newScreenshot = new Screenshot(
+        getNumberInputValue(ImageProcessorControl_InputImageBrightnessThreshold_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_ItemImageMaxWidth_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_ItemImageMinWidth_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_ItemPictureHeight_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_ItemPictureWidth_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_TextImageBorderTrimSize_NumberInput_id),
+        getNumberInputValue(ImageProcessorControl_TextImageCornerTrimSize_NumberInput_id),
+        demoScreenshot_lastModified_timestamp,
+        demoScreenshot_name,
+        demoScreenshot_size
+      );
+      if (_screenshots.some(screenshot => screenshot.key === newScreenshot.key)) {
+        ++_discardedScreenshots_count;
+        set_discardedScreenshots_count(_discardedScreenshots_count);
+      } else {
+        _screenshots.push(newScreenshot);
+        set_screenshots([..._screenshots]);
+        waitForScreenshotsRendering_then_initializeScreenshotInputImage(newScreenshot, demoScreenshot_url);
+      }
+    }
+  }
+
+  function waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot: Screenshot, screenshotInputImageUrl: string): void {
+    if (isScreenshotsRendered()) {
+      initializeScreenshotInputImage();
+    } else {
+      setTimeout(() => waitForScreenshotsRendering_then_initializeScreenshotInputImage(screenshot, screenshotInputImageUrl), defaultTimeout);
+    }
+
+    function isScreenshotsRendered(): boolean {
       return (
-        htmlElementExists(filterable.inputImage_afterBrightnessThreshold_canvas_id)
-        && htmlElementExists(filterable.inputImage_afterItemImageDetection_canvas_id)
-        && htmlElementExists(filterable.inputImage_image_id)
-        && htmlElementExists(filterable.itemImage_canvas_id)
-        && htmlElementExists(filterable.textImage_canvas_id)
+        htmlElementExists(screenshot.inputImage_afterBrightnessThreshold_canvas_id)
+        && htmlElementExists(screenshot.inputImage_afterItemImageDetection_canvas_id)
+        && htmlElementExists(screenshot.inputImage_image_id)
+        && htmlElementExists(screenshot.itemImage_canvas_id)
+        && htmlElementExists(screenshot.textImage_canvas_id)
       );
 
       function htmlElementExists(htmlElement_id: string): boolean { return getHtmlElement(htmlElement_id) !== null; }
     }
 
-    function initializeFilterableInputImage(): void {
-      getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id).src = filterableInputImageUrl;
-      getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id).decode().then(() => processFilterableInputImage());
+    function initializeScreenshotInputImage(): void {
+      getHtmlElement<HTMLImageElement>(screenshot.inputImage_image_id).src = screenshotInputImageUrl;
+      getHtmlElement<HTMLImageElement>(screenshot.inputImage_image_id).decode().then(() => processScreenshotInputImage());
 
-      function processFilterableInputImage(): void {
-        filterable.start_Processing_Image();
+      function processScreenshotInputImage(): void {
+        screenshot.start_Processing_Image();
         _fromInputImage_toTextImage(
-          filterable.inputImage_afterBrightnessThreshold_canvas_id,
-          filterable.inputImage_afterItemImageDetection_canvas_id,
-          getHtmlElement<HTMLImageElement>(filterable.inputImage_image_id),
-          filterable.itemImage_canvas_id,
-          filterable.itemImage_data_id,
-          filterable.textImage_canvas_id,
-          filterable.screenshot_processor_InputImageBrightnessThreshold,
-          filterable.screenshot_processor_ItemImageMaxWidth,
-          filterable.screenshot_processor_ItemImageMinWidth,
-          filterable.screenshot_processor_ItemPictureHeight,
-          filterable.screenshot_processor_ItemPictureWidth,
-          filterable.screenshot_processor_TextImageBorderTrimSize,
-          filterable.screenshot_processor_TextImageCornerTrimSize
+          screenshot.inputImage_afterBrightnessThreshold_canvas_id,
+          screenshot.inputImage_afterItemImageDetection_canvas_id,
+          getHtmlElement<HTMLImageElement>(screenshot.inputImage_image_id),
+          screenshot.itemImage_canvas_id,
+          screenshot.itemImage_data_id,
+          screenshot.textImage_canvas_id,
+          screenshot.imageProcessor_InputImageBrightnessThreshold,
+          screenshot.imageProcessor_ItemImageMaxWidth,
+          screenshot.imageProcessor_ItemImageMinWidth,
+          screenshot.imageProcessor_ItemPictureHeight,
+          screenshot.imageProcessor_ItemPictureWidth,
+          screenshot.imageProcessor_TextImageBorderTrimSize,
+          screenshot.imageProcessor_TextImageCornerTrimSize
         );
-        filterable.end_Processing_Image();
-        set_filterables([..._filterables]);
+        screenshot.end_Processing_Image();
+        set_screenshots([..._screenshots]);
 
-        filterable.start_Processing_Text();
+        screenshot.start_Processing_Text();
         _fromImage_toText(
-          filterable.text_dataId,
-          getHtmlElement<HTMLCanvasElement>(filterable.textImage_canvas_id)
+          screenshot.text_data_id,
+          getHtmlElement<HTMLCanvasElement>(screenshot.textImage_canvas_id)
         );
-        waitForFilterableTextDataInitialization_then_processFilterableTextData();
+        waitForScreenshotTextDataInitialization_then_processScreenshotTextData();
 
-        function waitForFilterableTextDataInitialization_then_processFilterableTextData(): void {
-          if (isFilterableTextDataInitialized()) {
-            processFilterableTextData();
+        function waitForScreenshotTextDataInitialization_then_processScreenshotTextData(): void {
+          if (isScreenshotTextDataInitialized()) {
+            processScreenshotTextData();
           } else {
-            setTimeout(() => waitForFilterableTextDataInitialization_then_processFilterableTextData(), defaultTimeout);
+            setTimeout(() => waitForScreenshotTextDataInitialization_then_processScreenshotTextData(), defaultTimeout);
           }
 
-          function isFilterableTextDataInitialized(): boolean { return filterable.text_data_exists; }
+          function isScreenshotTextDataInitialized(): boolean { return screenshot.text_data_exists; }
 
-          function processFilterableTextData(): void {
-            filterable.end_Processing_Text();
-            filterable.processTextData();
-            applyFilters_and_setFilterables();
+          function processScreenshotTextData(): void {
+            screenshot.end_Processing_Text();
+            screenshot.process_Text_Data();
+            applyFilters_and_setScreenshots();
           }
         }
       }
@@ -1037,8 +1093,6 @@ export default function Home() {
 
         {AttributeFilters()}
 
-        {DevInfo()}
-
         {ImageProcessorControl()}
 
         {NameFilters()}
@@ -1048,10 +1102,12 @@ export default function Home() {
         {TypeFilters()}
 
         {ViewControl()}
+
+        {DevInfo()}
       </div>
 
       <div className='flex flex-wrap'>
-        {Filterables()}
+        {Screenshots()}
       </div>
     </main>
   </>;

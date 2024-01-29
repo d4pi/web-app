@@ -12,14 +12,16 @@ open-source software license, help is needed to
 
 # Build & Deploy
 
-D4pi is a [Next.js](https://nextjs.org/docs/getting-started) project
-deployed at https://github.com/d4pi/d4pi.github.io ( https://d4pi.com/
-).
+D4pi is a [Next.js](https://nextjs.org/docs/getting-started) project.
 
+* Web host: https://github.com/d4pi/d4pi.github.io ( https://d4pi.com/
+  ).
+* Dev environment:
+  [`mcr.microsoft.com/devcontainers/typescript-node:latest`](https://mcr.microsoft.com/en-us/product/devcontainers/typescript-node)
 * See commits
-  [579cfc8bf3ffcb3033e5739e969e674747f6a938](https://github.com/d4pi/web-app/commit/579cfc8bf3ffcb3033e5739e969e674747f6a938)
+  [`579cfc8bf3ffcb3033e5739e969e674747f6a938`](https://github.com/d4pi/web-app/commit/579cfc8bf3ffcb3033e5739e969e674747f6a938)
   and
-  [ab0c45acfa10db79f8f85e18b30eb9fe27de78e4](https://github.com/d4pi/web-app/commit/ab0c45acfa10db79f8f85e18b30eb9fe27de78e4)
+  [`ab0c45acfa10db79f8f85e18b30eb9fe27de78e4`](https://github.com/d4pi/web-app/commit/ab0c45acfa10db79f8f85e18b30eb9fe27de78e4)
   about this project's creation.
 * See Next.js documentation about
   [Run the Development Server](https://nextjs.org/docs/getting-started/installation#run-the-development-server).

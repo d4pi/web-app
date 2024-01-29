@@ -7,7 +7,7 @@ Filter web app.
 [Demo](https://d4pi.com/) - https://d4pi.com/ (hassle-free,
 click-and-go!)
 
-## Safety First
+# Safety First
 
 * D4pi **never** directly interfaces with Diablo4's game program -- D4pi
   deals with only user-supplied screenshots.
@@ -15,14 +15,14 @@ click-and-go!)
   D4pi has only limited access to its user's computer.
 * D4pi is open-source -- D4pi can be audited and/or self-hosted.
 
-## Feedback is Always Much Appreciated
+# Feedback is Always Much Appreciated
 
-* [Reddit](https://www.reddit.com/r/D4pi/) -
-  https://www.reddit.com/r/D4pi/
 * [Discord](https://discord.gg/sxUMgj3VcA) -
   https://discord.gg/sxUMgj3VcA
 * [GitHub](https://github.com/d4pi/web-app) -
   https://github.com/d4pi/web-app
+* [Reddit](https://www.reddit.com/r/D4pi/) -
+  https://www.reddit.com/r/D4pi/
 
 Honest feedback like
 [these](https://www.reddit.com/r/diablo4/comments/19cxffr/i_made_an_opensource_item_filter_web_app/)
