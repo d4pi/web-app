@@ -6,7 +6,6 @@ import React from 'react';
 import Screenshot from '@/code/Screenshot';
 import Script from 'next/script';
 import TypeFilter from '@/code/TypeFilter';
-import { findAllInRenderedTree } from 'react-dom/test-utils';
 
 // # App
 

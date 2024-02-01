@@ -4,8 +4,7 @@
 [open-source](https://github.com/d4pi/web-app), fan-made, Diablo4 Item
 Filter web app.
 
-[Demo](https://d4pi.com/) - https://d4pi.com/ (hassle-free,
-click-and-go!)
+[Demo](https://d4pi.com/) (hassle-free, no sign-up, just click-and-go!)
 
 # Safety First
 
@@ -24,8 +23,8 @@ click-and-go!)
 * [Reddit](https://www.reddit.com/r/D4pi/) -
   https://www.reddit.com/r/D4pi/
 
-Honest feedback like
-[these](https://www.reddit.com/r/diablo4/comments/19cxffr/i_made_an_opensource_item_filter_web_app/)
+Feedback (like
+[these](https://www.reddit.com/r/diablo4/comments/19cxffr/i_made_an_opensource_item_filter_web_app/))
 is the best way to help D4pi out.
 
 Thank you.
