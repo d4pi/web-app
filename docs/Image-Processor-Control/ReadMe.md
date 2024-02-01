@@ -1,17 +1,28 @@
 D4pi runs its input images thru several processing steps to extract
-useful information
+useful information.
 
 Take this screenshot as an example:
 ![Example Screenshot](Input-Image.jpg)
 
-It was taken under the following conditions, and in its original form it
-contains way more than the game item tooltip window.
+It was taken under the following conditions:
 
 * 1080p (**1920*1080**)
 * Diablo4: GAMEPLAY: **Advanced Tooltip Information: Enabled**
 * Diablo4: GRAPHICS: **Brightness: Default**
 * Diablo4: GRAPHICS: **Font Scale: Small**
 * **Xbox Series X**
+
+In its original form, this example screenshot contains way more than the
+game item tooltip window.
+
+# Image Processor Control
+
+All image processing settings mentioned in this document can be adjusted
+thru the **Image Processor Control**:
+
+![Image Processor Control](Image-Processor-Control.jpg)
+
+This document is based on D4pi `202401291613`.
 
 # Input Image Brightness Threshold
 
@@ -49,7 +60,7 @@ The following image is what the example screenshot looks like after
 being processed with the default **Max Width** (410) and **Min Width**
 (340) settings.
 
-![Item Image Max Min Width 410 340.jpg](Item-Image-Max-Min-Width-410-340.jpg)
+![Item Image Max Min Width 410 340](Item-Image-Max-Min-Width-410-340.jpg)
 
 Among all rectangular shapes, the best candidate for the game item
 tooltip window is marked with thick, green lines.
